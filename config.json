@@ -1,0 +1,37 @@
+{
+	"name": "Multilingual",
+
+	"namespace": "CMH\\Multilingual",
+
+	"description": "Allow survey's and data entry forms to be translated.<br>Add translations via the Online Designer.",
+	
+	"versions": [
+		 {"1.0": "Initial Release"}
+	],
+
+    "authors": [
+        {
+            "name": "Stephen Martin",
+            "email": "samartin1@cmh.edu",
+            "institution": "Children's Mercy Hospital"
+        },
+		{
+            "name": "Jen Hoitenga",
+            "email": "jahoitenga@cmh.edu",
+            "institution": "Children's Mercy Hospital"
+        }
+    ],
+	
+	"permissions": [
+		"redcap_data_entry_form",
+		"redcap_every_page_top",
+		"redcap_survey_complete",
+		"redcap_survey_page"
+	],
+
+	"links": {
+	},
+
+	"project-settings": {
+	}
+}

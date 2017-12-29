@@ -1,0 +1,48 @@
+#changeLang{
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	font-size:15px;
+	font-weight:bold;
+	background:#005cb9;
+	color:white;
+	line-height:30px;
+	border-radius:30px;
+	height:30px;
+	width:30px;
+	text-align:center;
+	vertical-align:middle;
+	cursor:pointer;
+	float:right;
+	-o-transition: background .2s ease-in-out;
+	-ms-transition: background .2s ease-in-out;
+	-moz-transition: background .2s ease-in-out;
+	-webkit-transition: background .2s ease-in-out;
+	transition: background .2s ease-in-out;
+	margin-bottom:10px;
+}
+#changeLang:hover{
+	background:#009ab9;
+}
+.setLangButtons{
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	font-size:15px;
+	font-weight:bold;
+	background:#005cb9;
+	color:white;
+	line-height:30px;
+	border-radius:30px;
+	height:30px;
+	width:30px;
+	text-align:center;
+	vertical-align:middle;
+	cursor:pointer;
+	float:right;
+	-o-transition: background .2s ease-in-out;
+	-ms-transition: background .2s ease-in-out;
+	-moz-transition: background .2s ease-in-out;
+	-webkit-transition: background .2s ease-in-out;
+	transition: background .2s ease-in-out;
+	margin-bottom:10px;
+}
+.setLangButtons:hover{
+	background:#009ab9;
+}
