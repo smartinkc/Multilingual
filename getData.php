@@ -183,6 +183,7 @@
 		echo json_encode($response);
 	}
 
+	//copied from php.net
 	function uniord($u) {
 		// i just copied this function fron the php.net comments, but it should work fine!
 		$k = mb_convert_encoding($u, 'UCS-2LE', 'UTF-8');
@@ -190,6 +191,7 @@
 		$k2 = ord(substr($k, 1, 1));
 		return $k2 * 256 + $k1;
 	}
+	//copied from stackoverflow
 	function is_arabic($str) {
 		if(mb_detect_encoding($str) !== 'UTF-8') {
 			$str = mb_convert_encoding($str,mb_detect_encoding($str),'UTF-8');
