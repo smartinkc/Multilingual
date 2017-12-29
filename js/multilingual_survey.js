@@ -263,7 +263,7 @@
 				}
 				
 				//hide label tags (v8.1.0){
-				if(	translations['questions'][id]['type'] == 'text' || translations['questions'][id]['type'] == 'radio' || translations['questions'][id]['type'] == 'yesno' || translations['questions'][id]['type'] == 'truefalse'){
+				if(	translations['questions'][id]['type'] == 'text' || translations['questions'][id]['type'] == 'radio' || translations['questions'][id]['type'] == 'select' || translations['questions'][id]['type'] == 'yesno' || translations['questions'][id]['type'] == 'truefalse'){
 					$('#label-' + id).hide();
 				}
 				

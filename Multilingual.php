@@ -22,6 +22,7 @@ class Multilingual extends AbstractExternalModule
 	
 	function redcap_every_page_top($project_id){
 		if(strpos($_SERVER['REQUEST_URI'], 'online_designer.php') !== false && isset($_GET['page'])){
+			echo '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css') . '">';
 			echo '<script type="text/javascript">' . str_replace('REDCAP_AJAX_URL', $this->getUrl(''), file_get_contents($this->getModulePath() . 'js/multilingual_setup.js')) . '</script>';
 		}
 		elseif(strpos($_SERVER['REQUEST_URI'], 'DataExport/index.php') !== false){

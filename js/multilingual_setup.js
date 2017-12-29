@@ -2,14 +2,23 @@
 	var ajax_url = 'REDCAP_AJAX_URLgetData.php';
 	var matrixCounter = 0;
 	var languages = {1: 'en', 2: 'es'};
+	var setup = 0;
 
 	$( document ).ready(function(){
 		getLanguages();
+		showSetup();
 
 		$('body').on('click', '.btn2', function(){
 			$('#multilingual').remove();
 		});
-
+		
+		$('body').on('click', '.noClose', function(event){
+			event.stopPropagation();
+		});
+		
+		$('body').on('click', '#multilingualSetup', function(){
+			openCloseSetup();
+		});
 		
 		$('body').on('click','img',function(){
 			if($(this).attr('title') == 'Edit' || $(this).attr('title') == 'Edit Matrix'){
@@ -64,6 +73,16 @@
 			data: 'data=' + json,
 			success: function (r) {
 				languages = r;
+				var count = 0;
+				var id;
+				for(id in languages){
+					if(id != ''){
+						count++;
+					}
+				}
+				if(count == 0){
+					openCloseSetup();
+				}
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				console.log(textStatus, errorThrown);
@@ -346,6 +365,67 @@
 		}
 		$('#multilingual').css('background','#b4ecb4');
 		//$('#multilingual').remove();
+	}
+	
+	//setup functions
+	function showSetup(){
+		$('body').append('<div id="multilingualSetup">?</div>');
+		$('#multilingualSetup').fadeIn();
+	}
+	
+	function openCloseSetup(){
+		if($('#multilingualSetup').css('height') == '50px'){
+			$( "#multilingualSetup" ).html('');
+			
+			$( "#multilingualSetup" ).animate({
+				"border-radius": "0px",
+				"height": "50%",
+				"width": "280px"
+			}, 500, function() {
+				$( "#multilingualSetup" ).css(
+					{
+						"font-size": "12px",
+						"text-align": "left",
+						"font-weight": "normal",
+						"overflow-y": "scroll",
+						"line-height": "0px"
+					}
+				);
+				
+				setTimeout(function(){
+					$('#multilingualSetup').html(
+						'<p><span style="font-weight:bold;color:#ADD8E6;">Getting Started</span><br>Add a variable called languages as a multiple choice field listing your languages as the choices.  Make sure you add the action tag @HIDDEN.</p>'
+						+ '<p>Refresh the page and you\'re ready to start entering translations. Remember you have to add the field first and save, then go back and edit it to add translations.</p>'
+						+ '<p><span style="font-weight:bold;color:#ADD8E6;">Title and Instructions</span><br>To add translations for the Survey Title and Instructions for <i>this</i> instrument, add a variable called <span style="color:yellow;" class="noClose"> survey_text_' + getVariable('page') + '  </span>.  Each instrument should have it\'s own field with a variable name of "survey_text_[form name]" (Replace [form name] with the name of each instrument). Make sure you add the action tag @HIDDEN.</p>'
+						+ '<p><span style="font-weight:bold;color:#ADD8E6;">Completion Text</span><br>To add translations for Survey Completion Text, add a variable called survey_text_finish. Make sure you add the action tag @HIDDEN.</p>'
+						+ '<p>If you have just one instrument, you can just add the survey_text_finish variable and add the Title, Instructions and Completion Text to it.</p>'
+						+ '<p><span style="font-weight:bold;color:#ADD8E6;">Required Fields Text</span><br>To translate the <span style="color:red;">* must provide value</span> text, add this html to your translated question text:</p><span class="noClose"><p>   &lt;p&gt;&lt;span class=&quot;multilingual&quot; style=&quot;color:red;&quot;&gt;Your translation here&lt;/span&gt;&lt;/p&gt;   </span> </p>'
+						+ '<p>For more information: <span class="noClose"><a style="color:#ADD8E6;" href="https://community.projectredcap.org/storage/attachments/3597-how-to-use-multilingual-hook.docx">click here</a></span></p>'
+					);
+				},1);
+			});
+			
+			
+		}
+		else{
+			$( "#multilingualSetup" ).html('');
+			$( "#multilingualSetup" ).animate({
+				"border-radius": "50px",
+				"height": "50px",
+				"width": "50px"
+			}, 500, function() {
+				$( "#multilingualSetup" ).css(
+					{
+						"font-size": "40px",
+						"text-align": "center",
+						"font-weight": "bold",
+						"overflow": "hidden",
+						"line-height": "25px"
+					}
+				);
+				$('#multilingualSetup').html('?');
+			});
+		}
 	}
 
 	//generic functions
