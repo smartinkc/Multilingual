@@ -312,7 +312,7 @@
 					//enhanced radio buttons
 					for(id2 in translations['answers'][id]['text']){
 						$('.ec').each(function(){
-							var tmp = $(this).parent().attr('for').split(',');
+							var tmp = $(this).parent().attr('comps').split(',');
 							if(tmp[0] == id && tmp[2] == id2){
 								$(this).html(translations['answers'][id]['text'][id2]);
 							}
@@ -329,7 +329,7 @@
 					//enhanced checkboxes
 					for(id2 in translations['answers'][id]['text']){
 						$('.ec').each(function(){
-							var tmp = $(this).parent().attr('for').split(',');
+							var tmp = $(this).parent().attr('comps').split(',');
 							if(tmp[0] == id && tmp[2] == id2){
 								$(this).html(translations['answers'][id]['text'][id2]);
 							}
