@@ -1,5 +1,5 @@
 (function(){
-	var ajax_url = 'REDCAP_AJAX_URLgetData.php';
+	var ajax_url = 'REDCAP_AJAX_URL';
 	var matrixCounter = 0;
 	var languages = {1: 'en', 2: 'es'};
 	var setup = 0;

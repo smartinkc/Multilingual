@@ -1,6 +1,6 @@
 (function(){
 	//load languages
-	var ajax_url = 'REDCAP_AJAX_URLgetData.php';
+	var ajax_url = 'REDCAP_AJAX_URL';
 	var page = getVariable('page');
 	var project_id = getVariable('pid');
 	var languages = {1: 'en', 2: 'es'};

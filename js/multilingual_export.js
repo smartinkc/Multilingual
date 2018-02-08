@@ -1,5 +1,5 @@
 (function(){
-	var ajax_url = 'REDCAP_AJAX_URLgetData.php';
+	var ajax_url = 'REDCAP_AJAX_URL';
 	var languages = {1: 'en', 2: 'es'};
 	
 	$( document ).ready(function(){
@@ -33,7 +33,7 @@
 	}
 
 	function exportData(id){
-		window.location.replace('REDCAP_AJAX_URLexportData.php?pid=' + getVariable('pid') + '&id=' + id);
+		window.location.replace('REDCAP_AJAX_URL' + '&lang=' + id + '&todo=2');
 	}
 
 	function showButtons(){
