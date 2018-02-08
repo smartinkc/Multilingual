@@ -6,7 +6,7 @@
 	"description": "Allow survey's and data entry forms to be translated.<br>Add translations via the Online Designer.",
 	
 	"versions": [
-		 {"1.0": "Initial Release"}
+		 {"1.2": "Move all functions into Multilingual class"}
 	],
 
     "authors": [
@@ -29,8 +29,9 @@
 		"redcap_survey_page"
 	],
 
-	"links": {
-	},
+   "no-auth-pages": [
+      "index"
+   ],
 
 	"project-settings": {
 	}
