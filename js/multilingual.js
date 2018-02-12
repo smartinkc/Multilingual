@@ -110,7 +110,8 @@
 					var id2;
 					var counter = 1;
 					for(id2 in translations['answers'][id]['text']){
-						$('#' + translations['answers'][id]['matrix'] + '-mtxhdr-tr').children('td').eq(0).children().children().children().children('td').eq(counter).html(translations['answers'][id]['text'][id2]);
+						//$('#' + translations['answers'][id]['matrix'] + '-mtxhdr-tr').children('td').eq(0).children().children().children().children('td').eq(counter).html(translations['answers'][id]['text'][id2]);
+						$('#matrixheader-' + translations['answers'][id]['matrix'] + '-' + id2).html(translations['answers'][id]['text'][id2]);
 						counter++;
 					}
 				}
