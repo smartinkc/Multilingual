@@ -245,7 +245,7 @@
 					var tmp = $('#' + id + '-tr').children('td').eq(1).html();
 					if(tmp != undefined){
 						var position = tmp.indexOf("<");
-						if(position > 0){
+						if(position >= 0){
 							tmp = tmp.slice(position);
 							$('#' + id + '-tr').children('td').eq(1).html(translations['questions'][id]['text'] + tmp);
 						}
@@ -263,9 +263,7 @@
 				}
 				
 				//hide label tags (v8.1.0){
-				if(	translations['questions'][id]['type'] == 'text' || translations['questions'][id]['type'] == 'radio' || translations['questions'][id]['type'] == 'select' || translations['questions'][id]['type'] == 'yesno' || translations['questions'][id]['type'] == 'truefalse'){
-					$('#label-' + id).hide();
-				}
+				$('#label-' + id).hide();
 				
 			}
 			
