@@ -8,7 +8,8 @@
 	"versions": [
 		 {"1.2": "Move all functions into Multilingual class"},
 		 {"1.3": "Fix matrix column label order"},
-		 {"1.4": "Hide all label elements"}
+		 {"1.4": "Hide all label elements"},
+		 {"1.5": "Fix validation popup"}
 	],
 
     "authors": [
