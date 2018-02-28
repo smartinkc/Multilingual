@@ -46,9 +46,9 @@
 					$('#redcapValidationErrorPopup').html(translations['errors'][id]['text']);
 				}
 				else{
-					$('#redcapValidationErrorPopup').html('<center><img style="height:100px;width:100px" src="/plugins/multilingual/css/error.png"></center>');
+					$('#redcapValidationErrorPopup').html('<center><span style="color:red;font-size:50px;">&#x26D4;</span></center>');
 				}
-			}, 100);
+			}, 200);
 		});
 	});
 

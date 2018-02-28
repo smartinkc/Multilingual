@@ -114,7 +114,7 @@
 							$('#redcapValidationErrorPopup').html(translations['errors'][id]['text']);
 						}
 						else{
-							$('#redcapValidationErrorPopup').html('<center><img style="height:100px;width:100px" src="/plugins/multilingual/css/error.png"></center>');
+							$('#redcapValidationErrorPopup').html('<center><span style="color:red;font-size:50px;">&#x26D4;</span></center>');
 						}
 						$('#redcapValidationErrorPopup').next().children().children().children().html('&#x2714;');
 						
@@ -124,7 +124,7 @@
 							}
 						});
 						
-					}, 100);
+					}, 200);
 				}
 			}
 		});
@@ -185,7 +185,7 @@
 		$('#changeFont').children().eq(0).html('<span style="font-size:14px;">A</span> <span style="font-size:12px;">A</span> <span style="font-size:10px;">A</span>');
 		
 		//popup
-		$('#redcapValidationErrorPopup').html('<center><img style="height:100px;width:100px" src="/plugins/multilingual/css/error.png"></center>');
+		$('#redcapValidationErrorPopup').html('<center><span style="color:red;font-size:50px;">&#x26D4;</span></center>');
 		
 		//previous page
 		$('.ui-button-text').each(function(){
