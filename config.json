@@ -10,7 +10,7 @@
 		 {"1.3": "Fix matrix column label order"},
 		 {"1.4": "Hide all label elements"},
 		 {"1.5": "Fix validation popup"},
-		 {"1.6": "Fix NOAUTH"}
+		 {"1.6": "Fix NOAUTH, Other IE issues"}
 	],
 
     "authors": [
@@ -33,6 +33,16 @@
 		"redcap_survey_page"
 	],
 
+	"links": {
+      "project": [
+         {
+            "name": "Multilingual",
+            "icon": "brick",
+            "url": "index.php?NOAUTH"
+         }
+      ]
+   },
+   
    "no-auth-pages": [
       "index"
    ],
