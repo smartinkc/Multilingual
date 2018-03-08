@@ -135,16 +135,16 @@
 		var survey_translations = {"surveytitle":"Survey Title","surveyinstructions":"Survey Instructions","surveyacknowledgment":"Survey Response"}
 		var others = '';
 		for(id in tags){
-			if(tags[id].includes('@p1000lang')){
+			if(tags[id].indexOf('@p1000lang') > -1){
 				questions = JSON.parse(tags[id].replace('@p1000lang','',tags[id]));
 			}
-			else if(tags[id].includes('@p1000answers')){
+			else if(tags[id].indexOf('@p1000answers') > -1){
 				answers = JSON.parse(tags[id].replace('@p1000answers','',tags[id]));
 			}
-			else if(tags[id].includes('@p1000errors')){
+			else if(tags[id].indexOf('@p1000errors') > -1){
 				errors = JSON.parse(tags[id].replace('@p1000errors','',tags[id]));
 			}
-			else if(tags[id].includes('@p1000surveytext')){
+			else if(tags[id].indexOf('@p1000surveytext') > -1){
 				survey_text = JSON.parse(tags[id].replace('@p1000surveytext','',tags[id]));
 			}
 			else{
@@ -224,10 +224,10 @@
 				var tags = data.split('\n');
 				
 				for(id in tags){
-					if(tags[id].includes('@p1000lang')){
+					if(tags[id].indexOf('@p1000lang') > -1){
 						questions = JSON.parse(tags[id].replace('@p1000lang','',tags[id]));
 					}
-					else if(tags[id].includes('@p1000answers')){
+					else if(tags[id].indexOf('@p1000answers') > -1){
 						answers = JSON.parse(tags[id].replace('@p1000answers','',tags[id]));
 					}
 				}
