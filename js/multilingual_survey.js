@@ -241,6 +241,13 @@
 				if(translations['questions'][id]['matrix'] != null){
 					$('#' + id + '-tr').children('td').eq(1).children('table').children().children().children('td:first').html(translations['questions'][id]['text']);
 				}
+				else if(translations['questions'][id]['type'] == 'descriptive'){
+					var tmp = $('#' + id + '-tr').children('td').eq(1).html();
+					if(tmp != undefined){
+						tmp = tmp.split(/<(.+)/);
+						$('#' + id + '-tr').children('td').eq(1).html(translations['questions'][id]['text'] + ' <' + tmp[1]);
+					}
+				}
 				else{
 					$('#label-' + id).html(translations['questions'][id]['text']);
 				}
