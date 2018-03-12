@@ -371,7 +371,7 @@
 		data['todo'] = 1;
 		data['lang'] = lang;
 		data['project_id'] = pid;
-		data['record_id'] = $('#record_id').val();
+		data['record_id'] = $('[name="' + table_pk + '"]').val();
 		data['event_id'] = event_id;
 		data['page'] = $('#surveytitle').html().replace(/ /g,'_').toLowerCase();
 		
