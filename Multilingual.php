@@ -31,6 +31,24 @@ class Multilingual extends AbstractExternalModule
 		}
 	}
 	
+	public function getSettings($data){
+		$response = $this->getProjectSettings($data['project_id']);
+		
+		foreach($response AS $key => $values){
+			if($key == 'button-width'){
+				if(substr($response[$key]['value'], -2) != 'px'){
+					$response[$key]['value'] = '100px';
+				}
+				elseif(intval(str_replace('px', '', $response[$key]['value'])) < 1){
+					$response[$key]['value'] = '100px';
+				}
+			}
+		}
+		
+		header('Content-Type: application/json');
+		echo json_encode($response);
+	}
+	
 	public function getAnswers($data){
 		global $conn;
 		
