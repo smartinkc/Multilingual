@@ -170,7 +170,7 @@
 		data['todo'] = 1;
 		data['lang'] = lang;
 		data['project_id'] = (project_id ? project_id : pid);
-		data['record_id'] = record;
+		data['record_id'] = $('[name="' + table_pk + '"]').val();
 		data['event_id'] = event_id;
 		data['page'] = (page ? page : $('#surveytitle').html().replace(/ /g,'_').toLowerCase());
 		var json = encodeURIComponent(JSON.stringify(data));
