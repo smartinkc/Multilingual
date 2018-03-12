@@ -114,7 +114,7 @@ class Multilingual extends AbstractExternalModule
 					$value = json_decode($value, true);
 					foreach($value AS $key2 => $trans){
 						if($key2 == $data['lang']){
-							$response['questions'][$row['field_name']]['text'] = Piping::replaceVariablesInLabel($trans, $data['record_id'], $data['event_id']);
+							$response['questions'][$row['field_name']]['text'] = Piping::replaceVariablesInLabel($trans, ($data['record_id'] ? $data['record_id'] : '0'), $data['event_id']);
 							if(strpos($row['element_validation_type'], 'date') !== false){
 								$response['questions'][$row['field_name']]['type'] = 'date';
 							}
