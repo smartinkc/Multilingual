@@ -241,30 +241,9 @@
 				if(translations['questions'][id]['matrix'] != null){
 					$('#' + id + '-tr').children('td').eq(1).children('table').children().children().children('td:first').html(translations['questions'][id]['text']);
 				}
-				else if(translations['questions'][id]['type'] == 'date' || translations['questions'][id]['type'] == 'file' || translations['questions'][id]['type'] == 'slider' || translations['questions'][id]['type'] == 'checkbox'){
-					var tmp = $('#' + id + '-tr').children('td').eq(1).html();
-					if(tmp != undefined){
-						var position = tmp.indexOf("<");
-						if(position >= 0){
-							tmp = tmp.slice(position);
-							$('#' + id + '-tr').children('td').eq(1).html(translations['questions'][id]['text'] + tmp);
-						}
-						else{
-							$('#' + id + '-tr').children('td').eq(1).html(translations['questions'][id]['text']);
-						}
-					}
-				}
 				else{
-					var tmp = $('#' + id + '-tr').children('td').eq(1).html();
-					if(tmp != undefined){
-						tmp = tmp.split(/<(.+)/);
-						$('#' + id + '-tr').children('td').eq(1).html(translations['questions'][id]['text'] + ' <' + tmp[1]);
-					}
+					$('#label-' + id).html(translations['questions'][id]['text']);
 				}
-				
-				//hide label tags (v8.1.0){
-				$('#label-' + id).hide();
-				
 			}
 			
 			//answers
@@ -392,6 +371,8 @@
 		data['todo'] = 1;
 		data['lang'] = lang;
 		data['project_id'] = pid;
+		data['record_id'] = $('#record_id').val();
+		data['event_id'] = event_id;
 		data['page'] = $('#surveytitle').html().replace(/ /g,'_').toLowerCase();
 		
 		//pull survey page name
