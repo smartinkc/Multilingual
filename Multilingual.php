@@ -3,6 +3,7 @@ namespace CMH\Multilingual;
 
 use ExternalModules\AbstractExternalModule;
 use ExternalModules\ExternalModules;
+use \Piping as Piping;
 
 class Multilingual extends AbstractExternalModule
 {
@@ -113,7 +114,7 @@ class Multilingual extends AbstractExternalModule
 					$value = json_decode($value, true);
 					foreach($value AS $key2 => $trans){
 						if($key2 == $data['lang']){
-							$response['questions'][$row['field_name']]['text'] = $trans;
+							$response['questions'][$row['field_name']]['text'] = Piping::replaceVariablesInLabel($trans, $data['record_id'], $data['event_id']);
 							if(strpos($row['element_validation_type'], 'date') !== false){
 								$response['questions'][$row['field_name']]['type'] = 'date';
 							}
