@@ -1,5 +1,5 @@
 (function(){
-	var ajax_url = 'REDCAP_AJAX_URL';
+	var ajax_url = 'REDCAP_AJAX_URL&NOAUTH';
 	var translations = {};
 	var languages = {};
 	var lang = getCookie('p1000Lang');
