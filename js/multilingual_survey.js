@@ -218,8 +218,10 @@
 		});
 		
 		//page number
-		var tmp = $('#surveypagenum').html().split(' ');
-		$('#surveypagenum').html(tmp[1] + ' / ' + tmp[3]);
+		if($('#surveypagenum').is(':visible')){
+			var tmp = $('#surveypagenum').html().split(' ');
+			$('#surveypagenum').html(tmp[1] + ' / ' + tmp[3]);
+		}
 	}
 
 	function translate(){
