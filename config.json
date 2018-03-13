@@ -11,7 +11,7 @@
 		{"1.4": "Hide all label elements"},
 		{"1.5": "Fix validation popup"},
 		{"1.6": "Fix NOAUTH, Other IE issues"},
-		{"1.7": "Piping"}
+		{"1.7": "Piping and Button settings (color/width)"}
 	],
 
 	"authors": [
