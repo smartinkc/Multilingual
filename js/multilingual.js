@@ -42,16 +42,18 @@
 		
 		//error messages
 		$('body').on('blur', 'input', function(){
-			var id = $(this).parent().parent().attr('id').replace('-tr','');
-			$('#redcapValidationErrorPopup').html('');
-			setTimeout(function(){ 
-				if(translations['errors'][id] && translations['errors'][id]['text'] != ''){
-					$('#redcapValidationErrorPopup').html(translations['errors'][id]['text']);
-				}
-				else{
-					$('#redcapValidationErrorPopup').html('<center><span style="color:red;font-size:50px;">&#x26D4;</span></center>');
-				}
-			}, 200);
+			if($(this).attr('type') != 'radio'){
+				var id = $(this).parent().parent().attr('id').replace('-tr','');
+				$('#redcapValidationErrorPopup').html('');
+				setTimeout(function(){ 
+					if(translations['errors'][id] && translations['errors'][id]['text'] != ''){
+						$('#redcapValidationErrorPopup').html(translations['errors'][id]['text']);
+					}
+					else{
+						$('#redcapValidationErrorPopup').html('<center><span style="color:red;font-size:50px;">&#x26D4;</span></center>');
+					}
+				}, 200);
+			}
 		});
 	});
 	
