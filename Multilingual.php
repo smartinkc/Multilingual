@@ -8,12 +8,12 @@ use \Piping as Piping;
 class Multilingual extends AbstractExternalModule
 {
 	function redcap_survey_page($project_id, $record, $instrument){
-		echo '<script type="text/javascript">' . str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php"), file_get_contents($this->getModulePath() . 'js/multilingual_survey.js')) . '</script>';
+		echo '<script type="text/javascript">' . str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true), file_get_contents($this->getModulePath() . 'js/multilingual_survey.js')) . '</script>';
 		echo '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css') . '">';
 	}
 	
 	function redcap_survey_complete($project_id, $record, $instrument){
-		echo '<script type="text/javascript">' . str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php"), file_get_contents($this->getModulePath() . 'js/multilingual_survey_complete.js')) . '</script>';
+		echo '<script type="text/javascript">' . str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true), file_get_contents($this->getModulePath() . 'js/multilingual_survey_complete.js')) . '</script>';
 	}
 	
 	function redcap_data_entry_form($project_id, $record, $instrument){
