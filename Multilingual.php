@@ -3,31 +3,50 @@ namespace CMH\Multilingual;
 
 use ExternalModules\AbstractExternalModule;
 use ExternalModules\ExternalModules;
+use \Piping as Piping;
 
 class Multilingual extends AbstractExternalModule
 {
 	function redcap_survey_page($project_id, $record, $instrument){
-		echo '<script type="text/javascript">' . str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php",true), file_get_contents($this->getModulePath() . 'js/multilingual_survey.js')) . '</script>';
+		echo '<script type="text/javascript">' . str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true), file_get_contents($this->getModulePath() . 'js/multilingual_survey.js')) . '</script>';
 		echo '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css') . '">';
 	}
 	
 	function redcap_survey_complete($project_id, $record, $instrument){
-		echo '<script type="text/javascript">' . str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php",true), file_get_contents($this->getModulePath() . 'js/multilingual_survey_complete.js')) . '</script>';
+		echo '<script type="text/javascript">' . str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true), file_get_contents($this->getModulePath() . 'js/multilingual_survey_complete.js')) . '</script>';
 	}
 	
 	function redcap_data_entry_form($project_id, $record, $instrument){
-		echo '<script type="text/javascript">' . str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php",true), file_get_contents($this->getModulePath() . 'js/multilingual.js')) . '</script>';
+		echo '<script type="text/javascript">' . str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php"), file_get_contents($this->getModulePath() . 'js/multilingual.js')) . '</script>';
 		echo '<link rel="stylesheet" type="text/css" href="' . $this->getUrl('css/multilingual.css') . '">';
 	}
 	
 	function redcap_every_page_top($project_id){
 		if(strpos($_SERVER['REQUEST_URI'], 'online_designer.php') !== false && isset($_GET['page'])){
 			echo '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css') . '">';
-			echo '<script type="text/javascript">' . str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php",true), file_get_contents($this->getModulePath() . 'js/multilingual_setup.js')) . '</script>';
+			echo '<script type="text/javascript">' . str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php"), file_get_contents($this->getModulePath() . 'js/multilingual_setup.js')) . '</script>';
 		}
 		elseif(strpos($_SERVER['REQUEST_URI'], 'DataExport/index.php') !== false){
-			echo '<script type="text/javascript">' . str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php",true), file_get_contents($this->getModulePath() . 'js/multilingual_export.js')) . '</script>';
+			echo '<script type="text/javascript">' . str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php"), file_get_contents($this->getModulePath() . 'js/multilingual_export.js')) . '</script>';
 		}
+	}
+	
+	public function getSettings($data){
+		$response = $this->getProjectSettings($data['project_id']);
+		
+		foreach($response AS $key => $values){
+			if($key == 'button-width'){
+				if(substr($response[$key]['value'], -2) != 'px'){
+					$response[$key]['value'] = '100px';
+				}
+				elseif(intval(str_replace('px', '', $response[$key]['value'])) < 1){
+					$response[$key]['value'] = '100px';
+				}
+			}
+		}
+		
+		header('Content-Type: application/json');
+		echo json_encode($response);
 	}
 	
 	public function getAnswers($data){
@@ -51,7 +70,13 @@ class Multilingual extends AbstractExternalModule
 		
 		$row = mysqli_fetch_array($result);
 			
-		$tmp = explode(' \n ', $row['element_enum']);
+		if(strpos(' \n ', $row['element_enum']) !== false){
+			$tmp = explode(' \n ', $row['element_enum']);
+		}
+		else{
+			$tmp = explode('\n', $row['element_enum']);
+		}
+		
 		foreach($tmp AS $key => $value){
 			$tmp2 = explode(',', $value);
 			$response[trim($tmp2[0])] = trim($tmp2[1]);
@@ -113,7 +138,7 @@ class Multilingual extends AbstractExternalModule
 					$value = json_decode($value, true);
 					foreach($value AS $key2 => $trans){
 						if($key2 == $data['lang']){
-							$response['questions'][$row['field_name']]['text'] = $trans;
+							$response['questions'][$row['field_name']]['text'] = Piping::replaceVariablesInLabel($trans, ($data['record_id'] ? $data['record_id'] : '0'), $data['event_id']);
 							if(strpos($row['element_validation_type'], 'date') !== false){
 								$response['questions'][$row['field_name']]['type'] = 'date';
 							}

@@ -5,6 +5,9 @@
 	//var languages = {1: 'en', 2: 'es', 3: 'fr'};
 	var languages = {1: 'en', 2: 'es'};
 	var totalLanguages = 2;
+	var settings = {};
+	settings['empty'] = true;
+	getSettings();
 	getLanguages();
 	var lang = 'en';
 	var langReady = 0;
@@ -21,7 +24,7 @@
 		symbols();
 		
 		//link to change
-		$('#surveytitle').parent().append(' <div id="changeLang">' + lang + '</div>');
+		$('#surveytitle').parent().append(' <div id="changeLang" style="display:none;">' + lang + '</div>');
 		
 		//click function
 		$('body').on('click', '.setLangButtons', function(){
@@ -138,6 +141,25 @@
 			$('#p1000ChooseLang').fadeIn();
 		}
 	});
+	
+	function getSettings(){
+		var data = {};
+		data['todo'] = 3;
+		data['project_id'] = pid;
+		var json = encodeURIComponent(JSON.stringify(data));
+		
+		$.ajax({
+			url: ajax_url,
+			type: 'POST',
+			data: 'data=' + json,
+			success: function (r) {
+				settings = r;
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+			   console.log(textStatus, errorThrown);
+			}
+		});
+	}
 
 	function translatePopup(){
 		var tmp = $('#reqPopup').html();
@@ -194,17 +216,24 @@
 				$(this).html('&lt;&lt;');
 			}
 		});
+		
+		//page number
+		if($('#surveypagenum').is(':visible')){
+			var tmp = $('#surveypagenum').html().split(' ');
+			$('#surveypagenum').html(tmp[1] + ' / ' + tmp[3]);
+		}
 	}
 
 	function translate(){
-		if(langReady == 1){
+		if(langReady == 1 && !settings['empty']){
 			clearInterval(interval);
+			$('#changeLang').fadeIn();
 			
 			//add buttons to startUp
 			if($('#p1000Overlay').is(':visible') && $('#p1000ChooseLang').html() == ''){
 				var i;
 				for(i in languages){
-					$('#p1000ChooseLang').append('<p><div class="setLangButtons" id="changeLang1" name="' + languages[i] + '" style="display:none;float:left;width:100px;margin-top:20px;" onclick="$(\'#p1000Overlay\').fadeOut();$(\'#p1000ChooseLang\').fadeOut();">' + languages[i] + '</div></p>');
+					$('#p1000ChooseLang').append('<p><div class="setLangButtons" id="changeLang1" name="' + languages[i] + '" style="display:none;float:left;width:' + (settings['button-width'] && settings['button-width']['value'] ? settings['button-width']['value'] : '100px') + ';color:' + (settings['font-color'] && settings['font-color']['value'] ? settings['font-color']['value'] : '') + ';background:' + (settings['background-color'] && settings['background-color']['value'] ? settings['background-color']['value'] : '') + ';margin-top:20px;" onclick="$(\'#p1000Overlay\').fadeOut();$(\'#p1000ChooseLang\').fadeOut();">' + languages[i] + '</div></p>');
 				}
 				
 				var timing = 300;
@@ -219,17 +248,17 @@
 			
 			$('#changeLang').html(lang);
 			if(lang.length > 2){
-				$('#changeLang').css('width','100px');
+				$('#changeLang').css('width', (settings['button-width'] && settings['button-width']['value'] ? settings['button-width']['value'] : '100px'));
 				$('#changeLang').css('padding-left','8px');
 				$('#changeLang').css('padding-right','8px');
 			}
 			else{
-				$('#changeLang').css('width','30px');
+				$('#changeLang').css('width', (settings['button-width'] && settings['button-width']['value'] ? settings['button-width']['value'] : '30px'));
 				$('#changeLang').css('padding-left','');
 				$('#changeLang').css('padding-right','');
 			}
-			$('#changeLang').css('background','');
-			$('#changeLang').css('color','');
+			$('#changeLang').css('background', (settings['background-color'] && settings['background-color']['value'] ? settings['background-color']['value'] : ''));
+			$('#changeLang').css('color', (settings['font-color'] && settings['font-color']['value'] ? settings['font-color']['value'] : ''));
 			
 			//remover required english label
 			$('.requiredlabel').remove();
@@ -241,30 +270,16 @@
 				if(translations['questions'][id]['matrix'] != null){
 					$('#' + id + '-tr').children('td').eq(1).children('table').children().children().children('td:first').html(translations['questions'][id]['text']);
 				}
-				else if(translations['questions'][id]['type'] == 'date' || translations['questions'][id]['type'] == 'file' || translations['questions'][id]['type'] == 'slider' || translations['questions'][id]['type'] == 'checkbox'){
-					var tmp = $('#' + id + '-tr').children('td').eq(1).html();
-					if(tmp != undefined){
-						var position = tmp.indexOf("<");
-						if(position >= 0){
-							tmp = tmp.slice(position);
-							$('#' + id + '-tr').children('td').eq(1).html(translations['questions'][id]['text'] + tmp);
-						}
-						else{
-							$('#' + id + '-tr').children('td').eq(1).html(translations['questions'][id]['text']);
-						}
-					}
-				}
-				else{
+				else if(translations['questions'][id]['type'] == 'descriptive'){
 					var tmp = $('#' + id + '-tr').children('td').eq(1).html();
 					if(tmp != undefined){
 						tmp = tmp.split(/<(.+)/);
 						$('#' + id + '-tr').children('td').eq(1).html(translations['questions'][id]['text'] + ' <' + tmp[1]);
 					}
 				}
-				
-				//hide label tags (v8.1.0){
-				$('#label-' + id).hide();
-				
+				else{
+					$('#label-' + id).html(translations['questions'][id]['text']);
+				}
 			}
 			
 			//answers
@@ -392,6 +407,8 @@
 		data['todo'] = 1;
 		data['lang'] = lang;
 		data['project_id'] = pid;
+		data['record_id'] = $('[name="' + table_pk + '"]').val();
+		data['event_id'] = event_id;
 		data['page'] = $('#surveytitle').html().replace(/ /g,'_').toLowerCase();
 		
 		//pull survey page name

@@ -5,6 +5,9 @@
 	var project_id = getVariable('pid');
 	var languages = {1: 'en', 2: 'es'};
 	var totalLanguages = 2;
+	var settings = {};
+	settings['empty'] = true;
+	getSettings();
 	getLanguages();
 	var lang = 'en';
 	var langReady = 0;
@@ -15,7 +18,7 @@
 	$( document ).ready(function(){
 		translateReady();
 		//link to change
-		$('#subheaderDiv2').append(' <div id="changeLang">' + lang + '</div>');
+		$('#subheaderDiv2').append(' <div id="changeLang" style="display:none;">' + lang + '</div>');
 		
 		//click function
 		$('body').on('click', '#changeLang', function(){
@@ -39,36 +42,59 @@
 		
 		//error messages
 		$('body').on('blur', 'input', function(){
-			var id = $(this).parent().parent().attr('id').replace('-tr','');
-			$('#redcapValidationErrorPopup').html('');
-			setTimeout(function(){ 
-				if(translations['errors'][id] && translations['errors'][id]['text'] != ''){
-					$('#redcapValidationErrorPopup').html(translations['errors'][id]['text']);
-				}
-				else{
-					$('#redcapValidationErrorPopup').html('<center><span style="color:red;font-size:50px;">&#x26D4;</span></center>');
-				}
-			}, 200);
+			if($(this).attr('type') != 'radio'){
+				var id = $(this).parent().parent().attr('id').replace('-tr','');
+				$('#redcapValidationErrorPopup').html('');
+				setTimeout(function(){ 
+					if(translations['errors'][id] && translations['errors'][id]['text'] != ''){
+						$('#redcapValidationErrorPopup').html(translations['errors'][id]['text']);
+					}
+					else{
+						$('#redcapValidationErrorPopup').html('<center><span style="color:red;font-size:50px;">&#x26D4;</span></center>');
+					}
+				}, 200);
+			}
 		});
 	});
+	
+	function getSettings(){
+		var data = {};
+		data['todo'] = 3;
+		data['project_id'] = pid;
+		var json = encodeURIComponent(JSON.stringify(data));
+		
+		$.ajax({
+			url: ajax_url,
+			type: 'POST',
+			data: 'data=' + json,
+			success: function (r) {
+				settings = r;
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+			   console.log(textStatus, errorThrown);
+			}
+		});
+	}
 
 	//specific functions
 	function translate(){
-		if(langReady == 1){
+		if(langReady == 1 && !settings['empty']){
 			clearInterval(interval);
 			$('#changeLang').html(lang);
+			$('#changeLang').fadeIn();
+			
 			if(lang.length > 2){
-				$('#changeLang').css('width','100px');
+				$('#changeLang').css('width', (settings['button-width'] && settings['button-width']['value'] ? settings['button-width']['value'] : '100px'));
 				$('#changeLang').css('padding-left','8px');
 				$('#changeLang').css('padding-right','8px');
 			}
 			else{
-				$('#changeLang').css('width','30px');
+				$('#changeLang').css('width', (settings['button-width'] && settings['button-width']['value'] ? settings['button-width']['value'] : '30px'));
 				$('#changeLang').css('padding-left','');
 				$('#changeLang').css('padding-right','');
 			}
-			$('#changeLang').css('background','');
-			$('#changeLang').css('color','');
+			$('#changeLang').css('background', (settings['background-color'] && settings['background-color']['value'] ? settings['background-color']['value'] : ''));
+			$('#changeLang').css('color', (settings['font-color'] && settings['font-color']['value'] ? settings['font-color']['value'] : ''));
 			
 			//questions
 			var id;
@@ -170,6 +196,8 @@
 		data['todo'] = 1;
 		data['lang'] = lang;
 		data['project_id'] = (project_id ? project_id : pid);
+		data['record_id'] = $('[name="' + table_pk + '"]').val();
+		data['event_id'] = event_id;
 		data['page'] = (page ? page : $('#surveytitle').html().replace(/ /g,'_').toLowerCase());
 		var json = encodeURIComponent(JSON.stringify(data));
 		
@@ -227,14 +255,14 @@
 		return(false);
 	}
 
-	function setCookie(cname, cvalue, exdays) {
+	function setCookie(cname, cvalue, exdays){
 		var d = new Date();
 		d.setTime(d.getTime() + (exdays*24*60*60*1000));
 		var expires = "expires="+ d.toUTCString();
 		document.cookie = cname + "=" + cvalue + "; " + expires;
 	}
 
-	function getCookie(cname) {
+	function getCookie(cname){
 		var name = cname + "=";
 		var ca = document.cookie.split(';');
 		for(var i = 0; i <ca.length; i++) {

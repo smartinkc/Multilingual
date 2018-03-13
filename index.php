@@ -11,6 +11,10 @@
 			case 2:
 				\CMH\Multilingual\Multilingual::getAnswers($data);
 				break;
+			case 3:
+				$tmp = new \CMH\Multilingual\Multilingual();
+				$tmp->getSettings($data);
+				break;
 			default:
 				exit;
 		}
