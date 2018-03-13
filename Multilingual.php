@@ -70,7 +70,13 @@ class Multilingual extends AbstractExternalModule
 		
 		$row = mysqli_fetch_array($result);
 			
-		$tmp = explode(' \n ', $row['element_enum']);
+		if(strpos(' \n ', $row['element_enum']) !== false){
+			$tmp = explode(' \n ', $row['element_enum']);
+		}
+		else{
+			$tmp = explode('\n', $row['element_enum']);
+		}
+		
 		foreach($tmp AS $key => $value){
 			$tmp2 = explode(',', $value);
 			$response[trim($tmp2[0])] = trim($tmp2[1]);
