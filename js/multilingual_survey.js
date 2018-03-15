@@ -228,7 +228,7 @@
 	function translate(){
 		if(langReady == 1 && !settings['empty']){
 			clearInterval(interval);
-			$('#changeLang').fadeIn();
+			$('#changeLang').show();
 			
 			//add buttons to startUp
 			if($('#p1000Overlay').is(':visible') && $('#p1000ChooseLang').html() == ''){
@@ -240,7 +240,7 @@
 				var timing = 300;
 				$('.setLangButtons').each(function(){
 					$(this).fadeIn(timing);
-					timing += 100;
+					timing += 150;
 				});
 			}
 			

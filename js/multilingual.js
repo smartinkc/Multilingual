@@ -82,7 +82,7 @@
 		if(langReady == 1 && !settings['empty']){
 			clearInterval(interval);
 			$('#changeLang').html(lang);
-			$('#changeLang').fadeIn();
+			$('#changeLang').show();
 			
 			if(lang.length > 2){
 				$('#changeLang').css('width', (settings['button-width'] && settings['button-width']['value'] ? settings['button-width']['value'] : '100px'));

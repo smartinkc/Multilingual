@@ -18,6 +18,7 @@
 	-webkit-transition: background .2s ease-in-out;
 	transition: background .2s ease-in-out;
 	margin-bottom:10px;
+	display:none;
 }
 #changeLang:hover{
 	background:#009ab9;
