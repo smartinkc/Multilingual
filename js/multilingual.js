@@ -25,6 +25,7 @@
 			if(langReady == 2){
 				$('#changeLang').css('background','#505050');
 				$('#changeLang').css('color','#CCCCCC');
+				$('#changeLang').css('opacity','0.5');
 				langReady = 0;
 				var id;
 				for(id in languages){
@@ -95,6 +96,7 @@
 			}
 			$('#changeLang').css('background', (settings['background-color'] && settings['background-color']['value'] ? settings['background-color']['value'] : ''));
 			$('#changeLang').css('color', (settings['font-color'] && settings['font-color']['value'] ? settings['font-color']['value'] : ''));
+			$('#changeLang').css('opacity','1');
 			
 			//questions
 			var id;

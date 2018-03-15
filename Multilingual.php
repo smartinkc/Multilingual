@@ -166,6 +166,15 @@ class Multilingual extends AbstractExternalModule
 					$value = json_decode($value, true);
 					foreach($value AS $key2 => $trans){
 						if($key2 == $data['lang']){
+							foreach($trans AS $key3 => $newTrans){
+								if($row['element_type'] == 'select'){
+									$trans[$key3] = strip_tags(Piping::replaceVariablesInLabel($newTrans, ($data['record_id'] ? $data['record_id'] : '0'), $data['event_id']));
+								}
+								else{
+									$trans[$key3] = Piping::replaceVariablesInLabel($newTrans, ($data['record_id'] ? $data['record_id'] : '0'), $data['event_id']);
+								}
+							}
+
 							$response['answers'][$row['field_name']]['text'] = $trans;
 							if(strpos($row['element_validation_type'], 'date') !== false){
 								$response['answers'][$row['field_name']]['type'] = 'date';

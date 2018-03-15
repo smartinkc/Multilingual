@@ -36,6 +36,7 @@
 			if(langReady == 2){
 				$('#changeLang').css('background','#505050');
 				$('#changeLang').css('color','#CCCCCC');
+				$('#changeLang').css('opacity','0.5');
 				langReady = 0;
 				var id;
 				for(id in languages){
@@ -259,8 +260,9 @@
 			}
 			$('#changeLang').css('background', (settings['background-color'] && settings['background-color']['value'] ? settings['background-color']['value'] : ''));
 			$('#changeLang').css('color', (settings['font-color'] && settings['font-color']['value'] ? settings['font-color']['value'] : ''));
+			$('#changeLang').css('opacity','1');
 			
-			//remover required english label
+			//remove required english label
 			$('.requiredlabel').remove();
 			$('.multilingual').remove();
 			
@@ -319,7 +321,8 @@
 					for(id2 in translations['answers'][id]['text']){
 						$('[name="' + id + '___radio"]').each(function(){
 							if($(this).val() == id2){
-								$(this).parent().contents().last().replaceWith(' ' + translations['answers'][id]['text'][id2]);
+								//$(this).parent().contents().last().replaceWith(' ' + translations['answers'][id]['text'][id2]);
+								$(this).parent().contents().last().html(' ' + translations['answers'][id]['text'][id2]);
 							}
 						});
 					}
@@ -337,7 +340,8 @@
 					var id2;
 					for(id2 in translations['answers'][id]['text']){
 						$('[name="__chk__' + id + '_RC_' + id2 + '"]').each(function(){
-							$(this).parent().contents().last().replaceWith(' ' + translations['answers'][id]['text'][id2]);
+							//$(this).parent().contents().last().replaceWith(' ' + translations['answers'][id]['text'][id2]);
+							$(this).parent().contents().last().html(' ' + translations['answers'][id]['text'][id2]);
 						});
 					}
 					//enhanced checkboxes
@@ -366,8 +370,33 @@
 			
 			//layout
 			$('body').css('direction', translations['layout']);
+			if(translations['layout'] == 'rtl'){
+				$('td').each(function(){
+					$(this).attr('align', 'right');
+				});
+				
+				$('p').each(function(){
+					$(this).css('text-align','right');
+				});
+				
+				$('#surveytitle').css('text-align','right');
+				$('#surveyinstructions').css('text-align','right');
+			}
+			else{
+				$('td').each(function(){
+					$(this).removeAttr('align');
+				});
+				
+				$('p').each(function(){
+					$(this).css('text-align','');
+				});
+				
+				$('#surveytitle').css('text-align','');
+				$('#surveyinstructions').css('text-align','');
+			}
 			
 			langReady = 2;
+
 		}
 	}
 
