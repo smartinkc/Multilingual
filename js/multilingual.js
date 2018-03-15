@@ -43,7 +43,7 @@
 		
 		//error messages
 		$('body').on('blur', 'input', function(){
-			if($(this).attr('type') != 'radio'){
+			if($(this).attr('type') != 'radio' && $(this).attr('type') != 'checkbox'){
 				var id = $(this).parent().parent().attr('id').replace('-tr','');
 				$('#redcapValidationErrorPopup').html('');
 				setTimeout(function(){ 
@@ -148,7 +148,8 @@
 					for(id2 in translations['answers'][id]['text']){
 						$('[name="' + id + '___radio"]').each(function(){
 							if($(this).val() == id2){
-								$(this).parent().contents().last().replaceWith(' ' + translations['answers'][id]['text'][id2]);
+								//$(this).parent().contents().last().replaceWith(' ' + translations['answers'][id]['text'][id2]);
+								$(this).parent().contents().last().html(' ' + translations['answers'][id]['text'][id2]);
 							}
 						});
 					}
@@ -157,7 +158,8 @@
 					var id2;
 					for(id2 in translations['answers'][id]['text']){
 						$('[name="__chk__' + id + '_RC_' + id2 + '"]').each(function(){
-							$(this).parent().contents().last().replaceWith(' ' + translations['answers'][id]['text'][id2]);
+							//$(this).parent().contents().last().replaceWith(' ' + translations['answers'][id]['text'][id2]);
+							$(this).parent().contents().last().html(' ' + translations['answers'][id]['text'][id2]);
 						});
 					}
 				}
@@ -166,7 +168,25 @@
 				}
 			}
 			langReady = 2;
+			
+			piping();
 		}
+	}
+	
+	function piping(){
+		$('.piping_receiver').each(function(){
+			var classes = $(this).attr('class').split(' ');
+			var tmp;
+			var tmp2;
+			for(tmp in classes){
+				if(classes[tmp].indexOf('piperec') > -1){
+					tmp2 = classes[tmp].split('-');
+					if($('[name="' + tmp2[2] + '"]').val() != ''){
+						$(this).html($('[name="' + tmp2[2] + '"]').val());
+					}
+				}
+			}
+		});
 	}
 
 	function translateReady(){

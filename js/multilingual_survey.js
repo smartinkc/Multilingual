@@ -396,8 +396,25 @@
 			}
 			
 			langReady = 2;
-
+			
+			piping();
 		}
+	}
+	
+	function piping(){
+		$('.piping_receiver').each(function(){
+			var classes = $(this).attr('class').split(' ');
+			var tmp;
+			var tmp2;
+			for(tmp in classes){
+				if(classes[tmp].indexOf('piperec') > -1){
+					tmp2 = classes[tmp].split('-');
+					if($('[name="' + tmp2[2] + '"]').val() != ''){
+						$(this).html($('[name="' + tmp2[2] + '"]').val());
+					}
+				}
+			}
+		});
 	}
 
 	function translateReady(){
