@@ -13,6 +13,7 @@
 	var langReady = 0;
 	var interval = null;
 	var translations = {};
+	var errorChecking = 0;
 
 	//document ready change language
 	$( document ).ready(function(){
@@ -43,7 +44,8 @@
 		
 		//error messages
 		$('body').on('blur', 'input', function(){
-			if($(this).attr('type') != 'radio' && $(this).attr('type') != 'checkbox'){
+			if($(this).attr('type') != 'radio' && $(this).attr('type') != 'checkbox' && errorChecking != 1){
+				errorChecking = 1;
 				var id = $(this).parent().parent().attr('id').replace('-tr','');
 				$('#redcapValidationErrorPopup').html('');
 				setTimeout(function(){ 
@@ -53,6 +55,15 @@
 					else{
 						$('#redcapValidationErrorPopup').html('<center><span style="color:red;font-size:50px;">&#x26D4;</span></center>');
 					}
+					
+					$('#redcapValidationErrorPopup').next().children().children().children().html('&#x2714;');
+						
+					$('.ui-dialog-title').each(function(){
+						if($(this).is(':visible')){
+							$(this).children().html('<span style="font-size:20px;font-weight:bold;">&#x26a0;</span>');
+						}
+					});
+					errorChecking = 0;
 				}, 200);
 			}
 		});

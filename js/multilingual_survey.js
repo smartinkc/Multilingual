@@ -13,6 +13,7 @@
 	var langReady = 0;
 	var interval = null;
 	var translations = {};
+	var errorChecking = 0;
 
 	//document ready change language
 	$( document ).ready(function(){
@@ -108,7 +109,8 @@
 		
 		//error messages (invalid input in text boxes)
 		$('body').on('blur', 'input', function(){
-			if(!$('#file_upload').is(':visible') && $(this).attr('name') != 'submit-btn-saveprevpage'){
+			if(!$('#file_upload').is(':visible') && $(this).attr('name') != 'submit-btn-saveprevpage' && errorChecking != 1){
+				errorChecking = 1;
 				var id = $(this).parent().parent().attr('id');
 				if(id != undefined){
 					id = id.replace('-tr','');
@@ -127,7 +129,7 @@
 								$(this).children().html('<span style="font-size:20px;font-weight:bold;">&#x26a0;</span>');
 							}
 						});
-						
+						errorChecking = 0;
 					}, 200);
 				}
 			}
