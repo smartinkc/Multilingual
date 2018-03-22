@@ -43,6 +43,8 @@
 	-webkit-transition: background .2s ease-in-out;
 	transition: background .2s ease-in-out;
 	margin-bottom:10px;
+	margin-left:3px;
+	margin-right:3px;
 }
 .setLangButtons:hover{
 	background:#009ab9;
