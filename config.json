@@ -12,7 +12,8 @@
 		{"1.5": "Fix validation popup"},
 		{"1.6": "Fix NOAUTH, Other IE issues"},
 		{"1.7": "Piping, Button settings (color/width) and fix for XML export"},
-		{"1.8": "Piping for answers"}
+		{"1.8": "Piping for answers"},
+		{"1.8.1": "Bug fix for validation popup"}
 	],
 
 	"authors": [
