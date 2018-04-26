@@ -109,6 +109,9 @@
 			$('#changeLang').css('color', (settings['font-color'] && settings['font-color']['value'] ? settings['font-color']['value'] : ''));
 			$('#changeLang').css('opacity','1');
 			
+			//remove html
+			$('.multilingual').remove();
+			
 			//questions
 			var id;
 			for(id in translations['questions']){
