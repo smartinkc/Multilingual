@@ -290,7 +290,8 @@
 		
 		$('.answers').each(function(){
 			tmp = $(this).attr('id').replace('a','');
-			tmp = tmp.split('-');
+			tmp = tmp.replace('-',':');
+			tmp = tmp.split(':');
 			
 			if(!a[languages[tmp[0]]]){
 				a[languages[tmp[0]]] = {};
@@ -340,7 +341,8 @@
 			
 			$('.answers').each(function(){
 				tmp = $(this).attr('id').replace('a','');
-				tmp = tmp.split('-');
+				tmp = tmp.replace('-',':');
+				tmp = tmp.split(':');
 				
 				if(!a[languages[tmp[0]]]){
 					a[languages[tmp[0]]] = {};
