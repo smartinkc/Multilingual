@@ -7,7 +7,9 @@ Jen Hoitenga, Children's Mercy Hospital, Kansas City, MO
 ## Instructions
 
 ###Getting Started
--Add a variable called languages as a multiple choice field listing your languages as the choices. Make sure you add the action tag @HIDDEN. Make sure your values for languages are numeric, starting with 1.
+-Add a variable called languages as a multiple choice field listing your languages as the choices. Make sure you add the action tag @HIDDEN. Make sure your choice values for languages are numeric, starting with 1. Example:
+1, English
+2, Español
 
 -Refresh the page and you're ready to start entering translations. Remember you have to add the field first and save, then go back and edit it to add translations.
 
