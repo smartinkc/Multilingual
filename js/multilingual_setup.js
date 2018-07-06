@@ -193,7 +193,7 @@
 				display += '<p><span style="color:blue;">Answers</span><p><table>';
 				for(id in languages){
 					for(id2 in r){
-						display += '<tr><td>' + languages[id] + ': ' + id2 + ' </td><td> <input class="answers" type="text" style="color:black;" value="' + (answers[languages[id]]!= null && answers[languages[id]][id2] != null ? answers[languages[id]][id2] : '') + '" size=30 name="a' + id + '-' + id2 + '" id="a' + id + '-' + id2 + '">' + '</td></tr>';
+						display += '<tr><td>' + languages[id] + ': ' + id2 + ' </td><td> <input class="answers" type="text" style="color:black;" value="' + (answers[languages[id]]!= null && answers[languages[id]][id2] != null ? answers[languages[id]][id2].replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : '') + '" size=30 name="a' + id + '-' + id2 + '" id="a' + id + '-' + id2 + '">' + '</td></tr>';
 					}
 				}
 			}
