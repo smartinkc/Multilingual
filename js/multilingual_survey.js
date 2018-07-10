@@ -275,11 +275,16 @@
 					$('#' + id + '-tr').children('td').eq(1).children('table').children().children().children('td:first').html(translations['questions'][id]['text']);
 				}
 				else if(translations['questions'][id]['type'] == 'descriptive'){
-					var tmp = $('#' + id + '-tr').children('td').eq(1).html();
-					if(tmp != undefined){
-						tmp = tmp.split(/<(.+)/);
-						$('#' + id + '-tr').children('td').eq(1).html(translations['questions'][id]['text'] + ' <' + tmp[1]);
-					}
+                    var tmp = $('#' + id + '-tr').children('td').eq(1).html();
+                    if(tmp != undefined){
+                        // preserve embeded content
+                        tmp = tmp.split(/<div class="div_embed_video">(.+)<\/div>/);
+                        appendStr = '';
+                        if(tmp.length >= 2){
+                            appendStr = '<div class="div_embed_video">' + tmp[1] + '</div>';
+                        }
+                        $('#' + id + '-tr').children('td').eq(1).html(translations['questions'][id]['text'] + appendStr);
+                    }
 				}
 				else{
 					$('#label-' + id).html(translations['questions'][id]['text']);
