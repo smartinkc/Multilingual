@@ -129,12 +129,12 @@ class Multilingual extends AbstractExternalModule
 			//default questions
 			$response['defaults'][$row['field_name']] = strip_tags($row['element_label']);
 			
-			$misc = explode("\n", $row['misc']);
+			$misc = explode("@", $row['misc']);
 			$response['all'][$row['field_name']] = $misc;
 			foreach($misc AS $key => $value){
 				//questions
-				if(strpos($value, '@p1000lang') !== false){
-					$value = str_replace('@p1000lang', '', $value);
+				if(strpos($value, 'p1000lang') !== false){
+					$value = trim(str_replace('p1000lang', '', $value));
 					$value = json_decode($value, true);
 					foreach($value AS $key2 => $trans){
 						if($key2 == $data['lang']){
@@ -161,8 +161,8 @@ class Multilingual extends AbstractExternalModule
 					}
 				}
 				//answers
-				elseif(strpos($value, '@p1000answers') !== false){
-					$value = str_replace('@p1000answers', '', $value);
+				elseif(strpos($value, 'p1000answers') !== false){
+					$value = trim(str_replace('p1000answers', '', $value));
 					$value = json_decode($value, true);
 					foreach($value AS $key2 => $trans){
 						if($key2 == $data['lang']){
@@ -190,8 +190,8 @@ class Multilingual extends AbstractExternalModule
 					}
 				}
 				//errors
-				elseif(strpos($value, '@p1000errors') !== false){
-					$value = str_replace('@p1000errors', '', $value);
+				elseif(strpos($value, 'p1000errors') !== false){
+					$value = trim(str_replace('p1000errors', '', $value));
 					$value = json_decode($value, true);
 					foreach($value AS $key2 => $trans){
 						if($key2 == $data['lang']){
@@ -207,8 +207,8 @@ class Multilingual extends AbstractExternalModule
 					}
 				}
 				//survey tranlations
-				elseif(strpos($value, '@p1000surveytext') !== false){
-					$value = str_replace('@p1000surveytext', '', $value);
+				elseif(strpos($value, 'p1000surveytext') !== false){
+					$value = trim(str_replace('p1000surveytext', '', $value));
 					$value = json_decode($value, true);
 					foreach($value AS $key2 => $trans){
 						if($key2 == $data['lang']){
@@ -298,12 +298,12 @@ class Multilingual extends AbstractExternalModule
 		$result = mysqli_query($conn, $query);
 
 		while($row = mysqli_fetch_array($result)){
-			$misc = explode(PHP_EOL, $row['misc']);
+			$misc = explode('@', $row['misc']);
 
 			foreach($misc AS $key => $value){
 				//questions
-				if(strpos($value, '@p1000lang') !== false){
-					$value = str_replace('@p1000lang', '', $value);
+				if(strpos($value, 'p1000lang') !== false){
+					$value = trim(str_replace('p1000lang', '', $value));
 					$value = json_decode($value, true);
 					foreach($value AS $key2 => $trans){
 						if($key2 == $response['language']){
@@ -319,8 +319,8 @@ class Multilingual extends AbstractExternalModule
 					}
 				}
 				//answers
-				elseif(strpos($value, '@p1000answers') !== false){
-					$value = str_replace('@p1000answers', '', $value);
+				elseif(strpos($value, 'p1000answers') !== false){
+					$value = trim(str_replace('p1000answers', '', $value));
 					$value = json_decode($value, true);
 					foreach($value AS $key2 => $trans){
 						if($key2 == $response['language']){
