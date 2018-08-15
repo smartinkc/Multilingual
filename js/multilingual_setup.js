@@ -23,13 +23,19 @@
 		$('body').on('click','img',function(){
 			if($(this).attr('title') == 'Edit' || $(this).attr('title') == 'Edit Matrix'){
 				$('#multilingual').remove();
-				setTimeout(function(){
-					getAnswers();
-				}, 1500);
+				function checkgetAnswers(){
+					// call ajax once the popup dialog box is visible
+					if ($('#div_add_field:visible, #addMatrixPopup:visible').length){
+						getAnswers();
+					} else {
+						setTimeout(checkgetAnswers, 250);
+					}
+				}
+				checkgetAnswers();
 			}
 		});
 		
-		$('body').on('change','.answers',function(){
+		$('body').on('change','.p1000_answers',function(){
 			if($('#field_name').is(':visible')){
 				updateActionTags();
 			}
@@ -38,7 +44,7 @@
 			}
 		});
 		
-		$('body').on('change','.questions',function(){
+		$('body').on('change','.p1000_questions',function(){
 			if($('#field_name').is(':visible')){
 				updateActionTags();
 			}
@@ -47,11 +53,15 @@
 			}
 		});
 		
-		$('body').on('change','.errors',function(){
+		$('body').on('change','.p1000_errors',function(){
 			updateActionTags();
 		});
 		
-		$('body').on('change','.otherActionTags',function(){
+		$('body').on('change','.p1000_notes',function(){
+			updateActionTags();
+		});
+		
+		$('body').on('change','.p1000_otherActionTags',function(){
 			updateActionTags();
 		});
 		
@@ -114,6 +124,7 @@
 					getTranslationsMatrix(r);
 				}
 				else{
+					console.log(r);
 					getTranslations(r);
 				}
 			},
@@ -125,27 +136,32 @@
 
 	function getTranslations(r){
 		//parse existing data
+		$('#div_parent_field_annotation textarea').val($('#div_parent_field_annotation textarea').val().replace(/\n([^@])/g, "<br>$1"));
 		var data = $('#div_parent_field_annotation textarea').val();
 		var tags = data.split('\n');
 		var id;
 		var questions = {};
 		var answers = {};
 		var errors = {};
+		var notes = {};
 		var survey_text = {};
 		var survey_translations = {"surveytitle":"Survey Title","surveyinstructions":"Survey Instructions","surveyacknowledgment":"Survey Response"}
 		var others = '';
 		for(id in tags){
 			if(tags[id].indexOf('@p1000lang') > -1){
-				questions = JSON.parse(tags[id].replace('@p1000lang','',tags[id]));
+				questions = JSON.parse(tags[id].replace('@p1000lang',''));
 			}
 			else if(tags[id].indexOf('@p1000answers') > -1){
-				answers = JSON.parse(tags[id].replace('@p1000answers','',tags[id]));
+				answers = JSON.parse(tags[id].replace('@p1000answers',''));
 			}
 			else if(tags[id].indexOf('@p1000errors') > -1){
-				errors = JSON.parse(tags[id].replace('@p1000errors','',tags[id]));
+				errors = JSON.parse(tags[id].replace('@p1000errors',''));
+			}
+			else if(tags[id].indexOf('@p1000notes') > -1){
+				notes = JSON.parse(tags[id].replace('@p1000notes',''));
 			}
 			else if(tags[id].indexOf('@p1000surveytext') > -1){
-				survey_text = JSON.parse(tags[id].replace('@p1000surveytext','',tags[id]));
+				survey_text = JSON.parse(tags[id].replace('@p1000surveytext',''));
 			}
 			else{
 				others += tags[id] + '\n';
@@ -165,17 +181,17 @@
 				display += '<tr><td colspan=2><hr></td></tr>';
 			}
 			display += '</table><p><span style="color:blue;">Other Action Tags</span><p><table>';
-			display += '<tr><td><textarea rows=3 cols=40 class="otherActionTags">' + others + '</textarea></td></tr>';
+			display += '<tr><td><textarea rows=3 cols=40 class="p1000_otherActionTags">' + others + '</textarea></td></tr>';
 			display += '</table></div>';
 		}
 		else{
 			//display
-			var display = '<div id="multilingual"><p><b>Multilingual</b><p><span style="color:blue;">Questions</span><table>';
+			var display = '<div id="multilingual"><p><b>Multilingual</b></p><p><span style="color:blue;">Questions</span></p><table>';
 			
 			//questions
 			var id;
 			for(id in languages){
-				display += '<tr><td>' + languages[id] + ' </td><td class="question"> <input class="questions" type="text" style="color:black;" value="' + (questions[languages[id]] != null ? questions[languages[id]].replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : '') + '" size=30 name="q' + id + '" id="q' + id + '">' + '</td></tr>';
+				display += '<tr><td>' + languages[id] + ' </td><td class="p1000_question"> <input class="p1000_questions" type="text" style="color:black;" value="' + (questions[languages[id]] != null ? questions[languages[id]].replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : '') + '" size=30 name="q' + id + '" id="q' + id + '">' + '</td></tr>';
 			}
 			display += '</table>';
 			
@@ -183,7 +199,7 @@
 			display += '<p><span style="color:blue;">Error/Validation Messages</span><table>';
 			var id;
 			for(id in languages){
-				display += '<tr><td>' + languages[id] + ' </td><td class="error"> <input class="errors" type="text" style="color:black;" value="' + (errors[languages[id]] != null ? errors[languages[id]].replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : '') + '" size=30 name="e' + id + '" id="e' + id + '">' + '</td></tr>';
+				display += '<tr><td>' + languages[id] + ' </td><td class="p1000_error"> <input class="p1000_errors" type="text" style="color:black;" value="' + (errors[languages[id]] != null ? errors[languages[id]].replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : '') + '" size=30 name="e' + id + '" id="e' + id + '">' + '</td></tr>';
 			}
 			display += '</table>';
 			
@@ -193,15 +209,24 @@
 				display += '<p><span style="color:blue;">Answers</span><p><table>';
 				for(id in languages){
 					for(id2 in r){
-						display += '<tr><td>' + languages[id] + ': ' + id2 + ' </td><td> <input class="answers" type="text" style="color:black;" value="' + (answers[languages[id]]!= null && answers[languages[id]][id2] != null ? answers[languages[id]][id2].replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : '') + '" size=30 name="a' + id + '-' + id2 + '" id="a' + id + '-' + id2 + '">' + '</td></tr>';
+						display += '<tr><td>' + languages[id] + ': ' + id2 + ' </td><td> <input class="p1000_answers" type="text" style="color:black;" value="' + (answers[languages[id]]!= null && answers[languages[id]][id2] != null ? answers[languages[id]][id2] : '') + '" size=30 name="a' + id + '-' + id2 + '" id="a' + id + '-' + id2 + '">' + '</td></tr>';
 					}
 				}
 			}
 			display += '</table>';
-			
+
+			//field notes
+			display += '<p><span style="color:blue;">Field Note</span><table>';
+			var id;
+			for(id in languages){
+				display += '<tr><td>' + languages[id] + ' </td><td class="p1000_note"> <input class="p1000_notes" type="text" style="color:black;" value="' + (notes[languages[id]] != null ? notes[languages[id]].replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : '') + '" size=30 name="n' + id + '" id="n' + id + '">' + '</td></tr>';
+
+			}
+			display += '</table>';
+
 			//other
 			display += '<p><span style="color:blue;">Other Action Tags</span><p><table>';
-			display += '<tr><td><textarea rows=3 cols=40 class="otherActionTags">' + others + '</textarea></td></tr>';
+			display += '<tr><td><textarea rows=3 cols=40 class="p1000_otherActionTags">' + others + '</textarea></td></tr>';
 			display += '</table></div>';
 		}
 
@@ -219,23 +244,23 @@
 		$('.addFieldMatrixRowFieldAnnotation').each(function(){
 			if(counter > 0){
 				var questions = {};
-				
+				$(this).children().val($(this).children().val().replace(/\n([^@])/g, "<br>$1"));
 				var data = $(this).children().val();
 				var tags = data.split('\n');
 				
 				for(id in tags){
 					if(tags[id].indexOf('@p1000lang') > -1){
-						questions = JSON.parse(tags[id].replace('@p1000lang','',tags[id]));
+						questions = JSON.parse(tags[id].replace('@p1000lang',''));
 					}
 					else if(tags[id].indexOf('@p1000answers') > -1){
-						answers = JSON.parse(tags[id].replace('@p1000answers','',tags[id]));
+						answers = JSON.parse(tags[id].replace('@p1000answers',''));
 					}
 				}
 				
 				//questions
 				var id;
 				for(id in languages){
-					display += '<tr><td>' + languages[id] + ' </td><td class="question"> <input class="questions questions' + counter + '" type="text" style="color:black;" value="' + (questions[languages[id]] != null ? questions[languages[id]].replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : '') + '" size=40 name="mq' + id + '" id="mq' + id + '">' + '</td></tr>';
+					display += '<tr><td>' + languages[id] + ' </td><td class="question"> <input class="p1000_questions p1000_questions' + counter + '" type="text" style="color:black;" value="' + (questions[languages[id]] != null ? questions[languages[id]].replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : '') + '" size=40 name="mq' + id + '" id="mq' + id + '">' + '</td></tr>';
 				}
 				
 				display += '<tr><td colspan=2>&nbsp;</td></tr>';
@@ -252,7 +277,7 @@
 			display += '<p><span style="color:blue;">Answers</span><p><table>';
 			for(id in languages){
 				for(id2 in r){
-					display += '<tr><td>' + languages[id] + ': ' + id2 + ' </td><td> <input class="answers" type="text" style="color:black;" value="' + (answers[languages[id]]!= null && answers[languages[id]][id2] != null ? answers[languages[id]][id2] : '') + '" size=30 name="a' + id + '-' + id2 + '" id="a' + id + '-' + id2 + '">' + '</td></tr>';
+					display += '<tr><td>' + languages[id] + ': ' + id2 + ' </td><td> <input class="p1000_answers" type="text" style="color:black;" value="' + (answers[languages[id]]!= null && answers[languages[id]][id2] != null ? answers[languages[id]][id2] : '') + '" size=30 name="a' + id + '-' + id2 + '" id="a' + id + '-' + id2 + '">' + '</td></tr>';
 				}
 			}
 		}
@@ -271,33 +296,40 @@
 		var q = {};
 		var a = {};
 		var e = {};
+		var n = {};
 		var st = {};
 		var others = '';
 		var tmp;
-		$('.questions').each(function(){
+		$('.p1000_questions').each(function(){
 			tmp = $(this).attr('id').replace('q','');
 			if($(this).val() != ''){
 				q[languages[tmp]] = $(this).val();
 			}
 		});
 		
-		$('.errors').each(function(){
+		$('.p1000_errors').each(function(){
 			tmp = $(this).attr('id').replace('e','');
 			if($(this).val() != ''){
 				e[languages[tmp]] = $(this).val();
 			}
 		});
 		
-		$('.answers').each(function(){
+		$('.p1000_answers').each(function(){
 			tmp = $(this).attr('id').replace('a','');
-			tmp = tmp.replace('-',':');
-			tmp = tmp.split(':');
+			tmp = tmp.split(/-(.+)/); // split by first hyphen
 			
-			if(!a[languages[tmp[0]]]){
-				a[languages[tmp[0]]] = {};
-			}
 			if($(this).val() != ''){
+				if(!a[languages[tmp[0]]]){
+					a[languages[tmp[0]]] = {};
+				}
 				a[languages[tmp[0]]][tmp[1]] = $(this).val();
+			}
+		});
+
+		$('.p1000_notes').each(function(){
+			tmp = $(this).attr('id').replace('n','');
+			if($(this).val() != ''){
+				n[languages[tmp]] = $(this).val();
 			}
 		});
 		
@@ -305,22 +337,25 @@
 			tmp = $(this).attr('id').replace('st','');
 			tmp = tmp.split('-');
 
-			if(!st[languages[tmp[0]]]){
-				st[languages[tmp[0]]] = {};
-			}
 			if($(this).val() != ''){
+				if(!st[languages[tmp[0]]]){
+					st[languages[tmp[0]]] = {};
+				}
 				st[languages[tmp[0]]][tmp[1]] = $(this).val();
 			}
 		});
 		
-		others = $('.otherActionTags').val();
+		others = $('.p1000_otherActionTags').val();
 		
-		var ques = '@p1000lang' + JSON.stringify(q);
-		var answ = '@p1000answers' + JSON.stringify(a);
-		var err = '@p1000errors' + JSON.stringify(e);
-		var stext = '@p1000surveytext' + JSON.stringify(st);
+		// inject p1000 action tags only if any translation exists
+		var ques = ($.isEmptyObject(q))?'':('@p1000lang' + JSON.stringify(q) + '\n');
+		var answ = ($.isEmptyObject(a))?'':('@p1000answers' + JSON.stringify(a) + '\n');
+		var err = ($.isEmptyObject(e))?'':('@p1000errors' + JSON.stringify(e) + '\n');
+		var note = ($.isEmptyObject(n))?'':('@p1000notes' + JSON.stringify(n) + '\n');
+		var stext = ($.isEmptyObject(st))?'':('@p1000surveytext' + JSON.stringify(st) + '\n');
 		
-		$('#div_parent_field_annotation').children(0).val(ques + '\n' + answ + '\n' + err + '\n' + stext + '\n' + others);
+		$('#div_parent_field_annotation').children(0).val((ques + answ + err + note + stext + others).trim());
+		
 		$('#multilingual').css('background','#b4ecb4');
 		//$('#multilingual').remove();
 	}
@@ -330,35 +365,46 @@
 			var q = {};
 			var a = {};
 			var tmp;
-			$('.questions' + counter).each(function(){
+			$('.p1000_questions' + counter).each(function(){
 				tmp = $(this).attr('id').replace('mq','');
 				if($(this).val() != ''){
 					q[languages[tmp[0]]] = $(this).val();
 				}
 			});
 			
-			var ques = '@p1000lang' + JSON.stringify(q);
+			var ques = ($.isEmptyObject(q))?'':('@p1000lang' + JSON.stringify(q) + '\n');
 			
-			$('.answers').each(function(){
+			$('.p1000_answers').each(function(){
 				tmp = $(this).attr('id').replace('a','');
-				tmp = tmp.replace('-',':');
-				tmp = tmp.split(':');
+				tmp = tmp.split('-');
 				
-				if(!a[languages[tmp[0]]]){
-					a[languages[tmp[0]]] = {};
-				}
 				if($(this).val() != ''){
+					if(!a[languages[tmp[0]]]){
+						a[languages[tmp[0]]] = {};
+					}
 					a[languages[tmp[0]]][tmp[1]] = $(this).val();
 				}
 			});
 			
-			var answ = '@p1000answers' + JSON.stringify(a);
+			var answ = ($.isEmptyObject(a))?'':('@p1000answers' + JSON.stringify(a));
 			
 			//update
 			count = 0;
 			$('.addFieldMatrixRowFieldAnnotation').each(function(){
 				if(count == counter){
-					$(this).children().val(ques + '\n' + answ);
+					// read existing action tags and preserve those unrelated to multilingual
+					var data = $(this).children().val();
+					var tags = data.split('\n');
+					var others = '';
+					
+					for(id in tags){
+						if(tags[id].indexOf('@p1000lang') === -1 && tags[id].indexOf('@p1000answers') === -1){
+							others += '\n' + tags[id];
+						}
+					}
+					
+					
+					$(this).children().val((ques + answ + others).trim());
 				}
 				count++;
 			});
@@ -396,7 +442,7 @@
 				
 				setTimeout(function(){
 					$('#multilingualSetup').html(
-						'<p><span style="font-weight:bold;color:#ADD8E6;">Getting Started</span><br>Add a variable called languages as a multiple choice field listing your languages as the choices.  Make sure you add the action tag @HIDDEN. Also, make sure your choice values for languages are numeric, starting with 1. Example:<br> 1, English<br> 2, Español</p>'
+						'<p><span style="font-weight:bold;color:#ADD8E6;">Getting Started</span><br>Add a variable called languages as a multiple choice field listing your languages as the choices.  Make sure you add the action tag @HIDDEN.</p>'
 						+ '<p>Refresh the page and you\'re ready to start entering translations. Remember you have to add the field first and save, then go back and edit it to add translations.</p>'
 						+ '<p><span style="font-weight:bold;color:#ADD8E6;">Title and Instructions</span><br>To add translations for the Survey Title and Instructions for <i>this</i> instrument, add a variable called <span style="color:yellow;" class="noClose"> survey_text_' + getVariable('page') + '  </span>.  Each instrument should have it\'s own field with a variable name of "survey_text_[form name]" (Replace [form name] with the name of each instrument). Make sure you add the action tag @HIDDEN.</p>'
 						+ '<p><span style="font-weight:bold;color:#ADD8E6;">Completion Text</span><br>To add translations for Survey Completion Text, add a variable called survey_text_finish. Make sure you add the action tag @HIDDEN.</p>'

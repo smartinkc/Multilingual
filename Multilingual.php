@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace CMH\Multilingual;
 
 use ExternalModules\AbstractExternalModule;
@@ -8,32 +8,34 @@ use \Piping as Piping;
 class Multilingual extends AbstractExternalModule
 {
 	function redcap_survey_page($project_id, $record, $instrument){
-		echo '<script type="text/javascript">' . str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true), file_get_contents($this->getModulePath() . 'js/multilingual_survey.js')) . '</script>';
+		echo '<script type="text/javascript">' . str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true), file_get_contents($this->getModulePath() . 'js/multilingual_survey.js'))) . '</script>';
 		echo '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css') . '">';
 	}
-	
+
 	function redcap_survey_complete($project_id, $record, $instrument){
 		echo '<script type="text/javascript">' . str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true), file_get_contents($this->getModulePath() . 'js/multilingual_survey_complete.js')) . '</script>';
 	}
-	
+
 	function redcap_data_entry_form($project_id, $record, $instrument){
-		echo '<script type="text/javascript">' . str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php"), file_get_contents($this->getModulePath() . 'js/multilingual.js')) . '</script>';
+		echo '<script type="text/javascript">' . str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true), file_get_contents($this->getModulePath() . 'js/multilingual.js'))) . '</script>';
 		echo '<link rel="stylesheet" type="text/css" href="' . $this->getUrl('css/multilingual.css') . '">';
 	}
-	
+
 	function redcap_every_page_top($project_id){
 		if(strpos($_SERVER['REQUEST_URI'], 'online_designer.php') !== false && isset($_GET['page'])){
 			echo '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css') . '">';
 			echo '<script type="text/javascript">' . str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php"), file_get_contents($this->getModulePath() . 'js/multilingual_setup.js')) . '</script>';
 		}
+		/* Commented out by Nikki because the exported contents are somewhat buggy, doesn't handles CSV parsing properly, and little flexibility is given regarding the labels
 		elseif(strpos($_SERVER['REQUEST_URI'], 'DataExport/index.php') !== false){
 			echo '<script type="text/javascript">' . str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php"), file_get_contents($this->getModulePath() . 'js/multilingual_export.js')) . '</script>';
 		}
+		*/
 	}
-	
+
 	public function getSettings($data){
 		$response = $this->getProjectSettings($data['project_id']);
-		
+
 		foreach($response AS $key => $values){
 			if($key == 'button-width'){
 				if(substr($response[$key]['value'], -2) != 'px'){
@@ -44,44 +46,44 @@ class Multilingual extends AbstractExternalModule
 				}
 			}
 		}
-		
+
 		header('Content-Type: application/json');
 		echo json_encode($response);
 	}
-	
+
 	public function getAnswers($data){
 		global $conn;
-		
+
 		$data['project_id'] = mysqli_real_escape_string($conn, $data['project_id']);
 		$data['field_name'] = mysqli_real_escape_string($conn, $data['field_name']);
-		
+
 		if($data['matrix'] == 1){
-			$query = "SELECT element_enum, element_type, element_validation_type FROM redcap_metadata
-				WHERE project_id = " . $data['project_id'] . " 
+			$query = "SELECT element_enum, element_type, element_validation_type, element_validation_min, element_validation_max FROM redcap_metadata
+				WHERE project_id = " . $data['project_id'] . "
 				AND grid_name LIKE '" . $data['field_name'] . "'
 				LIMIT 1";
 		}
 		else{
 			$query = "SELECT element_enum, element_type, element_validation_type FROM redcap_metadata
-				WHERE project_id = " . $data['project_id'] . " 
+				WHERE project_id = " . $data['project_id'] . "
 				AND field_name LIKE '" . $data['field_name'] . "'";
 		}
 		$result = mysqli_query($conn, $query);
-		
+
 		$row = mysqli_fetch_array($result);
-			
+
 		if(strpos(' \n ', $row['element_enum']) !== false){
 			$tmp = explode(' \n ', $row['element_enum']);
 		}
 		else{
 			$tmp = explode('\n', $row['element_enum']);
 		}
-		
+
 		foreach($tmp AS $key => $value){
 			$tmp2 = explode(',', $value);
 			$response[trim($tmp2[0])] = trim($tmp2[1]);
 		}
-		
+
 		if($row['element_type'] == 'text' && strpos($row['element_validation_type'], 'date') !== false){
 			$response = null;
 			$response['0'] = 'Answer';
@@ -108,27 +110,36 @@ class Multilingual extends AbstractExternalModule
 			$response['0'] = "False";
 			$response['1'] = "True";
 		}
-		
+		elseif($row['element_type'] == 'slider'){
+			$response = explode('|', array_keys($response)[0]);
+			$response = array_map('trim',$response);
+			if (count($response) == 3){$keys = array('0', '50', '100');}
+			elseif(count($response) == 2){$keys = array('0', '100');}
+			elseif(count($response) == 1){$keys = array('0');}
+			else{$keys = array();}
+			$response = array_combine($keys, $response);
+		}
+
 		header('Content-Type: application/json');
 		echo json_encode($response);
 	}
-	
-	public function getTranslations($data){
+
+	public function getTranslations($data, $projectSettings){
 		global $conn;
 		$layout_set = 0;
-		
+
 		$data['project_id'] = mysqli_real_escape_string($conn, $data['project_id']);
 		$data['page'] = mysqli_real_escape_string($conn, $data['page']);
-		
-		$query = "SELECT field_name, element_type, misc, grid_name, element_validation_type, element_label FROM redcap_metadata 
-			WHERE project_id = " . $data['project_id'] . " 
+
+		$query = "SELECT field_name, element_type, misc, grid_name, element_validation_type, element_validation_min, element_validation_max, element_label FROM redcap_metadata
+			WHERE project_id = " . $data['project_id'] . "
 				AND (form_name LIKE '" . $data['page'] . "' OR field_name LIKE 'survey_text_" . $data['page'] . "')";
 		$result = mysqli_query($conn, $query);
 
 		while($row = mysqli_fetch_array($result)){
 			//default questions
-			$response['defaults'][$row['field_name']] = strip_tags($row['element_label']);
-			
+			$response['defaults'][$row['field_name']] = strip_tags($row['element_label'], '<br>');
+
 			$misc = explode("\n", $row['misc']);
 			$response['all'][$row['field_name']] = $misc;
 			foreach($misc AS $key => $value){
@@ -146,7 +157,7 @@ class Multilingual extends AbstractExternalModule
 								$response['questions'][$row['field_name']]['type'] = $row['element_type'];
 							}
 							$response['questions'][$row['field_name']]['matrix'] = $row['grid_name'];
-						
+
 							//layout
 							if($layout_set == 0){
 								if(\CMH\Multilingual\Multilingual::is_arabic($trans) === true){
@@ -160,7 +171,7 @@ class Multilingual extends AbstractExternalModule
 						}
 					}
 				}
-				//answers
+ 				//answers
 				elseif(strpos($value, '@p1000answers') !== false){
 					$value = str_replace('@p1000answers', '', $value);
 					$value = json_decode($value, true);
@@ -168,7 +179,7 @@ class Multilingual extends AbstractExternalModule
 						if($key2 == $data['lang']){
 							foreach($trans AS $key3 => $newTrans){
 								if($row['element_type'] == 'select'){
-									$trans[$key3] = strip_tags(Piping::replaceVariablesInLabel($newTrans, ($data['record_id'] ? $data['record_id'] : '0'), $data['event_id']));
+									$trans[$key3] = strip_tags(Piping::replaceVariablesInLabel($newTrans, ($data['record_id'] ? $data['record_id'] : '0'), $data['event_id']), '<br>');
 								}
 								else{
 									$trans[$key3] = Piping::replaceVariablesInLabel($newTrans, ($data['record_id'] ? $data['record_id'] : '0'), $data['event_id']);
@@ -206,6 +217,16 @@ class Multilingual extends AbstractExternalModule
 						}
 					}
 				}
+				//field notes
+				elseif(strpos($value, '@p1000notes') !== false){
+					$value = str_replace('@p1000notes', '', $value);
+					$value = json_decode($value, true);
+					foreach($value AS $key2 => $trans){
+						if($key2 == $data['lang']){
+							$response['notes'][$row['field_name']]['text'] = Piping::replaceVariablesInLabel($trans, ($data['record_id'] ? $data['record_id'] : '0'), $data['event_id']);
+						}
+					}
+				}
 				//survey tranlations
 				elseif(strpos($value, '@p1000surveytext') !== false){
 					$value = str_replace('@p1000surveytext', '', $value);
@@ -219,8 +240,46 @@ class Multilingual extends AbstractExternalModule
 					}
 				}
 			}
+
+			// if error message is not set
+			if(!isset($response['errors'][$row['field_name']])){
+				// if it is a text field with validation
+				if($row['element_type'] == 'text' && !empty($row['element_validation_type'])){
+
+					// Make array of error messages from project settings if not already made
+					if (!isset($defaultError)){
+						// make array of default error prompts
+						$defaultError = array();
+						$defaultError = array_fill_keys($projectSettings['validation']['value'], NULL);
+
+						foreach($projectSettings['validation']['value'] AS $key => $valid_type){
+							$defaultError[$valid_type] = array_combine($projectSettings['lang']['value'][$key], $projectSettings['error']['value'][$key]);
+						}
+					}
+
+					// If the text field's validation matches with any defined default error messages, use the default error messages
+					if (array_key_exists($row['element_validation_type'], $defaultError)){
+						if (array_key_exists($data['lang'], $defaultError[$row['element_validation_type']])){
+
+							// Check if the variable contains "[validation_range]", if so, pipe it with the actual range.
+							if (strpos($defaultError[$row['element_validation_type']][$data['lang']], "[validation_range]") !== false){
+
+								if (empty($row['element_validation_min']) && empty($row['element_validation_max'])){
+									$validationRange = '';
+								} else {
+									$validationRange = '('.$row['element_validation_min'].' - '.$row['element_validation_max'].')';
+								}
+
+								$response['errors'][$row['field_name']]['text'] = str_replace("[validation_range]", $validationRange, $defaultError[$row['element_validation_type']][$data['lang']]);
+							} else {
+								$response['errors'][$row['field_name']]['text'] = $defaultError[$row['element_validation_type']][$data['lang']];
+							}
+						}
+					}
+				}
+			}
 		}
-		
+
 		header('Content-Type: application/json');
 		echo json_encode($response);
 	}
@@ -249,7 +308,7 @@ class Multilingual extends AbstractExternalModule
 		$latin_count = 0;
 		$total_count = 0;
 		foreach($chars as $char) {
-			//$pos = ord($char); we cant use that, its not binary safe 
+			//$pos = ord($char); we cant use that, its not binary safe
 			$pos = \CMH\Multilingual\Multilingual::uniord($char);
 			//echo $char ." --> ".$pos.PHP_EOL;
 
@@ -266,23 +325,23 @@ class Multilingual extends AbstractExternalModule
 		}
 		return false;
 	}
-	
+
 	public function exportData($pid, $lang){
 		global $conn;
-		
+
 		ini_set('memory_limit','100M');
 		set_time_limit(0);
-		
+
 		$lang = mysqli_real_escape_string($conn, $lang);
 		$pid = mysqli_real_escape_string($conn, $pid);
-		
+
 		//language
 		$query = "SELECT element_enum, element_type, element_validation_type FROM redcap_metadata
-			WHERE project_id = " . $pid . " 
+			WHERE project_id = " . $pid . "
 			AND field_name LIKE 'languages'";
 		$result = mysqli_query($conn, $query);
 		$row = mysqli_fetch_array($result);
-			
+
 		$tmp = explode(' \n ', $row['element_enum']);
 		foreach($tmp AS $key => $value){
 			$tmp2 = explode(',', $value);
@@ -291,9 +350,9 @@ class Multilingual extends AbstractExternalModule
 				break;
 			}
 		}
-		
+
 		//translations
-		$query = "SELECT field_name, element_type, misc, grid_name, element_validation_type, element_label FROM redcap_metadata 
+		$query = "SELECT field_name, element_type, misc, grid_name, element_validation_type, element_label FROM redcap_metadata
 			WHERE project_id = " . $pid . " AND field_name NOT LIKE 'survey_text%' ORDER BY field_order";
 		$result = mysqli_query($conn, $query);
 
@@ -339,7 +398,7 @@ class Multilingual extends AbstractExternalModule
 					}
 				}
 			}
-			
+
 			//non translated fields
 			if(!isset($response['questions'][$row['field_name']])){
 				$response['questions'][$row['field_name']]['text'] = $row['element_label'];
@@ -360,11 +419,11 @@ class Multilingual extends AbstractExternalModule
 			}
 		}
 		$data .= "\r\n";
-		
+
 		//data
 		$query = "SELECT record, field_name, instance, value FROM redcap_data WHERE project_id = " . $pid . " ORDER BY record";
 		$result = mysqli_query($conn, $query);
-		
+
 		while($row = mysqli_fetch_array($result)){
 			if($response['questions'][$row['field_name']]['type'] == 'checkbox'){
 				$myData[$row['record']][($row['instance'] == null ? 1 : $row['instance'])][$row['field_name'] . '___' . $row['value']] = 1;
@@ -394,7 +453,7 @@ class Multilingual extends AbstractExternalModule
 				$data .= "\r\n";
 			}
 		}
-		
+
 		//export
 		header("Content-type: text/csv");
 		header("Content-Disposition: attachment; filename=\"Multilingual" . ''/*\REDCap::getProjectTitle($pid)*/ . " DATA (" . $response['language'] . ") " . date('Y-m-d Hi') . ".csv\"");

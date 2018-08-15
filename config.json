@@ -14,8 +14,7 @@
 		{"1.7": "Piping, Button settings (color/width) and fix for XML export"},
 		{"1.8": "Piping for answers"},
 		{"1.8.1": "Bug fix for validation popup"},
-		{"1.8.2": "Bug fix for removing html on the data entry page"},
-		{"1.8.3": "Bug fixes"}
+		{"1.8.2": "Bug fix for removing html on the data entry page"}
 	],
 
 	"authors": [
@@ -69,6 +68,77 @@
 			"type": "text",
 			"repeatable": false,
 			"default": "100px"
+		}, 
+		{
+			"key": "default-error-prompt",
+			"name": "Default error prompt for text fields",
+			"required": false,
+			"type": "sub_settings",
+			"repeatable":true,
+			"sub_settings":[
+				{
+				"key": "validation",
+				"name": "Validation type",
+				"required": false,
+				"type": "dropdown",
+				"choices":[
+					{
+						"name" : "Integer",
+						"value" : "int"
+					},
+					{
+						"name" : "Number",
+						"value" : "float"
+					},
+					{
+						"name" : "Date (dmy)",
+						"value" : "date_dmy"
+					},
+					{
+						"name" : "Date (mdy)",
+						"value" : "date_mdy"
+					},
+					{
+						"name" : "Date (ymd)",
+						"value" : "date_ymd"
+					},
+					{
+						"name" : "Time",
+						"value" : "time"
+					},
+					{
+						"name" : "Email",
+						"value" : "email"
+					}
+				]
+				},
+				{
+				"key": "translations",
+				"name": "Translations",
+				"required": false,
+				"repeatable":true,
+				"type": "sub_settings", 
+				"sub_settings":[
+					{
+					"key": "lang",
+					"name": "Language",
+					"required": false,
+					"type": "text"
+					}, 
+					{
+					"key": "error",
+					"name": "Translated error message",
+					"required": false,
+					"type": "textarea"
+					}
+				]
+				}
+			]
+		}, 
+		{
+		"key": "descriptive-text",
+		"name": "<u>Note</u><br><ul><li>Language must match with the labels as defined in the variable `language`.<br>e.g. 'English' instead of 1.</li><li>You may use `[validation_range]` in the translated error message to pipe the validation range.</li></ul>",
+		"type": "descriptive"
 		}
 	]
 }
