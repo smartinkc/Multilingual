@@ -20,21 +20,23 @@
 			type: 'POST',
 			data: 'data=' + json,
 			success: function (r) {
-				translations = r;
-				var id;
-				for(id in translations['surveytext']){
-					if(translations['surveytext'] != undefined){
-						if(translations['surveytext'][id] != null){
-							$('#' + id).html(translations['surveytext'][id]);
+			
+				if (r != null) {
+					translations = r;
+					var id;
+					for(id in translations['surveytext']){
+						if(translations['surveytext'] != undefined){
+							if(translations['surveytext'][id] != null){
+								$('#' + id).html(translations['surveytext'][id]);
+							}
 						}
 					}
+					setTimeout(function(){
+						$('.ui-button-text:contains("Close survey")').html('&times;');//&#x274c;');
+					}, 100);
+					//setCookie('p1000Lang', 'en', -1);
+					//setCookie('p1000pid', '1', -1);
 				}
-				setTimeout(function(){
-					$('.ui-button-text').html('&#x274c;');
-				}, 100);
-				setCookie('p1000Lang', 'en', -1);
-				setCookie('p1000pid', '1', -1);
-
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 			   console.log(textStatus, errorThrown);

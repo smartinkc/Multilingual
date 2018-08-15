@@ -14,13 +14,21 @@
 	var interval = null;
 	var translations = {};
 	var errorChecking = 0;
+	var anyTranslated = false;
 
 	//document ready change language
 	$( document ).ready(function(){
 		translateReady();
-		//link to change
+
+		// slider instruction text
+		$('.sldrmsg').each(function(){
+			var horiz = $(this).parents('table.sldrparent').find('span[role="slider"]').attr('aria-orientation') == 'horizontal';
+			$(this).html((horiz?'&#x2190;':'&#x2195;') + '<img alt="' + $(this).html() + '" src="APP_PATH_IMAGESpointer.png">' + (horiz?'&#x2192;':''));
+		});
+
+		//link to change language
 		$('#subheaderDiv2').append(' <div id="changeLang" style="display:none;">' + lang + '</div>');
-		
+
 		//click function
 		$('body').on('click', '#changeLang', function(){
 			if(langReady == 2){
@@ -41,26 +49,26 @@
 				getLanguage(languages[id]);
 			}
 		});
-		
+
 		//error messages
 		$('body').on('blur', 'input', function(){
 			if($(this).attr('type') != 'radio' && $(this).attr('type') != 'checkbox' && errorChecking != 1){
 				errorChecking = 1;
-				var id = $(this).parent().parent().attr('id').replace('-tr','');
+				var id = $(this).parents('tr[sq_id]').attr('id');
 				$('#redcapValidationErrorPopup').html('');
-				setTimeout(function(){ 
+				setTimeout(function(){
 					if(translations['errors'][id] && translations['errors'][id]['text'] != ''){
 						$('#redcapValidationErrorPopup').html(translations['errors'][id]['text']);
 					}
 					else{
 						$('#redcapValidationErrorPopup').html('<center><span style="color:red;font-size:50px;">&#x26D4;</span></center>');
 					}
-					
+
 					$('#redcapValidationErrorPopup').next().children().children().children().html('&#x2714;');
-						
+
 					$('.ui-dialog-title').each(function(){
 						if($(this).is(':visible')){
-							$(this).children().html('<span style="font-size:20px;font-weight:bold;">&#x26a0;</span>');
+							$(this).children().html('<img alt="Page" src="APP_PATH_IMAGESexclamation_frame.png">');
 						}
 					});
 					errorChecking = 0;
@@ -68,13 +76,13 @@
 			}
 		});
 	});
-	
+
 	function getSettings(){
 		var data = {};
 		data['todo'] = 3;
 		data['project_id'] = pid;
 		var json = encodeURIComponent(JSON.stringify(data));
-		
+
 		$.ajax({
 			url: ajax_url,
 			type: 'POST',
@@ -94,7 +102,7 @@
 			clearInterval(interval);
 			$('#changeLang').html(lang);
 			$('#changeLang').show();
-			
+
 			if(lang.length > 2){
 				$('#changeLang').css('width', (settings['button-width'] && settings['button-width']['value'] ? settings['button-width']['value'] : '100px'));
 				$('#changeLang').css('padding-left','8px');
@@ -108,10 +116,10 @@
 			$('#changeLang').css('background', (settings['background-color'] && settings['background-color']['value'] ? settings['background-color']['value'] : ''));
 			$('#changeLang').css('color', (settings['font-color'] && settings['font-color']['value'] ? settings['font-color']['value'] : ''));
 			$('#changeLang').css('opacity','1');
-			
+
 			//remove html
 			$('.multilingual').remove();
-			
+
 			//questions
 			var id;
 			for(id in translations['questions']){
@@ -119,14 +127,15 @@
 					$('#' + id + '-tr').children().children().children().children().children().children().children().children().children().children('td:first').html(translations['questions'][id]['text']);
 				}
 				else if(translations['questions'][id]['type'] == 'descriptive'){
-					var tmp = $('#' + id + '-tr').children('td:first').html().split(/<(.+)/);
-					$('#' + id + '-tr').children('td:first').html(translations['questions'][id]['text'] + ' <' + tmp[1]);
+					//var tmp = $('#' + id + '-tr').children('td:first').html().split(/<(.+)/);
+					//$('#' + id + '-tr').children('td:first').html(translations['questions'][id]['text'] + ' <' + tmp[1]);
+					$('#' + id + '-tr').children('td:first').html(translations['questions'][id]['text']);
 				}
 				else{
 					$('#' + id + '-tr').children().children().children().children().children().children('td:first').html(translations['questions'][id]['text']);
 				}
 			}
-			
+
 			//answers
 			for(id in translations['answers']){
 				if(translations['answers'][id]['type'] == 'select'){
@@ -177,16 +186,26 @@
 						});
 					}
 				}
+				else if(translations['answers'][id]['type'] == 'slider'){
+					if (translations['answers'][id]['text'][0] != null) $('#sldrlaba-' + id).html(translations['answers'][id]['text'][0]);
+					if (translations['answers'][id]['text'][50] != null) $('#sldrlabb-' + id).html(translations['answers'][id]['text'][50]);
+					if (translations['answers'][id]['text'][100] != null) $('#sldrlabc-' + id).html(translations['answers'][id]['text'][100]);
+				}
 				else{
-				
+
 				}
 			}
+
+			// field notes
+			for(id in translations['notes']){
+				$('#note-' + id).html(translations['notes'][id]['text']);
+			}
 			langReady = 2;
-			
+
 			piping();
 		}
 	}
-	
+
 	function piping(){
 		$('.piping_receiver').each(function(){
 			var classes = $(this).attr('class').split(' ');
@@ -211,7 +230,7 @@
 		langReady = 0;
 		if(newLang == null){
 			lang = getCookie('p1000Lang');
-			
+
 			if(lang == "-1"){
 				lang = languages[1];
 				setCookie('p1000Lang', lang, 30);
@@ -222,7 +241,7 @@
 			lang = newLang;
 			translateReady();
 		}
-		
+
 		getTranslations();
 	}
 
@@ -236,20 +255,21 @@
 		data['event_id'] = event_id;
 		data['page'] = (page ? page : $('#surveytitle').html().replace(/ /g,'_').toLowerCase());
 		var json = encodeURIComponent(JSON.stringify(data));
-		
+
 		$.ajax({
 			url: ajax_url,
 			type: 'POST',
 			data: 'data=' + json,
 			success: function (r) {
-				if(r == null){
+				console.log(r);
+				if (!anyTranslated && (r == null || (r['questions'] == null && r['answers'] == null && r['notes'] == null))){
 					clearInterval(interval);
 					$('#changeLang').remove();
 					setCookie('p1000Lang', 'en', -1);
-				}
-				else{
+				} else {
 					translations = r;
 					langReady = 1;
+					anyTranslated = true;
 				}
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
@@ -264,7 +284,7 @@
 		data['project_id'] = pid;
 		data['field_name'] = 'languages';
 		var json = encodeURIComponent(JSON.stringify(data));
-		
+
 		$.ajax({
 			url: ajax_url,
 			type: 'POST',
