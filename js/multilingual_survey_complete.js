@@ -1,5 +1,7 @@
 (function(){
 	var ajax_url = 'REDCAP_AJAX_URL';
+	var langVar = 'REDCAP_LANGUAGE_VARIABLE';
+	
 	var translations = {};
 	var languages = {};
 	var lang = getCookie('p1000Lang');
@@ -34,8 +36,8 @@
 					setTimeout(function(){
 						$('.ui-button-text:contains("Close survey")').html('&times;');//&#x274c;');
 					}, 100);
-					//setCookie('p1000Lang', 'en', -1);
-					//setCookie('p1000pid', '1', -1);
+					setCookie('p1000Lang', 'en', -1);
+					setCookie('p1000pid', '1', -1);
 				}
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
@@ -48,7 +50,7 @@
 		var data = {};
 		data['todo'] = 2;
 		data['project_id'] = getCookie('p1000pid');
-		data['field_name'] = 'languages';
+		data['field_name'] = langVar;
 		var json = encodeURIComponent(JSON.stringify(data));
 		
 		$.ajax({

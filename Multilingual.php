@@ -8,29 +8,35 @@ use \Piping as Piping;
 class Multilingual extends AbstractExternalModule
 {
 	function redcap_survey_page($project_id, $record, $instrument){
-		echo '<script type="text/javascript">' . str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true), file_get_contents($this->getModulePath() . 'js/multilingual_survey.js'))) . '</script>';
+		echo '<script type="text/javascript">' . str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true), file_get_contents($this->getModulePath() . 'js/multilingual_survey.js')))) . '</script>';
 		echo '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css') . '">';
 	}
 
 	function redcap_survey_complete($project_id, $record, $instrument){
-		echo '<script type="text/javascript">' . str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true), file_get_contents($this->getModulePath() . 'js/multilingual_survey_complete.js')) . '</script>';
+		echo '<script type="text/javascript">' . str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true), file_get_contents($this->getModulePath() . 'js/multilingual_survey_complete.js'))) . '</script>';
 	}
 
 	function redcap_data_entry_form($project_id, $record, $instrument){
-		echo '<script type="text/javascript">' . str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true), file_get_contents($this->getModulePath() . 'js/multilingual.js'))) . '</script>';
+		echo '<script type="text/javascript">' . str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true), file_get_contents($this->getModulePath() . 'js/multilingual.js')))) . '</script>';
 		echo '<link rel="stylesheet" type="text/css" href="' . $this->getUrl('css/multilingual.css') . '">';
 	}
 
 	function redcap_every_page_top($project_id){
 		if(strpos($_SERVER['REQUEST_URI'], 'online_designer.php') !== false && isset($_GET['page'])){
 			echo '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css') . '">';
-			echo '<script type="text/javascript">' . str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php"), file_get_contents($this->getModulePath() . 'js/multilingual_setup.js')) . '</script>';
+			echo '<script type="text/javascript">' . str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php"), file_get_contents($this->getModulePath() . 'js/multilingual_setup.js'))) . '</script>';
 		}
-		/* Commented out by Nikki because the exported contents are somewhat buggy, doesn't handles CSV parsing properly, and little flexibility is given regarding the labels
 		elseif(strpos($_SERVER['REQUEST_URI'], 'DataExport/index.php') !== false){
-			echo '<script type="text/javascript">' . str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php"), file_get_contents($this->getModulePath() . 'js/multilingual_export.js')) . '</script>';
+			echo '<script type="text/javascript">' . str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php"), file_get_contents($this->getModulePath() . 'js/multilingual_export.js'))) . '</script>';
 		}
-		*/
+	}
+	
+	public function languageVariable($project_id){
+		$langVar = $this->getProjectSetting('languages_variable', $project_id);
+		if($langVar == ''){
+			$langVar = 'languages';
+		}
+		return $langVar;
 	}
 
 	public function getSettings($data){
@@ -140,7 +146,9 @@ class Multilingual extends AbstractExternalModule
 			//default questions
 			$response['defaults'][$row['field_name']] = strip_tags($row['element_label']. '<br>');
 			
-			$misc = explode("@", $row['misc']);
+			//$misc = explode("@", $row['misc']);
+			$misc = str_getcsv($row['misc'], '@');
+			$response['test'] = $misc;
 
 			$response['all'][$row['field_name']] = $misc;
 			foreach($misc AS $key => $value){
@@ -221,8 +229,8 @@ class Multilingual extends AbstractExternalModule
 					}
 				}
 				//field notes
-				elseif(strpos($value, '@p1000notes') !== false){
-					$value = str_replace('@p1000notes', '', $value);
+				elseif(strpos($value, 'p1000notes') !== false){
+					$value = str_replace('p1000notes', '', $value);
 					$value = json_decode($value, true);
 					foreach($value AS $key2 => $trans){
 						if($key2 == $data['lang']){
@@ -331,6 +339,11 @@ class Multilingual extends AbstractExternalModule
 
 	public function exportData($pid, $lang){
 		global $conn;
+		
+		$langVar = $this->getProjectSetting('languages_variable', $pid);
+		if($langVar == ''){
+			$langVar = 'languages';
+		}
 
 		ini_set('memory_limit','100M');
 		set_time_limit(0);
@@ -341,7 +354,7 @@ class Multilingual extends AbstractExternalModule
 		//language
 		$query = "SELECT element_enum, element_type, element_validation_type FROM redcap_metadata
 			WHERE project_id = " . $pid . "
-			AND field_name LIKE 'languages'";
+			AND field_name LIKE '" . $langVar . "'";
 		$result = mysqli_query($conn, $query);
 		$row = mysqli_fetch_array($result);
 

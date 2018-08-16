@@ -1,5 +1,7 @@
 (function(){
 	var ajax_url = 'REDCAP_AJAX_URL';
+	var langVar = 'REDCAP_LANGUAGE_VARIABLE';
+	
 	var languages = {1: 'en', 2: 'es'};
 	
 	$( document ).ready(function(){
@@ -15,7 +17,7 @@
 		var data = {};
 		data['todo'] = 2;
 		data['project_id'] = getVariable('pid');
-		data['field_name'] = 'languages';
+		data['field_name'] = langVar;
 		var json = encodeURIComponent(JSON.stringify(data));
 		
 		$.ajax({

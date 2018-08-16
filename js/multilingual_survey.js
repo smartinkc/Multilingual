@@ -1,6 +1,8 @@
 (function(){
 	//load languages
 	var ajax_url = 'REDCAP_AJAX_URL';
+	var langVar = 'REDCAP_LANGUAGE_VARIABLE';
+	
 	var project_id = getVariable('pid');
 	//var languages = {1: 'en', 2: 'es', 3: 'fr'};
 	var languages = {1: 'en', 2: 'es'};
@@ -110,7 +112,7 @@
 
 		//error messages (invalid input in text boxes)
 		$('body').on('blur', 'input', function(){
-			if(!$('#file_upload').is(':visible') && $(this).attr('name') != 'submit-btn-saveprevpage' && errorChecking != 1){
+			if(!$('#stopActionPrompt').is(':visible') && !$('#file_upload').is(':visible') && $(this).attr('name') != 'submit-btn-saveprevpage' && errorChecking != 1){
 				errorChecking = 1;
 				var id = $(this).parents('tr[sq_id]').attr('id');
 				if(id != undefined){
@@ -229,6 +231,38 @@
 			var horiz = $(this).parents('table.sldrparent').find('span[role="slider"]').attr('aria-orientation') == 'horizontal';
 			$(this).html((horiz?'&#x2190;':'&#x2195;') + '<img alt="' + $(this).html() + '" src="APP_PATH_IMAGESpointer.png">' + (horiz?'&#x2192;':''));
 		});
+	}
+	
+	function stopText(){
+		var id;
+		var langKey = -1;
+		for(id in settings['stop-text-lang']['value']){
+			if(lang == settings['stop-text-lang']['value'][id]){
+				langKey = id;
+				break;
+			}
+		}
+		
+		if(langKey > -1){
+			//title
+			$('#stopActionPrompt').attr('title', settings['stop-text-title']['value'][langKey]);
+			$('#ui-id-1').html(settings['stop-text-title']['value'][langKey]);
+			
+			//body
+			$('#stopActionPrompt').html(settings['stop-text-body']['value'][langKey]);
+			
+			//stop button
+			stopAction1 = settings['stop-text-stop-button']['value'][langKey];
+			
+			//continue buttons
+			stopAction2 = settings['stop-text-continue-button']['value'][langKey];
+			stopAction3 = settings['stop-text-continue-button']['value'][langKey];
+			
+			//return
+			$('#stopActionReturn').attr('title', settings['stop-text-return-title']['value'][langKey]);
+			$('#ui-id-2').html(settings['stop-text-return-title']['value'][langKey]);
+			$('#stopActionReturn').html(settings['stop-text-return-body']['value'][langKey]);
+		}
 	}
 
 	function translate(){
@@ -416,6 +450,7 @@
 			langReady = 2;
 
 			piping();
+			stopText();
 		}
 	}
 
@@ -491,9 +526,6 @@
 			type: 'POST',
 			data: 'data=' + json,
 			success: function (r) {
-				console.log(r);
-				//console.log("getCookie('p1000Lang'):", getCookie('p1000Lang'));
-
 				//hide if no translations
 				if(!anyTranslated && (r == null || (r['questions'] == null && r['answers'] == null && r['notes'] == null))){
 					clearInterval(interval);
@@ -520,7 +552,7 @@
 		var data = {};
 		data['todo'] = 2;
 		data['project_id'] = pid;
-		data['field_name'] = 'languages';
+		data['field_name'] = langVar;
 		var json = encodeURIComponent(JSON.stringify(data));
 
 		$.ajax({

@@ -14,7 +14,8 @@
 		{"1.7": "Piping, Button settings (color/width) and fix for XML export"},
 		{"1.8": "Piping for answers"},
 		{"1.8.1": "Bug fix for validation popup"},
-		{"1.8.2": "Bug fix for removing html on the data entry page"}
+		{"1.8.2": "Bug fix for removing html on the data entry page"},
+		{"1.8.3": "Bug fixes, translate notes/slider, default validation messages"}
 	],
 
 	"authors": [
@@ -46,6 +47,14 @@
 
 	"project-settings": [
 		{
+			"key": "languages_variable",
+			"name": "Languages Variable",
+			"required": true,
+			"type": "text",
+			"repeatable": false,
+			"default": "languages"
+		},
+		{
 			"key": "font-color",
 			"name": "Font Color (ex. #FFFFFF)",
 			"required": false,
@@ -68,6 +77,64 @@
 			"type": "text",
 			"repeatable": false,
 			"default": "100px"
+		}, 
+		{
+			"key": "stop-text",
+			"name": "Stop Survey Text",
+			"required": false,
+			"type": "sub_settings",
+			"repeatable": true,
+			"sub_settings":[
+				{
+					"key": "stop-text-lang",
+					"name": "Language",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "stop-text-title",
+					"name": "Title",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "stop-text-body",
+					"name": "Body",
+					"required": false,
+					"type": "textarea",
+					"repeatable": false
+				},
+				{
+					"key": "stop-text-stop-button",
+					"name": "Stop Button",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "stop-text-continue-button",
+					"name": "Continue Button",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "stop-text-return-title",
+					"name": "Return Title",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "stop-text-return-body",
+					"name": "Return Body",
+					"required": false,
+					"type": "textarea",
+					"repeatable": false
+				}
+			]
 		}, 
 		{
 			"key": "default-error-prompt",

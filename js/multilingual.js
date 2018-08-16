@@ -1,6 +1,8 @@
 (function(){
 	//load languages
 	var ajax_url = 'REDCAP_AJAX_URL';
+	var langVar = 'REDCAP_LANGUAGE_VARIABLE';
+	
 	var page = getVariable('page');
 	var project_id = getVariable('pid');
 	var languages = {1: 'en', 2: 'es'};
@@ -261,7 +263,6 @@
 			type: 'POST',
 			data: 'data=' + json,
 			success: function (r) {
-				console.log(r);
 				if (!anyTranslated && (r == null || (r['questions'] == null && r['answers'] == null && r['notes'] == null))){
 					clearInterval(interval);
 					$('#changeLang').remove();
@@ -282,7 +283,7 @@
 		var data = {};
 		data['todo'] = 2;
 		data['project_id'] = pid;
-		data['field_name'] = 'languages';
+		data['field_name'] = langVar;
 		var json = encodeURIComponent(JSON.stringify(data));
 
 		$.ajax({

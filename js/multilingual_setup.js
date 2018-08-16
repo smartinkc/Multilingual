@@ -1,5 +1,7 @@
 (function(){
 	var ajax_url = 'REDCAP_AJAX_URL';
+	var langVar = 'REDCAP_LANGUAGE_VARIABLE';
+	
 	var matrixCounter = 0;
 	var languages = {1: 'en', 2: 'es'};
 	var setup = 0;
@@ -74,7 +76,7 @@
 		var data = {};
 		data['todo'] = 2;
 		data['project_id'] = getVariable('pid');
-		data['field_name'] = 'languages';
+		data['field_name'] = langVar;
 		var json = encodeURIComponent(JSON.stringify(data));
 		
 		$.ajax({
@@ -124,7 +126,6 @@
 					getTranslationsMatrix(r);
 				}
 				else{
-					console.log(r);
 					getTranslations(r);
 				}
 			},
@@ -442,7 +443,7 @@
 				
 				setTimeout(function(){
 					$('#multilingualSetup').html(
-						'<p><span style="font-weight:bold;color:#ADD8E6;">Getting Started</span><br>Add a variable called languages as a multiple choice field listing your languages as the choices.  Make sure you add the action tag @HIDDEN.</p>'
+						'<p><span style="font-weight:bold;color:#ADD8E6;">Getting Started</span><br>Setup your language variable as a multiple choice field listing your languages as the choices (use numbers as keys).  Make sure you add the action tag @HIDDEN.</p>'
 						+ '<p>Refresh the page and you\'re ready to start entering translations. Remember you have to add the field first and save, then go back and edit it to add translations.</p>'
 						+ '<p><span style="font-weight:bold;color:#ADD8E6;">Title and Instructions</span><br>To add translations for the Survey Title and Instructions for <i>this</i> instrument, add a variable called <span style="color:yellow;" class="noClose"> survey_text_' + getVariable('page') + '  </span>.  Each instrument should have it\'s own field with a variable name of "survey_text_[form name]" (Replace [form name] with the name of each instrument). Make sure you add the action tag @HIDDEN.</p>'
 						+ '<p><span style="font-weight:bold;color:#ADD8E6;">Completion Text</span><br>To add translations for Survey Completion Text, add a variable called survey_text_finish. Make sure you add the action tag @HIDDEN.</p>'
