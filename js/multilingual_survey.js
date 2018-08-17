@@ -112,7 +112,7 @@
 
 		//error messages (invalid input in text boxes)
 		$('body').on('blur', 'input', function(){
-			if(!$('#stopActionPrompt').is(':visible') && !$('#file_upload').is(':visible') && $(this).attr('name') != 'submit-btn-saveprevpage' && errorChecking != 1){
+			if(!$('#file_upload').is(':visible') && $(this).attr('name') != 'submit-btn-saveprevpage' && errorChecking != 1){
 				errorChecking = 1;
 				var id = $(this).parents('tr[sq_id]').attr('id');
 				if(id != undefined){
@@ -126,7 +126,10 @@
 						else{
 							$('#redcapValidationErrorPopup').html('<center><span style="color:red;font-size:50px;">&#x26D4;</span></center>');
 						}
-						$('#redcapValidationErrorPopup').next().children().children().children().html('&#x2714;');
+						//make sure stop action has not been called
+						if(!$('#stopActionPrompt').is(':visible')){
+							$('#redcapValidationErrorPopup').next().children().children().children().html('&#x2714;');
+						}
 
 						$('.ui-dialog-title').each(function(){
 							if($(this).is(':visible')){
