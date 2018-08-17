@@ -248,8 +248,7 @@
 		
 		if(langKey > -1){
 			//title
-			$('#stopActionPrompt').attr('title', settings['stop-text-title']['value'][langKey]);
-			$('#ui-id-1').html(settings['stop-text-title']['value'][langKey]);
+			$('#stopActionPrompt').attr('title', '<img alt="Page" src="APP_PATH_IMAGESexclamation_frame.png">');
 			
 			//body
 			$('#stopActionPrompt').html(settings['stop-text-body']['value'][langKey]);
@@ -262,8 +261,7 @@
 			stopAction3 = settings['stop-text-continue-button']['value'][langKey];
 			
 			//return
-			$('#stopActionReturn').attr('title', settings['stop-text-return-title']['value'][langKey]);
-			$('#ui-id-2').html(settings['stop-text-return-title']['value'][langKey]);
+			$('#stopActionReturn').attr('title', '<img alt="Page" src="APP_PATH_IMAGESexclamation_frame.png">');
 			$('#stopActionReturn').html(settings['stop-text-return-body']['value'][langKey]);
 		}
 	}

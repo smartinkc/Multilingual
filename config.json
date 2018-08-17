@@ -93,13 +93,6 @@
 					"repeatable": false
 				},
 				{
-					"key": "stop-text-title",
-					"name": "Title",
-					"required": false,
-					"type": "text",
-					"repeatable": false
-				},
-				{
 					"key": "stop-text-body",
 					"name": "Body",
 					"required": false,
@@ -116,13 +109,6 @@
 				{
 					"key": "stop-text-continue-button",
 					"name": "Continue Button",
-					"required": false,
-					"type": "text",
-					"repeatable": false
-				},
-				{
-					"key": "stop-text-return-title",
-					"name": "Return Title",
 					"required": false,
 					"type": "text",
 					"repeatable": false
