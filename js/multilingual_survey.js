@@ -498,7 +498,7 @@
 		}
 
 		//set languages variable to current language
-		$('[name="languages"] option').each(function(){
+		$('[name="' + settings['languages_variable']['value'] + '"] option').each(function(){
 			if($(this).text() == lang){
 				$(this).prop('selected', true);
 			}
