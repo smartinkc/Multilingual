@@ -514,9 +514,13 @@
 		data['page'] = $('#surveytitle').html().replace(/ /g,'_').toLowerCase();
 
 		//pull survey page name
+		var prevInput;
 		$('input').each(function(){
 			if($(this).attr('name') && $(this).attr('name').indexOf('_complete') > -1){
-				data['page'] = $(this).attr('name').replace('_complete','');
+				prevInput = $(this).prev().attr('name');
+				if(prevInput == '__response_hash__'){
+					data['page'] = $(this).attr('name').replace('_complete','');
+				}
 			}
 		});
 
