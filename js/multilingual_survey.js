@@ -206,8 +206,12 @@
 		});
 
 		//submit
-		$('[name="submit-btn-saverecord"]').children().html('&#x2714;');
-		$('[name="submit-btn-saverecord"]').children().css('font-size','20px');
+		$('[name="submit-btn-saverecord"]').html('&#x2714;');
+		$('[name="submit-btn-saverecord"]').css('font-size','20px');
+		
+		//previous button
+		$('[name="submit-btn-saveprevpage"]').html('<<');
+		$('[name="submit-btn-saveprevpage"]').css('font-size','20px');
 
 		//resize font
 		$('#changeFont').children().eq(0).html('<span style="font-size:150%;">A</span> <span style="font-size:125%;">A</span> <span style="font-size:100%;">A</span>');
