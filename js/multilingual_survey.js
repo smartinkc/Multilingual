@@ -498,11 +498,13 @@
 		}
 
 		//set languages variable to current language
-		$('[name="' + settings['languages_variable']['value'] + '"] option').each(function(){
-			if($(this).text() == lang){
-				$(this).prop('selected', true);
-			}
-		});
+		if(settings['languages_variable'] && settings['languages_variable']['value']){
+			$('[name="' + settings['languages_variable']['value'] + '"] option').each(function(){
+				if($(this).text() == lang){
+					$(this).prop('selected', true);
+				}
+			});
+		}
 
 		getTranslations();
 	}

@@ -1,4 +1,9 @@
 <?php
+	namespace CMH\Multilingual;
+	
+	use ExternalModules\AbstractExternalModule;
+	use ExternalModules\ExternalModules;
+
 	$data = @$_POST['data'];
 
 	if(isset($data) && $data != ''){
@@ -6,21 +11,20 @@
 
 		switch($data['todo']){
 			case 1:
-				\CMH\Multilingual\Multilingual::getTranslations($data, $module->getProjectSettings());
+				$module->getTranslations($data, $module->getProjectSettings());
 				break;
 			case 2:
-				\CMH\Multilingual\Multilingual::getAnswers($data);
+				$module->getAnswers($data);
 				break;
 			case 3:
-				$tmp = new \CMH\Multilingual\Multilingual();
-				$tmp->getSettings($data);
+				$module->getSettings($data);
 				break;
 			default:
 				exit;
 		}
 	}
 	elseif($_GET['todo'] == 2){
-		\CMH\Multilingual\Multilingual::exportData($_GET['pid'], $_GET['lang']);
+		$module->exportData($_GET['pid'], $_GET['lang']);
 	} 
 
 	else{

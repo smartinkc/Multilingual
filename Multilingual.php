@@ -27,7 +27,7 @@ class Multilingual extends AbstractExternalModule
 			echo '<script type="text/javascript">' . str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php"), file_get_contents($this->getModulePath() . 'js/multilingual_setup.js'))) . '</script>';
 		}
 		elseif(strpos($_SERVER['REQUEST_URI'], 'DataExport/index.php') !== false){
-			echo '<script type="text/javascript">' . str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php"), file_get_contents($this->getModulePath() . 'js/multilingual_export.js'))) . '</script>';
+			echo '<script type="text/javascript">' . str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true), file_get_contents($this->getModulePath() . 'js/multilingual_export.js'))) . '</script>';
 		}
 	}
 	
@@ -148,7 +148,7 @@ class Multilingual extends AbstractExternalModule
 			
 			//$misc = explode("@", $row['misc']);
 			$misc = str_getcsv($row['misc'], '@');
-			$response['test'] = $misc;
+			//$response['test'] = $misc;
 
 			$response['all'][$row['field_name']] = $misc;
 			foreach($misc AS $key => $value){
