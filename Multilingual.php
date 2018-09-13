@@ -137,7 +137,7 @@ class Multilingual extends AbstractExternalModule
 		$data['project_id'] = mysqli_real_escape_string($conn, $data['project_id']);
 		$data['page'] = mysqli_real_escape_string($conn, $data['page']);
 
-		$query = "SELECT field_name, element_type, misc, grid_name, element_validation_type, element_validation_min, element_validation_max, element_label FROM redcap_metadata
+		$query = "SELECT field_name, element_type, misc, grid_name, element_validation_type, element_validation_min, element_validation_max, element_label, field_req FROM redcap_metadata
 			WHERE project_id = " . $data['project_id'] . "
 				AND (form_name LIKE '" . $data['page'] . "' OR field_name LIKE 'survey_text_" . $data['page'] . "')";
 		$result = mysqli_query($conn, $query);
@@ -145,6 +145,7 @@ class Multilingual extends AbstractExternalModule
 		while($row = mysqli_fetch_array($result)){
 			//default questions
 			$response['defaults'][$row['field_name']] = strip_tags($row['element_label']. '<br>');
+            $response['questions'][$row['field_name']]['req'] = $row['field_req'] == "1";
 			
 			//$misc = explode("@", $row['misc']);
 			$misc = str_getcsv($row['misc'], '@');
