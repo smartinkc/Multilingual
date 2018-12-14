@@ -29,6 +29,10 @@ class Multilingual extends AbstractExternalModule
 		elseif(strpos($_SERVER['REQUEST_URI'], 'DataExport/index.php') !== false){
 			echo '<script type="text/javascript">' . str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php"), file_get_contents($this->getModulePath() . 'js/multilingual_export.js'))) . '</script>';
 		}
+		elseif($_GET['__return'] == 1){
+			echo '<script type="text/javascript">' . str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true), file_get_contents($this->getModulePath() . 'js/multilingual_survey_return.js')))) . '</script>';
+			echo '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css') . '">';
+		}
 	}
 	
 	public function languageVariable($project_id){
@@ -290,9 +294,35 @@ class Multilingual extends AbstractExternalModule
 				}
 			}
 		}
+		
+		//update language field
+		$response['exist'] = $this->updateLangVar($data);
 
 		header('Content-Type: application/json');
 		echo json_encode($response);
+	}
+	
+	public function getRecordVar($data){
+		global $conn;
+		
+		$query = "SELECT field_name FROM redcap_metadata where project_id = " . mysqli_real_escape_string($conn, $data['project_id']) . " ORDER BY field_order LIMIT 1";
+		$result = mysqli_query($conn, $query);
+		$row = mysqli_fetch_array($result);
+		
+		return $row['field_name'];
+	}
+	
+	public function updateLangVar($data){
+		$exist = json_decode(\REDCap::getData($data['project_id'], 'json', $data['record_id']), true);
+		if(!empty($exist)){
+			$recordVar = $this->getRecordVar($data);
+			$langVar = $this->getProjectSetting('languages_variable', $data['project_id']);
+			
+			$t = array($recordVar => $data['record_id'], ($langVar != null ? $langVar : 'languages') => $data['lang_id']);
+			$json_data = json_encode(array($t));
+			$tmp = \REDCap::saveData($data['project_id'], 'json', $json_data, 'normal');
+			return $exist;
+		}
 	}
 
 	//copied from php.net

@@ -79,6 +79,154 @@
 			"default": "100px"
 		}, 
 		{
+			"key": "save-return-later",
+			"name": "Save & Return Later Text",
+			"required": false,
+			"type": "sub_settings",
+			"repeatable": true,
+			"sub_settings":[
+				{
+					"key": "save-return-later-lang",
+					"name": "Language",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "descriptive-text",
+					"name": "<span style=\"color:blue;font-style:italic;\">These are translations Save & Return on the survey page.</span>",
+					"type": "descriptive"
+				},
+				{
+					"key": "save-return-later-button",
+					"name": "Button Text",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "save-return-later-corner",
+					"name": "Returning? Corner of Survey",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "save-return-later-text",
+					"name": "Returning? Popup",
+					"required": false,
+					"type": "textarea",
+					"repeatable": false
+				},
+				{
+					"key": "save-return-later-continue-button",
+					"name": "Returning? Continue Button",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "descriptive-text",
+					"name": "<span style=\"color:blue;font-style:italic;\">These are translations for the popup on return page.</span>",
+					"type": "descriptive"
+				},
+				{
+					"key": "save-return-page-popup-title",
+					"name": "Return Page Popup Title",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "save-return-page-popup-body",
+					"name": "Return Page Popup Body",
+					"required": false,
+					"type": "textarea",
+					"repeatable": false
+				},
+				{
+					"key": "save-return-page-popup-return-code",
+					"name": "Return Page Return Code text",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "descriptive-text",
+					"name": "<span style=\"color:blue;font-style:italic;\">These are translations for the return page.</span>",
+					"type": "descriptive"
+				},
+				{
+					"key": "save-return-page-title",
+					"name": "Return Page Title",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "save-return-page-instructions",
+					"name": "Return Page Instructions",
+					"required": false,
+					"type": "textarea",
+					"repeatable": false
+				},
+				{
+					"key": "save-return-page-return-code-instructions",
+					"name": "Return Page Return Code Instructions",
+					"required": false,
+					"type": "textarea",
+					"repeatable": false
+				},
+				{
+					"key": "save-return-page-survey-link-title",
+					"name": "Return Page Email Title",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "save-return-page-email-instructions",
+					"name": "Return Page Email Instructions",
+					"required": false,
+					"type": "textarea",
+					"repeatable": false
+				},
+				{
+					"key": "save-return-page-email-button",
+					"name": "Return Page Email Button",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "save-return-page-continue-title",
+					"name": "Return Page Continue Title",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "descriptive-text",
+					"name": "<span style=\"color:blue;font-style:italic;\">These are translations for the continue page.</span>",
+					"type": "descriptive"
+				},
+				{
+					"key": "save-return-page-survey-title",
+					"name": "Continue Title",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "save-return-page-continue-text",
+					"name": "Continue Page Text",
+					"required": false,
+					"type": "textarea",
+					"repeatable": false
+				}
+			]
+		}, 
+		{
 			"key": "stop-text",
 			"name": "Stop Survey Text",
 			"required": false,
