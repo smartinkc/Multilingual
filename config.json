@@ -223,6 +223,20 @@
 					"required": false,
 					"type": "textarea",
 					"repeatable": false
+				},
+				{
+					"key": "save-return-page-startover-text",
+					"name": "Start Over Text",
+					"required": false,
+					"type": "textarea",
+					"repeatable": false
+				},
+				{
+					"key": "save-return-page-startover-button",
+					"name": "Start Over Button",
+					"required": false,
+					"type": "text",
+					"repeatable": false
 				}
 			]
 		}, 

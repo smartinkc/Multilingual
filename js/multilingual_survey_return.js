@@ -10,10 +10,57 @@
 	var settings = {};
 	settings['empty'] = true;
 	var lang = 'en';
+	var errorChecking = 0;
 
 	//document ready change language
 	$( document ).ready(function(){
 		getLanguages();
+		
+		//extend length of language cookie
+		if(getCookie('p1000Lang') != '-1'){
+			setCookie('p1000Lang', getCookie('p1000Lang'), 10);
+		}
+		
+		//error messages (invalid input in text boxes)
+		$('body').on('blur', 'input', function(){
+			if(errorChecking != 1){
+				errorChecking = 1;
+				$('#redcapValidationErrorPopup').html('');
+				setTimeout(function(){
+					var t;
+					for(t in settings['validation']['value']){
+						if(settings['validation']['value'][t] == 'email'){
+							break;
+						}
+					}
+					
+					var l;
+					for(l in settings['lang']['value']){
+						if(settings['lang']['value'][l] == languages[getCookie('p1000Lang')]){
+							break;
+						}						
+					}
+					
+					if(settings['error']['value'][t] && settings['error']['value'][t][l]){
+						$('#redcapValidationErrorPopup').html(settings['error']['value'][t][l]);
+					}
+					else{
+						$('#redcapValidationErrorPopup').html('<center><span style="color:red;font-size:50px;">&#x26D4;</span></center>');
+					}
+					//make sure stop action has not been called
+					if(!$('#stopActionPrompt').is(':visible')){
+						$('#redcapValidationErrorPopup').next().children().children().children().html('&#x2714;');
+					}
+
+					$('.ui-dialog-title').each(function(){
+						if($(this).is(':visible')){
+							$(this).children().html('<img alt="Page" src="APP_PATH_IMAGESexclamation_frame.png">');
+						}
+					});
+					errorChecking = 0;
+				}, 200);
+			}
+		});
 	});
 	
 	//functions
@@ -70,6 +117,10 @@
 			$('#surveytitle').html(settings['save-return-page-survey-title']['value'][curLang]);
 			$('#return_code_form_instructions').html(settings['save-return-page-continue-text']['value'][curLang]);
 			$('#return_code_form').find('button').html(settings['save-return-later-continue-button']['value'][curLang]);
+			
+			//start over
+			$('#start_over_form').find('p').html(settings['save-return-page-startover-text']['value'][curLang]);
+			$('#start_over_form').find('input').val(settings['save-return-page-startover-button']['value'][curLang]);
 		}
 	}
 	

@@ -177,7 +177,6 @@
 			//replace text
 			var id;
 			for(id in translations['defaults']){
-				console.log(tmp + ', ' + translations['defaults'][id] + ', ' + translations['questions'][id]);
 				if(tmp.indexOf(translations['defaults'][id]) > -1){
 					if(translations['questions'][id] != undefined){
 						tmp = tmp.replace(translations['defaults'][id], translations['questions'][id]['text']);
