@@ -377,7 +377,8 @@
 			
 			$('.p1000_answers').each(function(){
 				tmp = $(this).attr('id').replace('a','');
-				tmp = tmp.split('-');
+				//tmp = tmp.split('-');
+				tmp = tmp.split(/-(.+)/); // split by first hyphen
 				
 				if($(this).val() != ''){
 					if(!a[languages[tmp[0]]]){
