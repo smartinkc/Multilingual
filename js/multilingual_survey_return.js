@@ -111,6 +111,9 @@
 			
 			$('#return_continue_form').find('b').eq(0).html(settings['save-return-page-continue-title']['value'][curLang]);
 			$('#return_continue_form').find('button').eq(0).html(settings['save-return-later-continue-button']['value'][curLang]);
+			
+			$('#return_instructions').find('span').eq(4).html('');
+			$('#return_instructions').find('span').eq(1).html('');
 		}
 		else if($('#surveytitle').length && curLang > 0 && settings['save-return-page-survey-title']['value'][curLang]){
 			//continue page if cookie still set
