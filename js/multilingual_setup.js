@@ -481,7 +481,7 @@
 						+ '<p><span style="font-weight:bold;color:#ADD8E6;">Completion Text</span><br>To add translations for Survey Completion Text, add a variable called survey_text_finish. Make sure you add the action tag @HIDDEN.</p>'
 						+ '<p>If you have just one instrument, you can just add the survey_text_finish variable and add the Title, Instructions and Completion Text to it.</p>'
 						+ '<p><span style="font-weight:bold;color:#ADD8E6;">Required Fields Text</span><br>To translate the <span style="color:red;">* must provide value</span> text, add this html to your translated question text:</p><span class="noClose"><p>   &lt;p&gt;&lt;span class=&quot;multilingual&quot; style=&quot;color:red;&quot;&gt;Your translation here&lt;/span&gt;&lt;/p&gt;   </span> </p>'
-						+ '<p>For more information: <span class="noClose"><a style="color:#ADD8E6;" href="https://community.projectredcap.org/storage/attachments/3597-how-to-use-multilingual-hook.docx">click here</a></span></p>'
+						+ '<p>For more information: <span class="noClose"><a style="color:#ADD8E6;" href="https://cmhredcap.cmh.edu/plugins/media/7610-how-to-use-multilingual-external-module.docx">click here</a></span></p>'
 					);
 				},1);
 			});
