@@ -55,13 +55,6 @@
 			"default": "languages"
 		},
 		{
-			"key": "auto-populate",
-			"name": "Auto populate first answer with defaults",
-			"required": false,
-			"type": "checkbox",
-			"repeatable": false
-		},
-		{
 			"key": "font-color",
 			"name": "Font Color (ex. #FFFFFF)",
 			"required": false,

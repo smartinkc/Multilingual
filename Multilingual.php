@@ -55,6 +55,9 @@ class Multilingual extends AbstractExternalModule
 					$response[$key]['value'] = '100px';
 				}
 			}
+			elseif($key == 'languages_variable' && $response[$key]['value'] == null){
+				$response[$key]['value'] = 'languages';
+			}
 		}
 
 		header('Content-Type: application/json');
