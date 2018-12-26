@@ -214,9 +214,9 @@
 			var id;
 			for(id in languages){
 				//auto-populate
-				if(settings['auto-populate']['value'] == true && questions[languages[id]] == null && id == 1){
+				/* if(settings['auto-populate']['value'] == true && questions[languages[id]] == null && id == 1){
 					questions[languages[id]] = $('#field_label').val();
-				}
+				} */
 				
 				display += '<tr><td>' + languages[id] + ' </td><td class="p1000_question"> <input class="p1000_questions" type="text" style="color:black;" value="' + (questions[languages[id]] != null ? questions[languages[id]].replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : '') + '" size=30 name="q' + id + '" id="q' + id + '">' + '</td></tr>';
 			}
@@ -288,9 +288,9 @@
 				var id;
 				for(id in languages){
 					//auto-populate
-					if(settings['auto-populate']['value'] == true && questions[languages[id]] == null && id == 1){
+					/* if(settings['auto-populate']['value'] == true && questions[languages[id]] == null && id == 1){
 						questions[languages[id]] = $('.addFieldMatrixRowParent').find('.field_labelmatrix').eq(counter - 1).val();
-					}
+					} */
 					
 					display += '<tr><td>' + languages[id] + ' </td><td class="question"> <input class="p1000_questions p1000_questions' + counter + '" type="text" style="color:black;" value="' + (questions[languages[id]] != null ? questions[languages[id]].replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : '') + '" size=40 name="mq' + id + '" id="mq' + id + '">' + '</td></tr>';
 				}
