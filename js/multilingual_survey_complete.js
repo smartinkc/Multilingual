@@ -5,6 +5,7 @@
 	var translations = {};
 	var languages = {};
 	var lang = getCookie('p1000Lang');
+	var settings = {};
 	getLanguages();
 
 	function getTranslations(){
@@ -36,14 +37,60 @@
 					setTimeout(function(){
 						$('.ui-button-text:contains("Close survey")').html('&times;');//&#x274c;');
 					}, 100);
-					setCookie('p1000Lang', 'en', -1);
-					setCookie('p1000pid', '1', -1);
 				}
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 			   console.log(textStatus, errorThrown);
 			}
 		});
+	}
+	
+	function getSettings(){
+		var data = {};
+		data['todo'] = 3;
+		data['project_id'] = pid;
+		var json = encodeURIComponent(JSON.stringify(data));
+
+		$.ajax({
+			url: ajax_url,
+			type: 'POST',
+			data: 'data=' + json,
+			success: function (r) {
+				settings = r;
+				translate();
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+			   console.log(textStatus, errorThrown);
+			}
+		});
+	}
+	
+	function translate(){
+		var lang = getCookie('p1000Lang');
+		var curLang = 0;
+		var id;
+		for(id in settings['save-return-later-lang']['value']){
+			if(settings['save-return-later-lang']['value'][id] == languages[lang]){
+				curLang = id;
+				break;
+			}
+		}
+		
+		var html = $('#return_code_completed_survey_div').html();
+		if(html != '' && settings['save-return-page-complete-text']['value'][curLang]){
+			//text
+			html = html.split('<div');
+			html[0] = settings['save-return-page-complete-text']['value'][curLang];
+			
+			//return code text
+			var h = html[1].split('<span');
+			html[1] = '>' + settings['save-return-page-popup-return-code']['value'][curLang] + ': <span' + h[1];
+			
+			$('#return_code_completed_survey_div').html(html[0] + '<div' + html[1]);
+		}
+		
+		setCookie('p1000Lang', 'en', -1);
+		setCookie('p1000pid', '1', -1);
 	}
 
 	function getLanguages(){
@@ -60,6 +107,7 @@
 			success: function (r) {
 				languages = r;
 				getTranslations();
+				getSettings();
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 			   console.log(textStatus, errorThrown);

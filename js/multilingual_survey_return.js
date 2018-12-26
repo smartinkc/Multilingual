@@ -16,11 +16,6 @@
 	$( document ).ready(function(){
 		getLanguages();
 		
-		//extend length of language cookie
-		if(getCookie('p1000Lang') != '-1'){
-			setCookie('p1000Lang', getCookie('p1000Lang'), 10);
-		}
-		
 		//error messages (invalid input in text boxes)
 		$('body').on('blur', 'input', function(){
 			if(errorChecking != 1){
@@ -161,8 +156,12 @@
 			success: function (r) {
 				languages = r;
 				totalLanguages = Object.keys(languages).length;
-				
 				getSettings();
+				
+				//extend length of language cookie
+				if(getCookie('p1000Lang') != '-1'){
+					setCookie('p1000Lang', getCookie('p1000Lang'), 10);
+				}
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 			   console.log(textStatus, errorThrown);

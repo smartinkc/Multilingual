@@ -237,6 +237,18 @@
 					"required": false,
 					"type": "text",
 					"repeatable": false
+				},
+				{
+					"key": "descriptive-text",
+					"name": "<span style=\"color:blue;font-style:italic;\">These are translations for a completed survey.</span>",
+					"type": "descriptive"
+				},
+				{
+					"key": "save-return-page-complete-text",
+					"name": "Completed Text",
+					"required": false,
+					"type": "textarea",
+					"repeatable": false
 				}
 			]
 		}, 
