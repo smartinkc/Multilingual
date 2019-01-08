@@ -14,7 +14,7 @@ Jen Hoitenga, Children's Mercy Hospital, Kansas City, MO
 -Refresh the page and you're ready to start entering translations. Remember you have to add the field first and save, then go back and edit it to add translations.
 
 ###Title and Instructions
--To add translations for the Survey Title and Instructions for an instrument, add a variable called survey`_text`_[form_name]. Each instrument should have it's own field with a variable name of "survey`_text`_[form name]" (Replace [form name] with the name of each instrument). Make sure you add the action tag @HIDDEN.
+-To add translations for the Survey Title and Instructions for an instrument, add a variable called survey_text_[form_name]. Each instrument should have it's own field with a variable name of "survey_text_[form name]" (Replace [form name] with the name of each instrument). Make sure you add the action tag @HIDDEN.
 
 ###Completion Text
 -To add translations for Survey Completion Text, add a variable called survey`_text`_finish. Make sure you add the action tag @HIDDEN.
