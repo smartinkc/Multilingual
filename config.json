@@ -93,7 +93,7 @@
 					"repeatable": false
 				},
 				{
-					"key": "descriptive-text",
+					"key": "descriptive-text1",
 					"name": "<span style=\"color:blue;font-style:italic;\">These are translations Save & Return on the survey page.</span>",
 					"type": "descriptive"
 				},
@@ -126,7 +126,7 @@
 					"repeatable": false
 				},
 				{
-					"key": "descriptive-text",
+					"key": "descriptive-text2",
 					"name": "<span style=\"color:blue;font-style:italic;\">These are translations for the popup on return page.</span>",
 					"type": "descriptive"
 				},
@@ -152,7 +152,7 @@
 					"repeatable": false
 				},
 				{
-					"key": "descriptive-text",
+					"key": "descriptive-text3",
 					"name": "<span style=\"color:blue;font-style:italic;\">These are translations for the return page.</span>",
 					"type": "descriptive"
 				},
@@ -206,7 +206,7 @@
 					"repeatable": false
 				},
 				{
-					"key": "descriptive-text",
+					"key": "descriptive-text4",
 					"name": "<span style=\"color:blue;font-style:italic;\">These are translations for the continue page.</span>",
 					"type": "descriptive"
 				},
@@ -239,7 +239,7 @@
 					"repeatable": false
 				},
 				{
-					"key": "descriptive-text",
+					"key": "descriptive-text5",
 					"name": "<span style=\"color:blue;font-style:italic;\">These are translations for a completed survey.</span>",
 					"type": "descriptive"
 				},
