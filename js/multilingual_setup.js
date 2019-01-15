@@ -159,7 +159,7 @@
 	function getTranslations(r){
 		//parse existing data
 		$('#div_parent_field_annotation textarea').val($('#div_parent_field_annotation textarea').val().replace(/\n([^@])/g, "<br>$1"));
-		var data = $('#div_parent_field_annotation textarea').val();
+		var data = $('#div_parent_field_annotation textarea').val().replace(/___/g, '@');
 		var tags = data.split('\n');
 		var id;
 		var questions = {};
@@ -272,7 +272,7 @@
 			if(counter > 0){
 				var questions = {};
 				$(this).children().val($(this).children().val().replace(/\n([^@])/g, "<br>$1"));
-				var data = $(this).children().val();
+				var data = $(this).children().val().replace(/___/g, '@');
 				var tags = data.split('\n');
 				
 				for(id in tags){
@@ -380,11 +380,11 @@
 		others = $('.p1000_otherActionTags').val();
 		
 		// inject p1000 action tags only if any translation exists
-		var ques = ($.isEmptyObject(q))?'':('@p1000lang' + JSON.stringify(q) + '\n');
-		var answ = ($.isEmptyObject(a))?'':('@p1000answers' + JSON.stringify(a) + '\n');
-		var err = ($.isEmptyObject(e))?'':('@p1000errors' + JSON.stringify(e) + '\n');
-		var note = ($.isEmptyObject(n))?'':('@p1000notes' + JSON.stringify(n) + '\n');
-		var stext = ($.isEmptyObject(st))?'':('@p1000surveytext' + JSON.stringify(st) + '\n');
+		var ques = ($.isEmptyObject(q))?'':('@p1000lang' + JSON.stringify(q).replace(/@/g, '___') + '\n');
+		var answ = ($.isEmptyObject(a))?'':('@p1000answers' + JSON.stringify(a).replace(/@/g, '___') + '\n');
+		var err = ($.isEmptyObject(e))?'':('@p1000errors' + JSON.stringify(e).replace(/@/g, '___') + '\n');
+		var note = ($.isEmptyObject(n))?'':('@p1000notes' + JSON.stringify(n).replace(/@/g, '___') + '\n');
+		var stext = ($.isEmptyObject(st))?'':('@p1000surveytext' + JSON.stringify(st).replace(/@/g, '___') + '\n');
 		
 		$('#div_parent_field_annotation').children(0).val((ques + answ + err + note + stext + others).trim());
 		
@@ -404,7 +404,7 @@
 				}
 			});
 			
-			var ques = ($.isEmptyObject(q))?'':('@p1000lang' + JSON.stringify(q) + '\n');
+			var ques = ($.isEmptyObject(q))?'':('@p1000lang' + JSON.stringify(q).replace(/@/g, '___') + '\n');
 			
 			$('.p1000_answers').each(function(){
 				tmp = $(this).attr('id').replace('a','');
@@ -419,7 +419,7 @@
 				}
 			});
 			
-			var answ = ($.isEmptyObject(a))?'':('@p1000answers' + JSON.stringify(a));
+			var answ = ($.isEmptyObject(a))?'':('@p1000answers' + JSON.stringify(a).replace(/@/g, '___'));
 			
 			//update
 			count = 0;

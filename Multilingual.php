@@ -159,6 +159,9 @@ class Multilingual extends AbstractExternalModule
 
 			$response['all'][$row['field_name']] = $misc;
 			foreach($misc AS $key => $value){
+				//replace ___ with @
+				$value = str_replace('___', '@', $value);
+				
 				//questions
 				if(strpos($value, 'p1000lang') !== false){
 					$value = trim(str_replace('p1000lang', '', $value));
@@ -407,8 +410,11 @@ class Multilingual extends AbstractExternalModule
 
 		while($row = mysqli_fetch_array($result)){
 			$misc = explode('@', $row['misc']);
-
+			
 			foreach($misc AS $key => $value){
+				//replace ___ with @
+				$value = str_replace('___', '@', $value);
+				
 				//questions
 				if(strpos($value, 'p1000lang') !== false){
 					$value = trim(str_replace('p1000lang', '', $value));
