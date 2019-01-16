@@ -6,6 +6,8 @@
 
 	$data = @$_POST['data'];
 
+	/* @var $module Multilingual*/
+
 	if(isset($data) && $data != ''){
 		$data = json_decode($data, true);
 

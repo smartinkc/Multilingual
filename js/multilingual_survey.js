@@ -6,11 +6,12 @@
 	var project_id = getVariable('pid');
 	//var languages = {1: 'en', 2: 'es', 3: 'fr'};
 	var languages = {1: 'en', 2: 'es'};
+	var requiredFieldTranslations = {1:'Required *',2:'Required *'};
 	var totalLanguages = 2;
 	var settings = {};
 	settings['empty'] = true;
 	getSettings();
-	getLanguages();
+    getRequiredFieldTranslations();
 	var lang = 'en';
 	var langReady = 0;
 	var interval = null;
@@ -343,28 +344,57 @@
 			$('#changeLang').css('color', (settings['font-color'] && settings['font-color']['value'] ? settings['font-color']['value'] : ''));
 			$('#changeLang').css('opacity','1');
 
-			//remove required english label
-			$('.requiredlabel').remove();
+            var mergedRequiredFieldTranslations = {};
+            var requiredLabelText = "";
+
+			//handle required english label
+			if(requiredFieldTranslations[""]==""){
+				// no field was set
+                // remove required english label
+                $('.requiredlabel').remove();
+			}else{
+				// replace required field label (if language is found)
+				var langKeys = Object.keys(requiredFieldTranslations);
+
+				//match language ids with defined required field labels
+                for(i=0; i<langKeys.length;i++){
+                    mergedRequiredFieldTranslations[languages[langKeys[i]]]=requiredFieldTranslations[langKeys[i]];
+                }
+
+                if(lang in mergedRequiredFieldTranslations){
+                    requiredLabelText = mergedRequiredFieldTranslations[lang];
+                }
+                //replace requiredlabel text for untranslated questions.
+                $('.requiredlabel').html(requiredLabelText);
+
+            }
 			$('.multilingual').remove();
 
 			//questions
 			var id;
 			for(id in translations['questions']){
-				if(translations['questions'][id]['matrix'] != null){
-					//$('#' + id + '-tr').children('td').eq(1).children('table').children().children().children('td:first').html(translations['questions'][id]['text']);
-					$('#label-' + id).html(translations['questions'][id]['text']);
-				}
-				else if(translations['questions'][id]['type'] == 'descriptive'){
-					var tmp = $('#' + id + '-tr').children('td').eq(1).html();
-					if(tmp != undefined){
-						$('#' + id + '-tr').children('td').eq(1).html(translations['questions'][id]['text']);
-						//tmp = tmp.split(/<(.+)/);
-						//$('#' + id + '-tr').children('td').eq(1).html(translations['questions'][id]['text'] + ' <' + tmp[1]);
+				if('text' in translations['questions'][id]){
+					var requiredLabelDiv = "";
+					if(translations['questions'][id]['req']){
+						requiredLabelDiv = '<div class="requiredlabel">'+requiredLabelText+'</div>';
 					}
-				}
-				else{
-					$('#label-' + id).html(translations['questions'][id]['text']);
-				}
+
+					if(translations['questions'][id]['matrix'] != null){
+						//$('#' + id + '-tr').children('td').eq(1).children('table').children().children().children('td:first').html(translations['questions'][id]['text']);
+						$('#label-' + id).html(translations['questions'][id]['text']+requiredLabelDiv);
+					}
+					else if(translations['questions'][id]['type'] == 'descriptive'){
+						var tmp = $('#' + id + '-tr').children('td').eq(1).html();
+						if(tmp != undefined){
+							$('#' + id + '-tr').children('td').eq(1).html(translations['questions'][id]['text']+requiredLabelDiv);
+							//tmp = tmp.split(/<(.+)/);
+							//$('#' + id + '-tr').children('td').eq(1).html(translations['questions'][id]['text'] + ' <' + tmp[1]);
+						}
+					}
+					else{
+						$('#label-' + id).html(translations['questions'][id]['text']+requiredLabelDiv);
+					}
+                }
 			}
 
 			//answers
@@ -629,6 +659,27 @@
 			}
 		});
 	}
+
+    function getRequiredFieldTranslations(){
+        var data = {};
+        data['todo'] = 2;
+        data['project_id'] = pid;
+        data['field_name'] = 'requiredFieldTranslations';
+        var json = encodeURIComponent(JSON.stringify(data));
+
+        $.ajax({
+            url: ajax_url,
+            type: 'POST',
+            data: 'data=' + json,
+            success: function (r) {
+                requiredFieldTranslations = r;
+                getLanguages();
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            }
+        });
+    }
 
 	//generic functions
 	function getVariable(variable){
