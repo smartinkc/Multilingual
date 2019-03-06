@@ -380,11 +380,11 @@
 		others = $('.p1000_otherActionTags').val();
 		
 		// inject p1000 action tags only if any translation exists
-		var ques = ($.isEmptyObject(q))?'':('@p1000lang' + JSON.stringify(q).replace(/@/g, '___') + '\n');
-		var answ = ($.isEmptyObject(a))?'':('@p1000answers' + JSON.stringify(a).replace(/@/g, '___') + '\n');
-		var err = ($.isEmptyObject(e))?'':('@p1000errors' + JSON.stringify(e).replace(/@/g, '___') + '\n');
-		var note = ($.isEmptyObject(n))?'':('@p1000notes' + JSON.stringify(n).replace(/@/g, '___') + '\n');
-		var stext = ($.isEmptyObject(st))?'':('@p1000surveytext' + JSON.stringify(st).replace(/@/g, '___') + '\n');
+		var ques = ($.isEmptyObject(q))?'':('@p1000lang' + JSON.stringify(q).replace(/@/g, '___') + ' ');
+		var answ = ($.isEmptyObject(a))?'':('@p1000answers' + JSON.stringify(a).replace(/@/g, '___') + ' ');
+		var err = ($.isEmptyObject(e))?'':('@p1000errors' + JSON.stringify(e).replace(/@/g, '___') + ' ');
+		var note = ($.isEmptyObject(n))?'':('@p1000notes' + JSON.stringify(n).replace(/@/g, '___') + ' ');
+		var stext = ($.isEmptyObject(st))?'':('@p1000surveytext' + JSON.stringify(st).replace(/@/g, '___') + ' ');
 		
 		$('#div_parent_field_annotation').children(0).val((ques + answ + err + note + stext + others).trim());
 		
@@ -404,7 +404,7 @@
 				}
 			});
 			
-			var ques = ($.isEmptyObject(q))?'':('@p1000lang' + JSON.stringify(q).replace(/@/g, '___') + '\n');
+			var ques = ($.isEmptyObject(q))?'':('@p1000lang' + JSON.stringify(q).replace(/@/g, '___') + ' ');
 			
 			$('.p1000_answers').each(function(){
 				tmp = $(this).attr('id').replace('a','');

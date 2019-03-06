@@ -55,26 +55,29 @@
 		//error messages
 		$('body').on('blur', 'input', function(){
 			if($(this).attr('type') != 'radio' && $(this).attr('type') != 'checkbox' && errorChecking != 1){
-				errorChecking = 1;
 				var id = $(this).parents('tr[sq_id]').attr('id');
-				$('#redcapValidationErrorPopup').html('');
-				setTimeout(function(){
-					if(translations['errors'][id] && translations['errors'][id]['text'] != ''){
-						$('#redcapValidationErrorPopup').html(translations['errors'][id]['text']);
-					}
-					else{
-						$('#redcapValidationErrorPopup').html('<center><span style="color:red;font-size:50px;">&#x26D4;</span></center>');
-					}
-
-					$('#redcapValidationErrorPopup').next().children().children().children().html('&#x2714;');
-
-					$('.ui-dialog-title').each(function(){
-						if($(this).is(':visible')){
-							$(this).children().html('<img alt="Page" src="APP_PATH_IMAGESexclamation_frame.png">');
+				if(id != undefined){
+					errorChecking = 1;
+					$('#redcapValidationErrorPopup').html('');
+					setTimeout(function(){
+						id = id.replace('-tr', '');
+						if(translations['errors'][id] && translations['errors'][id]['text'] != ''){
+							$('#redcapValidationErrorPopup').html(translations['errors'][id]['text']);
 						}
-					});
-					errorChecking = 0;
-				}, 200);
+						else{
+							$('#redcapValidationErrorPopup').html('<center><span style="color:red;font-size:50px;">&#x26D4;</span></center>');
+						}
+
+						$('#redcapValidationErrorPopup').next().children().children().children().html('&#x2714;');
+
+						$('.ui-dialog-title').each(function(){
+							if($(this).is(':visible')){
+								$(this).children().html('<img alt="Page" src="APP_PATH_IMAGESexclamation_frame.png">');
+							}
+						});
+						errorChecking = 0;
+					}, 200);
+				}
 			}
 		});
 	});

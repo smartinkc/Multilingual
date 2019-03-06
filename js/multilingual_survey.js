@@ -380,8 +380,9 @@
 					}
 				}
 				else if(translations['answers'][id]['type'] == 'date'){
-					$('#' + id + '-tr').children().last().children().eq(2).children().html(translations['answers'][id]['text'][0]);
-					$('#' + id + '-tr').children().last().children().eq(1).children().html(translations['answers'][id]['text'][0]);
+					//$('#' + id + '-tr').children().last().children().eq(2).children().html(translations['answers'][id]['text'][0]);
+					//$('#' + id + '-tr').children().last().children().eq(1).children().html(translations['answers'][id]['text'][0]);
+					$('#' + id + '-tr').find('button').html(translations['answers'][id]['text'][0]);
 				}
 				else if(translations['answers'][id]['type'] == 'signature'){
 					$('#' + id + '-tr').children().last().children().eq(3).children().eq(1).html(translations['answers'][id]['text'][0]);
