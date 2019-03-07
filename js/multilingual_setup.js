@@ -159,8 +159,8 @@
 	function getTranslations(r){
 		//parse existing data
 		$('#div_parent_field_annotation textarea').val($('#div_parent_field_annotation textarea').val().replace(/\n([^@])/g, "<br>$1"));
-		var data = $('#div_parent_field_annotation textarea').val().replace(/___/g, '@');
-		var tags = data.split('\n');
+		var data = $('#div_parent_field_annotation textarea').val();
+		var tags = data.split('@');
 		var id;
 		var questions = {};
 		var answers = {};
@@ -170,20 +170,21 @@
 		var survey_translations = {"surveytitle":"Survey Title","surveyinstructions":"Survey Instructions","surveyacknowledgment":"Survey Response"}
 		var others = '';
 		for(id in tags){
-			if(tags[id].indexOf('@p1000lang') > -1){
-				questions = JSON.parse(tags[id].replace('@p1000lang',''));
+			tags[id] = tags[id].replace(/___/g, '@');
+			if(tags[id].indexOf('p1000lang') > -1){
+				questions = JSON.parse(tags[id].replace('p1000lang',''));
 			}
-			else if(tags[id].indexOf('@p1000answers') > -1){
-				answers = JSON.parse(tags[id].replace('@p1000answers',''));
+			else if(tags[id].indexOf('p1000answers') > -1){
+				answers = JSON.parse(tags[id].replace('p1000answers',''));
 			}
-			else if(tags[id].indexOf('@p1000errors') > -1){
-				errors = JSON.parse(tags[id].replace('@p1000errors',''));
+			else if(tags[id].indexOf('p1000errors') > -1){
+				errors = JSON.parse(tags[id].replace('p1000errors',''));
 			}
-			else if(tags[id].indexOf('@p1000notes') > -1){
-				notes = JSON.parse(tags[id].replace('@p1000notes',''));
+			else if(tags[id].indexOf('p1000notes') > -1){
+				notes = JSON.parse(tags[id].replace('p1000notes',''));
 			}
-			else if(tags[id].indexOf('@p1000surveytext') > -1){
-				survey_text = JSON.parse(tags[id].replace('@p1000surveytext',''));
+			else if(tags[id].indexOf('p1000surveytext') > -1){
+				survey_text = JSON.parse(tags[id].replace('p1000surveytext',''));
 			}
 			else{
 				others += tags[id] + '\n';
@@ -272,15 +273,16 @@
 			if(counter > 0){
 				var questions = {};
 				$(this).children().val($(this).children().val().replace(/\n([^@])/g, "<br>$1"));
-				var data = $(this).children().val().replace(/___/g, '@');
-				var tags = data.split('\n');
+				var data = $(this).children().val();
+				var tags = data.split('@');
 				
 				for(id in tags){
-					if(tags[id].indexOf('@p1000lang') > -1){
-						questions = JSON.parse(tags[id].replace('@p1000lang',''));
+					tags[id] = tags[id].replace(/___/g, '@');
+					if(tags[id].indexOf('p1000lang') > -1){
+						questions = JSON.parse(tags[id].replace('p1000lang',''));
 					}
-					else if(tags[id].indexOf('@p1000answers') > -1){
-						answers = JSON.parse(tags[id].replace('@p1000answers',''));
+					else if(tags[id].indexOf('p1000answers') > -1){
+						answers = JSON.parse(tags[id].replace('p1000answers',''));
 					}
 				}
 				
