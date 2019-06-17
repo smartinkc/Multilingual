@@ -186,8 +186,8 @@
 			else if(tags[id].indexOf('p1000surveytext') > -1){
 				survey_text = JSON.parse(tags[id].replace('p1000surveytext',''));
 			}
-			else{
-				others += tags[id] + '\n';
+			else if(tags[id] != ''){
+				others += '@' + tags[id] + ' ';
 			}
 		}
 		
