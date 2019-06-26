@@ -127,7 +127,7 @@
 				},
 				{
 					"key": "descriptive-text2",
-					"name": "<span style=\"color:blue;font-style:italic;\">These are translations for the popup on return page.</span>",
+					"name": "<span style=\"color:blue;font-style:italic;\">These are translations for the popup on return page (if using a return code).</span>",
 					"type": "descriptive"
 				},
 				{
