@@ -41,18 +41,33 @@
 				$('#changeLang').css('background','#505050');
 				$('#changeLang').css('color','#CCCCCC');
 				$('#changeLang').css('opacity','0.5');
-				langReady = 0;
-				var id;
-				for(id in languages){
-					if(languages[id] == lang){
-						break;
+				
+				//if show start screen is checked, show all languages when changing language
+				if(settings['show-start-screen'] && settings['show-start-screen']['value'] == true){
+					$('#p1000Overlay').show();
+					$('#p1000ChooseLang').show();
+					
+					if($('#p1000ChooseLang').html() == ''){
+						addLanguageButtons();
+						if(settings['start-screen-width'] && settings['start-screen-width']['value']){
+							$('#p1000ChooseLang').css('width', settings['start-screen-width']['value']);
+						}
 					}
 				}
-				id++;
-				if(id == (totalLanguages + 1)){
-					id = 1;
+				else{
+					langReady = 0;
+					var id;
+					for(id in languages){
+						if(languages[id] == lang){
+							break;
+						}
+					}
+					id++;
+					if(id == (totalLanguages + 1)){
+						id = 1;
+					}
+					getLanguage(languages[id]);
 				}
-				getLanguage(languages[id]);
 			}
 		});
 
@@ -144,7 +159,7 @@
 
 		//startUp
 		$('body').append('<div id="p1000Overlay" style="text-align:center;vertical-align:middle;display:none;z-index:10000;position:fixed;top:0px;bottom:0px;right:0px;left:0px;background-color:rgba(0, 0, 0, 0.7);"></div>');
-		$('#p1000Overlay').append('<div id="p1000ChooseLang" style="display:none;position:absolute;top:30%;transform: translateY(-50%);left:50%;transform: translateX(-50%);"></div>');
+		$('#p1000Overlay').append('<div id="p1000ChooseLang" style="display:none;position:fixed;top:50%;left:50%;transform: translate(-50%, -50%);width:;"></div>');
 	});
 
 	function getSettings(){
@@ -305,6 +320,19 @@
 			$('#dpop').children().children().children(1).children().children().children().children().html(settings['save-return-later-text']['value'][langKey] + '<br>' + b);
 		}
 	}
+	
+	function addLanguageButtons(){
+		var i;
+		for(i in languages){
+			$('#p1000ChooseLang').append('<p><div class="setLangButtons" id="changeLang1" name="' + languages[i] + '" style="display:none;float:left;width:' + (settings['button-width'] && settings['button-width']['value'] ? settings['button-width']['value'] : '100px') + ';color:' + (settings['font-color'] && settings['font-color']['value'] ? settings['font-color']['value'] : '') + ';background:' + (settings['background-color'] && settings['background-color']['value'] ? settings['background-color']['value'] : '') + ';margin-top:20px;" onclick="$(\'#p1000Overlay\').fadeOut();$(\'#p1000ChooseLang\').fadeOut();">' + languages[i] + '</div></p>');
+		}
+		
+		var timing = 300;
+		$('.setLangButtons').each(function(){
+			$(this).fadeIn(timing);
+			timing += 150;
+		});
+	}
 
 	function translate(){
 		if(langReady == 1 && !settings['empty']){
@@ -313,7 +341,13 @@
 
 			//add buttons to startUp
 			if($('#p1000Overlay').is(':visible') && $('#p1000ChooseLang').html() == ''){
-				var i;
+				//set width of start up screen (expand when using many languages)
+				if(settings['start-screen-width'] && settings['start-screen-width']['value']){
+					$('#p1000ChooseLang').css('width', settings['start-screen-width']['value']);
+				}
+				
+				addLanguageButtons();
+				/* var i;
 				for(i in languages){
 					$('#p1000ChooseLang').append('<p><div class="setLangButtons" id="changeLang1" name="' + languages[i] + '" style="display:none;float:left;width:' + (settings['button-width'] && settings['button-width']['value'] ? settings['button-width']['value'] : '100px') + ';color:' + (settings['font-color'] && settings['font-color']['value'] ? settings['font-color']['value'] : '') + ';background:' + (settings['background-color'] && settings['background-color']['value'] ? settings['background-color']['value'] : '') + ';margin-top:20px;" onclick="$(\'#p1000Overlay\').fadeOut();$(\'#p1000ChooseLang\').fadeOut();">' + languages[i] + '</div></p>');
 				}
@@ -322,7 +356,7 @@
 				$('.setLangButtons').each(function(){
 					$(this).fadeIn(timing);
 					timing += 150;
-				});
+				}); */
 			}
 
 			//required fields popup

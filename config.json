@@ -77,7 +77,23 @@
 			"type": "text",
 			"repeatable": false,
 			"default": "100px"
-		}, 
+		},
+		{
+			"key": "start-screen-width",
+			"name": "Start Up Screen Width (ex. 220px, expand initial screen if using many languages)",
+			"required": false,
+			"type": "text",
+			"repeatable": false,
+			"default": ""
+		},
+		{
+			"key": "show-start-screen",
+			"name": "Show Start Up Screen when changing languages (instead of jumping to next language)",
+			"required": false,
+			"type": "checkbox",
+			"repeatable": false,
+			"default": ""
+		},		
 		{
 			"key": "save-return-later",
 			"name": "Save & Return Later Text",
