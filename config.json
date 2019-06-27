@@ -313,6 +313,50 @@
 			]
 		}, 
 		{
+			"key": "survey-control-text",
+			"name": "Survey Control Text",
+			"required": false,
+			"type": "sub_settings",
+			"repeatable": true,
+			"sub_settings":[
+				{
+					"key": "survey-control-lang",
+					"name": "Language",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "survey-control-submit",
+					"name": "Submit Button",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "survey-control-next",
+					"name": "Next Button",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "survey-control-prev",
+					"name": "Previous Button",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "survey-control-reset",
+					"name": "Reset Field Link",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				}
+			]
+		}, 
+		{
 			"key": "default-error-prompt",
 			"name": "Default error prompt for text fields",
 			"required": false,

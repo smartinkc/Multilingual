@@ -9,8 +9,7 @@
 	var totalLanguages = 2;
 	var settings = {};
 	settings['empty'] = true;
-	getSettings();
-	getLanguages();
+	loadSettings();
 	var lang = 'en';
 	var langReady = 0;
 	var interval = null;
@@ -162,23 +161,51 @@
 		$('#p1000Overlay').append('<div id="p1000ChooseLang" style="display:none;position:fixed;top:50%;left:50%;transform: translate(-50%, -50%);width:;"></div>');
 	});
 
-	function getSettings(){
+	function loadSettings(){
+		// Get Settings JSON
 		var data = {};
 		data['todo'] = 3;
 		data['project_id'] = pid;
 		var json = encodeURIComponent(JSON.stringify(data));
 
-		$.ajax({
-			url: ajax_url,
-			type: 'POST',
-			data: 'data=' + json,
-			success: function (r) {
-				settings = r;
-				stopText();
-			},
-			error: function(jqXHR, textStatus, errorThrown) {
-			   console.log(textStatus, errorThrown);
-			}
+		// Get Languages JSON
+		var data2 = {};
+		data2['todo'] = 2;
+		data2['project_id'] = pid;
+		data2['field_name'] = langVar;
+		var json2 = encodeURIComponent(JSON.stringify(data2));
+
+		$.when(
+			// Get Settings
+			$.ajax({
+				url: ajax_url,
+				type: 'POST',
+				data: 'data=' + json,
+				success: function (r) {
+					settings = r;
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+				   console.log(textStatus, errorThrown);
+				}
+			}),
+			// Get Languages
+			$.ajax({
+				url: ajax_url,
+				type: 'POST',
+				data: 'data=' + json2,
+				success: function (r) {
+					languages = r;
+					totalLanguages = Object.keys(languages).length;
+					getLanguage();
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+				   console.log(textStatus, errorThrown);
+				}
+			})
+		).then(function() {
+			// Now that settings and language calls are complete process survey control text
+			stopText();
+			controlText();
 		});
 	}
 
@@ -216,18 +243,6 @@
 
 	//specific functions
 	function symbols(){
-		//reset
-		$('.smalllink').each(function(){
-		   $(this).html('&#x21ba;');
-		});
-
-		//submit
-		$('[name="submit-btn-saverecord"]').html('&#x2714;');
-		$('[name="submit-btn-saverecord"]').css('font-size','20px');
-		
-		//previous button
-		$('[name="submit-btn-saveprevpage"]').html('<<');
-		$('[name="submit-btn-saveprevpage"]').css('font-size','20px');
 
 		//resize font
 		$('#changeFont').children().eq(0).html('<span style="font-size:150%;">A</span> <span style="font-size:125%;">A</span> <span style="font-size:100%;">A</span>');
@@ -318,6 +333,56 @@
 			
 			//save and return popup text
 			$('#dpop').children().children().children(1).children().children().children().children().html(settings['save-return-later-text']['value'][langKey] + '<br>' + b);
+		}
+	}
+
+	function controlText(){
+		// Survey Controls
+		langKey = -1;
+		if(settings['survey-control-lang']){
+			for(id in settings['survey-control-lang']['value']){
+				if(lang == settings['survey-control-lang']['value'][id]){
+					langKey = id;
+					break;
+				}
+			}
+		}
+		
+		if(langKey > -1){
+			// Prev/Next/Submit buttons
+			var showArrows = true;
+			if($('[name="submit-btn-saverecord"]').text() == "Submit" || $('[name="submit-btn-saverecord"]').text() == settings['survey-control-submit']['value'][langKey]) {
+				// Submit Button
+				$('[name="submit-btn-saverecord"]').html(settings['survey-control-submit']['value'][langKey]);
+			} else {
+				// Next Button
+				$('[name="submit-btn-saverecord"]').html(settings['survey-control-next']['value'][langKey]+(showArrows ? " >>" : ""));
+			}
+			
+			// Prev Button
+			$('[name="submit-btn-saveprevpage"]').html((showArrows ? "<< " : "")+settings['survey-control-prev']['value'][langKey]);
+
+
+			var showSymbols = true;
+			// Reset
+			$('.smalllink').each(function(){
+				$(this).html((showArrows ? "&#x21ba; " : "")+settings['survey-control-reset']['value'][langKey]);
+			});
+		} else {
+			// If there is no data for this language then use symbols
+
+			//submit
+			$('[name="submit-btn-saverecord"]').html('&#x2714;');
+			$('[name="submit-btn-saverecord"]').css('font-size','20px');
+			
+			//previous button
+			$('[name="submit-btn-saveprevpage"]').html('<<');
+			$('[name="submit-btn-saveprevpage"]').css('font-size','20px');
+
+			//reset
+			$('.smalllink').each(function(){
+				$(this).html('&#x21ba;');
+			});
 		}
 	}
 	
@@ -636,28 +701,6 @@
 					langReady = 1;
 					anyTranslated = true;
 				}
-			},
-			error: function(jqXHR, textStatus, errorThrown) {
-			   console.log(textStatus, errorThrown);
-			}
-		});
-	}
-
-	function getLanguages(){
-		var data = {};
-		data['todo'] = 2;
-		data['project_id'] = pid;
-		data['field_name'] = langVar;
-		var json = encodeURIComponent(JSON.stringify(data));
-
-		$.ajax({
-			url: ajax_url,
-			type: 'POST',
-			data: 'data=' + json,
-			success: function (r) {
-				languages = r;
-				totalLanguages = Object.keys(languages).length;
-				getLanguage();
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 			   console.log(textStatus, errorThrown);
