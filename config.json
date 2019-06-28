@@ -360,6 +360,13 @@
 					"required": false,
 					"type": "text",
 					"repeatable": false
+				},
+				{
+					"key": "survey-control-page-number",
+					"name": "Page Number: Use 'CURRENTPAGE' and 'MAXPAGE' to place the numbers in the translation like so: (Page CURRENTPAGE of MAXPAGE)",
+					"required": false,
+					"type": "text",
+					"repeatable": false
 				}
 			]
 		}, 

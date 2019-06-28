@@ -255,12 +255,6 @@
 			}
 		});
 
-		//page number
-		if($('#surveypagenum').is(':visible')){
-			var tmp = $('#surveypagenum').html().split(' ');
-			$('#surveypagenum').html('<img alt="Page" src="APP_PATH_IMAGESblog_pencil.png"> ' + tmp[1] + ' / ' + tmp[3]);
-		}
-
 		// slider instruction text
 		$('.sldrmsg').each(function(){
 			var horiz = $(this).parents('table.sldrparent').find('span[role="slider"]').attr('aria-orientation') == 'horizontal';
@@ -340,6 +334,7 @@
 		var submitCheck = "&#x2714;";
 		var resetSymbol = "&#x21ba;";
 		var fontSizeSymbol = '<span style="font-size:150%;">A</span> <span style="font-size:125%;">A</span> <span style="font-size:100%;">A</span>';
+		var pageSymbol = '<img alt="Page" src="APP_PATH_IMAGESblog_pencil.png">';
 
 		// Survey Controls
 		langKey = -1;
@@ -380,7 +375,28 @@
 			//resize font
 			$('#changeFont').children().eq(0).html((settings['survey-control-font-size']['value'][langKey] ? settings['survey-control-font-size']['value'][langKey] : fontSizeSymbol ));
 
-			
+			//page number
+			if($('#surveypagenum').is(':visible')){
+				if($('#surveypagenum').hasClass('multilingual-translated')) {
+					var curPage = $('#surveypagenum .multilingual-cur-page').text();
+					var maxPage = $('#surveypagenum .multilingual-max-page').text();
+				} else {
+					var tmp = $('#surveypagenum').html().split(' ');
+					var curPage = tmp[1];
+					var maxPage = tmp[3];
+					$('#surveypagenum').addClass('multilingual-translated');
+				}
+				var surveyControlPageNumber = settings['survey-control-page-number']['value'][langKey];
+				if(surveyControlPageNumber.includes("CURRENTPAGE") && surveyControlPageNumber.includes("MAXPAGE")) {
+					surveyControlPageNumber = surveyControlPageNumber.replace("CURRENTPAGE", '<span class="multilingual-cur-page">'+curPage+'</span>').replace("MAXPAGE", '<span class="multilingual-max-page">'+maxPage+'</span>');
+				} else if(surveyControlPageNumber.includes("CURRENTPAGE") ) {
+					surveyControlPageNumber = surveyControlPageNumber.replace("CURRENTPAGE", '<span class="multilingual-cur-page">'+curPage+'</span>');
+					surveyControlPageNumber += '<span class="multilingual-max-page" style="display: none;">'+maxPage+'</span>';
+				} else {
+					surveyControlPageNumber = pageSymbol+' <span class="multilingual-cur-page">' + curPage + '</span> / <span class="multilingual-max-page">' + maxPage + '</span>';
+				}
+				$('#surveypagenum').html(surveyControlPageNumber);
+			}
 		} else {
 			// If there is no data for this language then use symbols
 
@@ -399,6 +415,20 @@
 
 			//resize font
 			$('#changeFont').children().eq(0).html(fontSizeSymbol);
+
+			//page number
+			if($('#surveypagenum').is(':visible')){
+				if($('#surveypagenum').hasClass('multilingual-translated')) {
+					var curPage = $('#surveypagenum .multilingual-cur-page').text();
+					var maxPage = $('#surveypagenum .multilingual-max-page').text();
+				} else {
+					var tmp = $('#surveypagenum').html().split(' ');
+					var curPage = tmp[1];
+					var maxPage = tmp[3];
+					$('#surveypagenum').addClass('multilingual-translated');
+				}
+				$('#surveypagenum').html(pageSymbol+' <span class="multilingual-cur-page">' + curPage + '</span> / <span class="multilingual-max-page">' + maxPage + '</span>');
+			}
 		}
 	}
 	
