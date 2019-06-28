@@ -353,6 +353,13 @@
 					"required": false,
 					"type": "text",
 					"repeatable": false
+				},
+				{
+					"key": "survey-control-font-size",
+					"name": "Font Size Text",
+					"required": false,
+					"type": "text",
+					"repeatable": false
 				}
 			]
 		}, 

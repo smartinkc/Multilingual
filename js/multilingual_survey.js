@@ -244,9 +244,6 @@
 	//specific functions
 	function symbols(){
 
-		//resize font
-		$('#changeFont').children().eq(0).html('<span style="font-size:150%;">A</span> <span style="font-size:125%;">A</span> <span style="font-size:100%;">A</span>');
-
 		//popup
 		$('#redcapValidationErrorPopup').html('<center><span style="color:red;font-size:50px;">&#x26D4;</span></center>');
 
@@ -337,6 +334,13 @@
 	}
 
 	function controlText(){
+		// Define symbols
+		var prevArrow = "<<";
+		var nextArrow = ">>";
+		var submitCheck = "&#x2714;";
+		var resetSymbol = "&#x21ba;";
+		var fontSizeSymbol = '<span style="font-size:150%;">A</span> <span style="font-size:125%;">A</span> <span style="font-size:100%;">A</span>';
+
 		// Survey Controls
 		langKey = -1;
 		if(settings['survey-control-lang']){
@@ -348,19 +352,23 @@
 			}
 		}
 		
+		if($('[name="submit-btn-saverecord"]').text() == "Submit") {
+			$('[name="submit-btn-saverecord"]').addClass('multilingual-final-submit');
+		}
+
 		if(langKey > -1){
 			// Prev/Next/Submit buttons
 			var showArrows = true;
-			if($('[name="submit-btn-saverecord"]').text() == "Submit" || $('[name="submit-btn-saverecord"]').text() == settings['survey-control-submit']['value'][langKey]) {
+			if($('[name="submit-btn-saverecord"]').hasClass('multilingual-final-submit')) {
 				// Submit Button
-				$('[name="submit-btn-saverecord"]').html(settings['survey-control-submit']['value'][langKey]);
+				$('[name="submit-btn-saverecord"]').html((settings['survey-control-submit']['value'][langKey] ? settings['survey-control-submit']['value'][langKey] : submitCheck ));
 			} else {
 				// Next Button
-				$('[name="submit-btn-saverecord"]').html(settings['survey-control-next']['value'][langKey]+(showArrows ? " >>" : ""));
+				$('[name="submit-btn-saverecord"]').html((settings['survey-control-next']['value'][langKey] ? settings['survey-control-next']['value'][langKey]+(showArrows ? " "+nextArrow : "") : nextArrow ));
 			}
 			
 			// Prev Button
-			$('[name="submit-btn-saveprevpage"]').html((showArrows ? "<< " : "")+settings['survey-control-prev']['value'][langKey]);
+			$('[name="submit-btn-saveprevpage"]').html((settings['survey-control-prev']['value'][langKey] ? (showArrows ? prevArrow+" " : "")+settings['survey-control-prev']['value'][langKey] : prevArrow ));
 
 
 			var showSymbols = true;
@@ -368,21 +376,29 @@
 			$('.smalllink').each(function(){
 				$(this).html((showArrows ? "&#x21ba; " : "")+settings['survey-control-reset']['value'][langKey]);
 			});
+
+			//resize font
+			$('#changeFont').children().eq(0).html((settings['survey-control-font-size']['value'][langKey] ? settings['survey-control-font-size']['value'][langKey] : fontSizeSymbol ));
+
+			
 		} else {
 			// If there is no data for this language then use symbols
 
 			//submit
-			$('[name="submit-btn-saverecord"]').html('&#x2714;');
+			$('[name="submit-btn-saverecord"]').html(submitCheck);
 			$('[name="submit-btn-saverecord"]').css('font-size','20px');
 			
 			//previous button
-			$('[name="submit-btn-saveprevpage"]').html('<<');
+			$('[name="submit-btn-saveprevpage"]').html(prevArrow);
 			$('[name="submit-btn-saveprevpage"]').css('font-size','20px');
 
 			//reset
 			$('.smalllink').each(function(){
-				$(this).html('&#x21ba;');
+				$(this).html(resetSymbol);
 			});
+
+			//resize font
+			$('#changeFont').children().eq(0).html(fontSizeSymbol);
 		}
 	}
 	
@@ -592,6 +608,7 @@
 
 			piping();
 			stopText();
+			controlText();
 			if(settings['languages_variable'] && settings['languages_variable']['value']){
 				doBranching(settings['languages_variable']['value']);
 			}
