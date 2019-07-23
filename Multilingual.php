@@ -92,7 +92,6 @@ class Multilingual extends AbstractExternalModule
 		$data['field_name'] = mysqli_real_escape_string($conn, $data['field_name']);
 
 		$metaDataTableName = $this->getMetaDataTableName($data['project_id']);
-		error_log("retrieving metadata from table $metaDataTableName");
 
 		if($data['matrix'] == 1){
 			$query = "SELECT element_enum, element_type, element_validation_type, element_validation_min, element_validation_max FROM $metaDataTableName
