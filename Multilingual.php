@@ -95,14 +95,12 @@ class Multilingual extends AbstractExternalModule
 		error_log("retrieving metadata from table $metaDataTableName");
 
 		if($data['matrix'] == 1){
-			error_log("using matrix mode");
 			$query = "SELECT element_enum, element_type, element_validation_type, element_validation_min, element_validation_max FROM $metaDataTableName
 				WHERE project_id = " . $data['project_id'] . "
 				AND grid_name LIKE '" . $data['field_name'] . "'
 				LIMIT 1";
 		}
 		else{
-			error_log("using non matrix mode");
 			$query = "SELECT element_enum, element_type, element_validation_type FROM $metaDataTableName
 				WHERE project_id = " . $data['project_id'] . "
 				AND field_name LIKE '" . $data['field_name'] . "'";
