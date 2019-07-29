@@ -9,8 +9,7 @@
 	var totalLanguages = 2;
 	var settings = {};
 	settings['empty'] = true;
-	getSettings();
-	getLanguages();
+	loadSettings();
 	var lang = 'en';
 	var langReady = 0;
 	var interval = null;
@@ -162,23 +161,51 @@
 		$('#p1000Overlay').append('<div id="p1000ChooseLang" style="display:none;position:fixed;top:50%;left:50%;transform: translate(-50%, -50%);width:;"></div>');
 	});
 
-	function getSettings(){
+	function loadSettings(){
+		// Get Settings JSON
 		var data = {};
 		data['todo'] = 3;
 		data['project_id'] = pid;
 		var json = encodeURIComponent(JSON.stringify(data));
 
-		$.ajax({
-			url: ajax_url,
-			type: 'POST',
-			data: 'data=' + json,
-			success: function (r) {
-				settings = r;
-				stopText();
-			},
-			error: function(jqXHR, textStatus, errorThrown) {
-			   console.log(textStatus, errorThrown);
-			}
+		// Get Languages JSON
+		var data2 = {};
+		data2['todo'] = 2;
+		data2['project_id'] = pid;
+		data2['field_name'] = langVar;
+		var json2 = encodeURIComponent(JSON.stringify(data2));
+
+		$.when(
+			// Get Settings
+			$.ajax({
+				url: ajax_url,
+				type: 'POST',
+				data: 'data=' + json,
+				success: function (r) {
+					settings = r;
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+				   console.log(textStatus, errorThrown);
+				}
+			}),
+			// Get Languages
+			$.ajax({
+				url: ajax_url,
+				type: 'POST',
+				data: 'data=' + json2,
+				success: function (r) {
+					languages = r;
+					totalLanguages = Object.keys(languages).length;
+					getLanguage();
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+				   console.log(textStatus, errorThrown);
+				}
+			})
+		).then(function() {
+			// Now that settings and language calls are complete process survey control text
+			stopText();
+			controlText();
 		});
 	}
 
@@ -216,21 +243,6 @@
 
 	//specific functions
 	function symbols(){
-		//reset
-		$('.smalllink').each(function(){
-		   $(this).html('&#x21ba;');
-		});
-
-		//submit
-		$('[name="submit-btn-saverecord"]').html('&#x2714;');
-		$('[name="submit-btn-saverecord"]').css('font-size','20px');
-		
-		//previous button
-		$('[name="submit-btn-saveprevpage"]').html('<<');
-		$('[name="submit-btn-saveprevpage"]').css('font-size','20px');
-
-		//resize font
-		$('#changeFont').children().eq(0).html('<span style="font-size:150%;">A</span> <span style="font-size:125%;">A</span> <span style="font-size:100%;">A</span>');
 
 		//popup
 		$('#redcapValidationErrorPopup').html('<center><span style="color:red;font-size:50px;">&#x26D4;</span></center>');
@@ -242,12 +254,6 @@
 				$(this).html('&lt;&lt;');
 			}
 		});
-
-		//page number
-		if($('#surveypagenum').is(':visible')){
-			var tmp = $('#surveypagenum').html().split(' ');
-			$('#surveypagenum').html('<img alt="Page" src="APP_PATH_IMAGESblog_pencil.png"> ' + tmp[1] + ' / ' + tmp[3]);
-		}
 
 		// slider instruction text
 		$('.sldrmsg').each(function(){
@@ -318,6 +324,111 @@
 			
 			//save and return popup text
 			$('#dpop').children().children().children(1).children().children().children().children().html(settings['save-return-later-text']['value'][langKey] + '<br>' + b);
+		}
+	}
+
+	function controlText(){
+		// Define symbols
+		var prevArrow = "<<";
+		var nextArrow = ">>";
+		var submitCheck = "&#x2714;";
+		var resetSymbol = "&#x21ba;";
+		var fontSizeSymbol = '<span style="font-size:150%;">A</span> <span style="font-size:125%;">A</span> <span style="font-size:100%;">A</span>';
+		var pageSymbol = '<img alt="Page" src="APP_PATH_IMAGESblog_pencil.png">';
+
+		// Survey Controls
+		langKey = -1;
+		if(settings['survey-control-lang']){
+			for(id in settings['survey-control-lang']['value']){
+				if(lang == settings['survey-control-lang']['value'][id]){
+					langKey = id;
+					break;
+				}
+			}
+		}
+		
+		if($('[name="submit-btn-saverecord"]').text() == "Submit") {
+			$('[name="submit-btn-saverecord"]').addClass('multilingual-final-submit');
+		}
+
+		if(langKey > -1){
+			// Prev/Next/Submit buttons
+			var showArrows = true;
+			if($('[name="submit-btn-saverecord"]').hasClass('multilingual-final-submit')) {
+				// Submit Button
+				$('[name="submit-btn-saverecord"]').html((settings['survey-control-submit']['value'][langKey] ? settings['survey-control-submit']['value'][langKey] : submitCheck ));
+			} else {
+				// Next Button
+				$('[name="submit-btn-saverecord"]').html((settings['survey-control-next']['value'][langKey] ? settings['survey-control-next']['value'][langKey]+(showArrows ? " "+nextArrow : "") : nextArrow ));
+			}
+			
+			// Prev Button
+			$('[name="submit-btn-saveprevpage"]').html((settings['survey-control-prev']['value'][langKey] ? (showArrows ? prevArrow+" " : "")+settings['survey-control-prev']['value'][langKey] : prevArrow ));
+
+
+			var showSymbols = true;
+			// Reset
+			$('.smalllink').each(function(){
+				$(this).html((showArrows ? "&#x21ba; " : "")+settings['survey-control-reset']['value'][langKey]);
+			});
+
+			//resize font
+			$('#changeFont').children().eq(0).html((settings['survey-control-font-size']['value'][langKey] ? settings['survey-control-font-size']['value'][langKey] : fontSizeSymbol ));
+
+			//page number
+			if($('#surveypagenum').is(':visible')){
+				if($('#surveypagenum').hasClass('multilingual-translated')) {
+					var curPage = $('#surveypagenum .multilingual-cur-page').text();
+					var maxPage = $('#surveypagenum .multilingual-max-page').text();
+				} else {
+					var tmp = $('#surveypagenum').html().split(' ');
+					var curPage = tmp[1];
+					var maxPage = tmp[3];
+					$('#surveypagenum').addClass('multilingual-translated');
+				}
+				var surveyControlPageNumber = settings['survey-control-page-number']['value'][langKey];
+				if(surveyControlPageNumber.includes("CURRENTPAGE") && surveyControlPageNumber.includes("MAXPAGE")) {
+					surveyControlPageNumber = surveyControlPageNumber.replace("CURRENTPAGE", '<span class="multilingual-cur-page">'+curPage+'</span>').replace("MAXPAGE", '<span class="multilingual-max-page">'+maxPage+'</span>');
+				} else if(surveyControlPageNumber.includes("CURRENTPAGE") ) {
+					surveyControlPageNumber = surveyControlPageNumber.replace("CURRENTPAGE", '<span class="multilingual-cur-page">'+curPage+'</span>');
+					surveyControlPageNumber += '<span class="multilingual-max-page" style="display: none;">'+maxPage+'</span>';
+				} else {
+					surveyControlPageNumber = pageSymbol+' <span class="multilingual-cur-page">' + curPage + '</span> / <span class="multilingual-max-page">' + maxPage + '</span>';
+				}
+				$('#surveypagenum').html(surveyControlPageNumber);
+			}
+		} else {
+			// If there is no data for this language then use symbols
+
+			//submit
+			$('[name="submit-btn-saverecord"]').html(submitCheck);
+			$('[name="submit-btn-saverecord"]').css('font-size','20px');
+			
+			//previous button
+			$('[name="submit-btn-saveprevpage"]').html(prevArrow);
+			$('[name="submit-btn-saveprevpage"]').css('font-size','20px');
+
+			//reset
+			$('.smalllink').each(function(){
+				$(this).html(resetSymbol);
+			});
+
+			//resize font
+			$('#changeFont').children().eq(0).html(fontSizeSymbol);
+
+			//page number
+			if($('#surveypagenum').is(':visible')){
+				if($('#surveypagenum').hasClass('multilingual-translated')) {
+					var curPage = $('#surveypagenum .multilingual-cur-page').text();
+					var maxPage = $('#surveypagenum .multilingual-max-page').text();
+				} else {
+					var tmp = $('#surveypagenum').html().split(' ');
+					var curPage = tmp[1];
+					var maxPage = tmp[3];
+					$('#surveypagenum').addClass('multilingual-translated');
+				}
+				$('#surveypagenum').html(pageSymbol+' <span class="multilingual-cur-page">' + curPage + '</span> / <span class="multilingual-max-page">' + maxPage + '</span>');
+			}
 		}
 	}
 	
@@ -527,6 +638,7 @@
 
 			piping();
 			stopText();
+			controlText();
 			if(settings['languages_variable'] && settings['languages_variable']['value']){
 				doBranching(settings['languages_variable']['value']);
 			}
@@ -636,28 +748,6 @@
 					langReady = 1;
 					anyTranslated = true;
 				}
-			},
-			error: function(jqXHR, textStatus, errorThrown) {
-			   console.log(textStatus, errorThrown);
-			}
-		});
-	}
-
-	function getLanguages(){
-		var data = {};
-		data['todo'] = 2;
-		data['project_id'] = pid;
-		data['field_name'] = langVar;
-		var json = encodeURIComponent(JSON.stringify(data));
-
-		$.ajax({
-			url: ajax_url,
-			type: 'POST',
-			data: 'data=' + json,
-			success: function (r) {
-				languages = r;
-				totalLanguages = Object.keys(languages).length;
-				getLanguage();
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 			   console.log(textStatus, errorThrown);

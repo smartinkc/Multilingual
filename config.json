@@ -3,7 +3,7 @@
 
 	"namespace": "CMH\\Multilingual",
 
-	"description": "Allow survey's and data entry forms to be translated. Add translations via the Online Designer.",
+	"description": "Allow survey's and data entry forms to be translated into multiple languages. Add translations via the Online Designer.",
 
 	"versions": [
 		{"1.2": "Move all functions into Multilingual class"},
@@ -308,6 +308,64 @@
 					"name": "Return Body",
 					"required": false,
 					"type": "textarea",
+					"repeatable": false
+				}
+			]
+		}, 
+		{
+			"key": "survey-control-text",
+			"name": "Survey Control Text",
+			"required": false,
+			"type": "sub_settings",
+			"repeatable": true,
+			"sub_settings":[
+				{
+					"key": "survey-control-lang",
+					"name": "Language",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "survey-control-submit",
+					"name": "Submit Button",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "survey-control-next",
+					"name": "Next Button",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "survey-control-prev",
+					"name": "Previous Button",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "survey-control-reset",
+					"name": "Reset Field Link",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "survey-control-font-size",
+					"name": "Font Size Text",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "survey-control-page-number",
+					"name": "Page Number: Use 'CURRENTPAGE' and 'MAXPAGE' to place the numbers in the translation like so: (Page CURRENTPAGE of MAXPAGE)",
+					"required": false,
+					"type": "text",
 					"repeatable": false
 				}
 			]
