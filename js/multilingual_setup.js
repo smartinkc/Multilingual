@@ -172,7 +172,7 @@
 		for(id in tags){
 			tags[id] = tags[id].replace(/___/g, '@');
 			if(tags[id].indexOf('p1000lang') > -1){
-				questions = JSON.parse(tags[id].replace('p1000lang',''));
+				questions = JSON.parse(tags[id].replace('p1000lang','').replace(/\n([^@])/g, "<br>"));
 			}
 			else if(tags[id].indexOf('p1000answers') > -1){
 				answers = JSON.parse(tags[id].replace('p1000answers',''));

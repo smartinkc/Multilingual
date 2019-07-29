@@ -29,7 +29,8 @@
 		});
 
 		//link to change language
-		$('#subheaderDiv2').append(' <div id="changeLang" style="display:none;">' + lang + '</div>');
+		//$('#subheaderDiv2').append(' <div id="changeLang" style="display:none;">' + lang + '</div>');
+		$('#dataEntryTopOptions').append(' <div id="changeLang" style="display:none;">' + lang + '</div>');
 
 		//click function
 		$('body').on('click', '#changeLang', function(){
