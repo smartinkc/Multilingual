@@ -44,6 +44,14 @@
 	"no-auth-pages": [
 		"index"
 	],
+	
+	"system-settings": [
+		{
+		  "key": "use-api-endpoint",
+		  "name": "<b>Use API endpoint for public surveys</b>",
+		  "type": "checkbox"
+		}
+	],
 
 	"project-settings": [
 		{
