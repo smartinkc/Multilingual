@@ -45,17 +45,19 @@ class Multilingual extends AbstractExternalModule
 	 */
 	private function getMetaDataTableName($projectId){
 		global $conn;
-		$query = "select draft_mode from redcap_projects where project_id = $projectId";
-		if($result = mysqli_query($conn, $query)){
-			if($row = mysqli_fetch_array($result)){
-				$draftMode = $row["draft_mode"];
-				return "redcap_metadata".($draftMode == 1?"_temp":"");
+		if($this->getProjectSetting('use-drafted-changes', $projectId)){
+			$query = "select draft_mode from redcap_projects where project_id = $projectId";
+			if($result = mysqli_query($conn, $query)){
+				if($row = mysqli_fetch_array($result)){
+					$draftMode = $row["draft_mode"];
+					return "redcap_metadata".($draftMode == 1?"_temp":"");
+				}else{
+					error_log("Multilingual: no row to determine draft_mode");
+				}
+				mysqli_free_result($result);
 			}else{
-				error_log("Multilingual: no row to determine draft_mode");
+				error_log("Multilingual: no result to determine draft_mode");
 			}
-			mysqli_free_result($result);
-		}else{
-			error_log("Multilingual: no result to determine draft_mode");
 		}
 		return "redcap_metadata";
 	}
@@ -332,6 +334,7 @@ class Multilingual extends AbstractExternalModule
 		
 		//update language field
 		$response['exist'] = $this->updateLangVar($data);
+		$response['table'] = $metaDataTableName;
 
 		header('Content-Type: application/json');
 		echo json_encode($response);

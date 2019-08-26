@@ -50,6 +50,11 @@
 		  "key": "use-api-endpoint",
 		  "name": "<b>Use API endpoint for public surveys</b>",
 		  "type": "checkbox"
+		},
+		{
+		  "key": "use-drafted-changes",
+		  "name": "<b>Use drafted changes while in production</b>",
+		  "type": "checkbox"
 		}
 	],
 
