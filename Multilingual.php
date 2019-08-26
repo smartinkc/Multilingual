@@ -38,6 +38,27 @@ class Multilingual extends AbstractExternalModule
 			echo '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css', true, ($api_endpoint == true ? true : false)) . '">';
 		}
 	}
+
+	/**
+	 * @param $projectId
+	 * @return string
+	 */
+	private function getMetaDataTableName($projectId){
+		global $conn;
+		$query = "select draft_mode from redcap_projects where project_id = $projectId";
+		if($result = mysqli_query($conn, $query)){
+			if($row = mysqli_fetch_array($result)){
+				$draftMode = $row["draft_mode"];
+				return "redcap_metadata".($draftMode == 1?"_temp":"");
+			}else{
+				error_log("Multilingual: no row to determine draft_mode");
+			}
+			mysqli_free_result($result);
+		}else{
+			error_log("Multilingual: no result to determine draft_mode");
+		}
+		return "redcap_metadata";
+	}
 	
 	public function languageVariable($project_id){
 		$langVar = $this->getProjectSetting('languages_variable', $project_id);
@@ -74,14 +95,16 @@ class Multilingual extends AbstractExternalModule
 		$data['project_id'] = mysqli_real_escape_string($conn, $data['project_id']);
 		$data['field_name'] = mysqli_real_escape_string($conn, $data['field_name']);
 
+		$metaDataTableName = $this->getMetaDataTableName($data['project_id']);
+
 		if($data['matrix'] == 1){
-			$query = "SELECT element_enum, element_type, element_validation_type, element_validation_min, element_validation_max FROM redcap_metadata
+			$query = "SELECT element_enum, element_type, element_validation_type, element_validation_min, element_validation_max FROM $metaDataTableName
 				WHERE project_id = " . $data['project_id'] . "
 				AND grid_name LIKE '" . $data['field_name'] . "'
 				LIMIT 1";
 		}
 		else{
-			$query = "SELECT element_enum, element_type, element_validation_type FROM redcap_metadata
+			$query = "SELECT element_enum, element_type, element_validation_type FROM $metaDataTableName
 				WHERE project_id = " . $data['project_id'] . "
 				AND field_name LIKE '" . $data['field_name'] . "'";
 		}
@@ -148,7 +171,9 @@ class Multilingual extends AbstractExternalModule
 		$data['project_id'] = mysqli_real_escape_string($conn, $data['project_id']);
 		$data['page'] = mysqli_real_escape_string($conn, $data['page']);
 
-		$query = "SELECT field_name, element_type, misc, grid_name, element_validation_type, element_validation_min, element_validation_max, element_label FROM redcap_metadata
+		$metaDataTableName = $this->getMetaDataTableName($data['project_id']);
+
+		$query = "SELECT field_name, element_type, misc, grid_name, element_validation_type, element_validation_min, element_validation_max, element_label FROM $metaDataTableName
 			WHERE project_id = " . $data['project_id'] . "
 				AND (form_name LIKE '" . $data['page'] . "' OR field_name LIKE 'survey_text_" . $data['page'] . "')";
 		$result = mysqli_query($conn, $query);
@@ -314,8 +339,12 @@ class Multilingual extends AbstractExternalModule
 	
 	public function getRecordVar($data){
 		global $conn;
+
+		$data['project_id'] = mysqli_real_escape_string($conn, $data['project_id']);
+
+		$metaDataTableName = $this->getMetaDataTableName($data['project_id']);
 		
-		$query = "SELECT field_name FROM redcap_metadata where project_id = " . mysqli_real_escape_string($conn, $data['project_id']) . " ORDER BY field_order LIMIT 1";
+		$query = "SELECT field_name FROM $metaDataTableName where project_id = " . $data['project_id'] . " ORDER BY field_order LIMIT 1";
 		$result = mysqli_query($conn, $query);
 		$row = mysqli_fetch_array($result);
 		
@@ -391,8 +420,10 @@ class Multilingual extends AbstractExternalModule
 		$lang = mysqli_real_escape_string($conn, $lang);
 		$pid = mysqli_real_escape_string($conn, $pid);
 
+		$metaDataTableName = $this->getMetaDataTableName($pid);
+
 		//language
-		$query = "SELECT element_enum, element_type, element_validation_type FROM redcap_metadata
+		$query = "SELECT element_enum, element_type, element_validation_type FROM $metaDataTableName
 			WHERE project_id = " . $pid . "
 			AND field_name LIKE '" . $langVar . "'";
 		$result = mysqli_query($conn, $query);
@@ -408,7 +439,7 @@ class Multilingual extends AbstractExternalModule
 		}
 
 		//translations
-		$query = "SELECT field_name, element_type, misc, grid_name, element_validation_type, element_label FROM redcap_metadata
+		$query = "SELECT field_name, element_type, misc, grid_name, element_validation_type, element_label FROM $metaDataTableName
 			WHERE project_id = " . $pid . " AND field_name NOT LIKE 'survey_text%' ORDER BY field_order";
 		$result = mysqli_query($conn, $query);
 
