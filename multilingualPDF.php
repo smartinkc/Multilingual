@@ -1,4 +1,6 @@
 <?php
+	//currently js adds download links to a specific Data Entry Form as we test
+
 	namespace CMH\Multilingual;
 	
 	use ExternalModules\AbstractExternalModule;
@@ -72,13 +74,14 @@
 		if($translations['questions'][$values['field_name']]['text']){
 			$metadata[$key]['element_label'] = $translations['questions'][$values['field_name']]['text'];
 		}
-		else if($translations['answers'][$values['field_name']]['text']){
+		
+		if($translations['answers'][$values['field_name']]['text']){
 			$element_enum = null;
 			foreach($translations['answers'][$values['field_name']]['text'] AS $k => $v){
 				$element_enum .= $k . ', ' . $v . ' \n ';
 			}
-			$element_enum = trim($element_enum);
-			$metadata[$key]['element_enum'] = $element_enum;
+			
+			$metadata[$key]['element_enum'] = rtrim($element_enum, ' \n ');
 		}
 	}
 
