@@ -128,6 +128,13 @@
 					"required": false,
 					"type": "text",
 					"repeatable": false
+				},
+				{
+					"key": "pdf-title",
+					"name": "PDF Title",
+					"required": false,
+					"type": "text",
+					"repeatable": false
 				}
 			]
 		},

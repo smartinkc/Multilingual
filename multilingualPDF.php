@@ -27,11 +27,14 @@
 	//encoding
 	$encodingLanguage = $module->getProjectSetting('encoding-language', $_GET['pid']);
 	$encoding = $module->getProjectSetting('encoding-type', $_GET['pid']);
+	$languageTitles = $module->getProjectSetting('pdf-title', $_GET['pid']);
 	
 	$pdf_encoding = '';
+	$pdf_title = '';
 	foreach($encodingLanguage AS $key => $value){
 		if($value == $language){
 			$pdf_encoding = $encoding[$key];
+			$pdf_title = $languageTitles[$key];
 		}
 	}
 	
@@ -60,6 +63,12 @@
 
 	//replace labels and element_enum with translations
 	foreach($metadata AS $key => $values){
+		//remove PDF-HIDDEN
+		if(strpos($values['misc'], '@PDF-HIDDEN') !== false){
+			unset($metadata[$key]);
+			continue;
+		}
+		
 		if($translations['questions'][$values['field_name']]['text']){
 			$metadata[$key]['element_label'] = $translations['questions'][$values['field_name']]['text'];
 		}
@@ -79,5 +88,5 @@
 	// Render the PDF
 	header("Content-type:application/pdf");
 	header("Content-Disposition:attachment; filename={$filename}");
-	renderPDF($metadata, $acknowledgement, strip_tags($app_title), $Data, isset($_GET['compact']));
+	renderPDF($metadata, $acknowledgement, strip_tags($pdf_title), $Data, isset($_GET['compact']));
 ?>
