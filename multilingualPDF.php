@@ -8,8 +8,8 @@
 	require APP_PATH_DOCROOT . '/Config/init_project.php';
 	define("FPDF_FONTPATH",   APP_PATH_WEBTOOLS . "pdf" . DS . "font" . DS);
 	define("_SYSTEM_TTFONTS", APP_PATH_WEBTOOLS . "pdf" . DS . "font" . DS);
-	define("USE_UTF8", false);
-	require APP_PATH_LIBRARIES . 'FPDF.php';
+	define("USE_UTF8", true);
+	
 	require APP_PATH_DOCROOT . 'PDF/functions.php';
 	define("DEID_TEXT", "[*DATA REMOVED*]");
 	
@@ -23,6 +23,30 @@
 	//language choices
 	$languages = $module->getLanguages($_GET['pid']);
 	$language = $languages[$_GET['langIndex']];
+	
+	//encoding
+	$encodingLanguage = $module->getProjectSetting('encoding-language', $_GET['pid']);
+	$encoding = $module->getProjectSetting('encoding-type', $_GET['pid']);
+	
+	$pdf_encoding = '';
+	foreach($encodingLanguage AS $key => $value){
+		if($value == $language){
+			$pdf_encoding = $encoding[$key];
+		}
+	}
+	
+	//chinese
+	if($pdf_encoding == 'chinese_utf8_traditional' || $pdf_encoding == 'chinese_utf8'){
+		require_once APP_PATH_LIBRARIES . "PDF_Unicode.php";
+	}
+	//japanese
+	elseif($pdf_encoding == 'japanese_sjis'){
+		require_once APP_PATH_LIBRARIES . "MBFPDF.php";
+	}
+	else{
+		require APP_PATH_LIBRARIES . 'tFPDF.php';
+	}
+	$GLOBALS['project_encoding'] = $pdf_encoding;
 	
 	//translations
 	$vars = array('todo' => 1, 'lang' => $language, 'project_id' => $_GET['pid'], 'record_id' => $_GET['id'], 'page' => $_GET['form']);

@@ -107,7 +107,30 @@
 			"type": "checkbox",
 			"repeatable": false,
 			"default": ""
-		},		
+		},	
+		{
+			"key": "multilingual-project-encoding",
+			"name": "PDF Encodings",
+			"required": false,
+			"type": "sub_settings",
+			"repeatable": true,
+			"sub_settings":[
+				{
+					"key": "encoding-language",
+					"name": "Language",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "encoding-type",
+					"name": "Encoding",
+					"required": false,
+					"type": "text",
+					"repeatable": false
+				}
+			]
+		},
 		{
 			"key": "save-return-later",
 			"name": "Save & Return Later Text",
