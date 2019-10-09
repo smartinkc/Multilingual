@@ -37,6 +37,10 @@ class Multilingual extends AbstractExternalModule
 			echo '<script type="text/javascript">' . str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true, ($api_endpoint == true ? true : false)), file_get_contents($this->getModulePath() . 'js/multilingual_survey_return.js')))) . '</script>';
 			echo '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css', true, ($api_endpoint == true ? true : false)) . '">';
 		}
+		elseif(strpos($_SERVER['REQUEST_URI'], 'DataEntry/index.php') !== false){
+			echo '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css') . '">';
+			echo '<script type="text/javascript">' . str_replace('PDF_URL', $this->getUrl("multilingualPDF.php", true), str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true), file_get_contents($this->getModulePath() . 'js/multilingual_pdf.js'))))) . '</script>';
+		}
 	}
 
 	/**
@@ -407,6 +411,49 @@ class Multilingual extends AbstractExternalModule
 			return true;
 		}
 		return false;
+	}
+	
+	public function getLanguages($project_id){
+		$langVar = $this->languageVariable($project_id);
+		
+		$q = "SELECT element_enum FROM redcap_metadata WHERE project_id = " . $project_id . " AND field_name = '" . $langVar . "'";
+		$query = db_query($q);
+		$row = db_fetch_assoc($query);
+			
+		$tmp = explode(' \n ', $row['element_enum']);
+		foreach($tmp AS $key => $value){
+			$tmp2 = explode(',', $value);
+			$response[trim($tmp2[0])] = trim($tmp2[1]);
+		}	
+			
+		return $response;
+	}
+	
+	public function getData($project_id, $record){
+		$q = "SELECT record, event_id, field_name, `value` FROM redcap_data
+			WHERE project_id = " . $project_id . 
+			" AND record = '" . $record . "'";
+		$query = db_query($q);
+	
+		while($row = db_fetch_assoc($query)){
+			$response[$row['record']][$row['event_id']][$row['field_name']] = $row['value'];
+		}
+		
+		return $response;
+	}
+	
+	public function getMetaData($project_id, $form){
+		$q = "SELECT * FROM redcap_metadata
+			WHERE project_id = " . $project_id . 
+			" AND form_name = '" . $form . "'
+			ORDER BY field_order";
+		$query = db_query($q);
+	
+		while($row = db_fetch_assoc($query)){
+			$response[] = $row;
+		}
+		
+		return $response;
 	}
 
 	public function exportData($pid, $lang){

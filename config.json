@@ -42,7 +42,8 @@
 	],
 
 	"no-auth-pages": [
-		"index"
+		"index",
+		"multilingualPDF"
 	],
 	
 	"system-settings": [
