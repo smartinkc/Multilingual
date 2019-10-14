@@ -20,17 +20,39 @@
 		window.location.href = pdf_url + '&id=' + getVariable('id') + '&form=' + getVariable('page') + '&langIndex=' + langIndex;
 	});
 	
+	$('body').on('click', '.pdfLangFull', function(){
+		var langIndex = $(this).attr('id').replace('lang','');
+		var lang = $(this).html().replace(/(<([^>]+)>)/ig,"").trim();
+		
+		$('#recordActionDropdownDiv').hide();
+		
+		window.location.href = pdf_url + '&id=' + getVariable('id') + '&langIndex=' + langIndex;
+	});
+	
 	//functions
 	function appendOptions(){
 		var id;
 		var html = '';
-		for(id in languages){
-			html += '<li class="ui-menu-item">'
-				+ '<a href="javascript:;" style="display:block;" onclick="" id="lang' + id + '" tabindex="-1" role="menuitem" class="ui-menu-item-wrapper pdfLang"><img src="' + imageDir + 'pdf.gif"> ' + languages[id] + '</a>'
-				+ '</li>';
-		}
 		
-		$('#pdfExportDropdown').append(html);
+		if(getVariable('page')){
+			for(id in languages){
+				html += '<li class="ui-menu-item">'
+					+ '<a href="javascript:;" style="display:block;" onclick="" id="lang' + id + '" tabindex="-1" role="menuitem" class="ui-menu-item-wrapper pdfLang"><img src="' + imageDir + 'pdf.gif"> ' + languages[id] + '</a>'
+					+ '</li>';
+			}
+			
+			//data entry page
+			$('#pdfExportDropdown').append(html);
+		}
+		else{
+			for(id in languages){
+				html += '<li class="ui-menu-item">'
+					+ '<a href="javascript:;" style="display:block;" onclick="" id="lang' + id + '" tabindex="-1" role="menuitem" class="ui-menu-item-wrapper pdfLangFull"><img src="' + imageDir + 'pdf.gif"> ' + languages[id] + '</a>'
+					+ '</li>';
+			}
+			//record home page
+			$('#recordActionDropdown').append(html);
+		}
 	}
 
 	function getLanguages(){

@@ -19,7 +19,7 @@
 	$metadata = array();
 	$acknowledgement = array();
 	$app_title = 'TEST';
-	$Data = array();
+	$Data = array(0 => null);
 	$filename = 'test.pdf';
 	
 	//language choices
@@ -67,6 +67,16 @@
 	foreach($metadata AS $key => $values){
 		//remove PDF-HIDDEN
 		if(strpos($values['misc'], '@PDF-HIDDEN') !== false){
+			unset($metadata[$key]);
+			continue;
+		}
+		//remove record_id
+		elseif($values['field_order'] == 1){
+			unset($metadata[$key]);
+			continue;
+		}
+		//remove _complete variables
+		elseif(substr($values['field_name'], -9) == '_complete'){
 			unset($metadata[$key]);
 			continue;
 		}

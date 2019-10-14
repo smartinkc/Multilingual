@@ -37,7 +37,7 @@ class Multilingual extends AbstractExternalModule
 			echo '<script type="text/javascript">' . str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true, ($api_endpoint == true ? true : false)), file_get_contents($this->getModulePath() . 'js/multilingual_survey_return.js')))) . '</script>';
 			echo '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css', true, ($api_endpoint == true ? true : false)) . '">';
 		}
-		elseif(strpos($_SERVER['REQUEST_URI'], 'DataEntry/index.php') !== false){
+		elseif(strpos($_SERVER['REQUEST_URI'], 'DataEntry/index.php') !== false || strpos($_SERVER['REQUEST_URI'], 'DataEntry/record_home.php') !== false){
 			echo '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css') . '">';
 			echo '<script type="text/javascript">' . str_replace('PDF_URL', $this->getUrl("multilingualPDF.php", true), str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true), file_get_contents($this->getModulePath() . 'js/multilingual_pdf.js'))))) . '</script>';
 		}
@@ -180,8 +180,8 @@ class Multilingual extends AbstractExternalModule
 		$metaDataTableName = $this->getMetaDataTableName($data['project_id']);
 
 		$query = "SELECT field_name, element_type, misc, grid_name, element_validation_type, element_validation_min, element_validation_max, element_label FROM $metaDataTableName
-			WHERE project_id = " . $data['project_id'] . "
-				AND (form_name LIKE '" . $data['page'] . "' OR field_name LIKE 'survey_text_" . $data['page'] . "')";
+			WHERE project_id = " . $data['project_id'] 
+				. ($data['page'] !='' ? " AND (form_name LIKE '" . $data['page'] . "' OR field_name LIKE 'survey_text_" . $data['page'] . "')" : '');
 		$result = mysqli_query($conn, $query);
 
 		while($row = mysqli_fetch_array($result)){
@@ -442,11 +442,11 @@ class Multilingual extends AbstractExternalModule
 		return $response;
 	}
 	
-	public function getMetaData($project_id, $form){
+	public function getMetaData($project_id, $form = null){
 		$q = "SELECT * FROM redcap_metadata
-			WHERE project_id = " . $project_id . 
-			" AND form_name = '" . $form . "'
-			ORDER BY field_order";
+			WHERE project_id = " . $project_id 
+			. ($form ? " AND form_name = '" . $form . "'" : "") .
+			" ORDER BY field_order";
 		$query = db_query($q);
 	
 		while($row = db_fetch_assoc($query)){
