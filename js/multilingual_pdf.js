@@ -47,7 +47,7 @@
 		else{
 			for(id in languages){
 				html += '<li class="ui-menu-item">'
-					+ '<a href="javascript:;" style="display:block;" onclick="" id="lang' + id + '" tabindex="-1" role="menuitem" class="ui-menu-item-wrapper pdfLangFull"><img src="' + imageDir + 'pdf.gif"> ' + languages[id] + '</a>'
+					+ '<a href="javascript:;" style="display:block;" onclick="" id="lang' + id + '" tabindex="-1" role="menuitem" class="ui-menu-item-wrapper pdfLangFull"><i class="fas fa-file-pdf"></i> ' + languages[id] + '</a>'
 					+ '</li>';
 			}
 			//record home page

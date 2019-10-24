@@ -359,15 +359,17 @@ class Multilingual extends AbstractExternalModule
 	}
 	
 	public function updateLangVar($data){
-		$exist = json_decode(\REDCap::getData($data['project_id'], 'json', $data['record_id']), true);
-		if(!empty($exist)){
-			$recordVar = $this->getRecordVar($data);
-			$langVar = $this->getProjectSetting('languages_variable', $data['project_id']);
-			
-			$t = array($recordVar => $data['record_id'], ($langVar != null ? $langVar : 'languages') => $data['lang_id']);
-			$json_data = json_encode(array($t));
-			$tmp = \REDCap::saveData($data['project_id'], 'json', $json_data, 'normal');
-			return $exist;
+		if($data['record_id'] != ''){
+			$exist = json_decode(\REDCap::getData($data['project_id'], 'json', $data['record_id']), true);
+			if(!empty($exist)){
+				$recordVar = $this->getRecordVar($data);
+				$langVar = $this->getProjectSetting('languages_variable', $data['project_id']);
+				
+				$t = array($recordVar => $data['record_id'], ($langVar != null ? $langVar : 'languages') => $data['lang_id']);
+				$json_data = json_encode(array($t));
+				$tmp = \REDCap::saveData($data['project_id'], 'json', $json_data, 'normal');
+				return $exist;
+			}
 		}
 	}
 
