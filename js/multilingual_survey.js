@@ -26,9 +26,6 @@
 
 		//change out text for symbols
 		symbols();
-		
-		//econsent pdf
-		econsent_pdf();
 
 		//link to change
 		$('#surveytitle').parent().append(' <div id="changeLang" style="display:none;">' + lang + '</div>');
@@ -166,11 +163,19 @@
 	});
 	
 	function econsent_pdf(){
+		var id = 0;
+		for(id in languages){
+			if(languages[id] == lang){
+				break;
+			}
+		}
+		
 		$('iframe').each(function(){
 			if($(this).attr('src').indexOf('compact=1') > -1){
-				console.log(pdf_url + '&langIndex=' + 3 + '&display=1');
-				$(this).attr('src', pdf_url + '&langIndex=' + 3 + '&display=1');
-				$(this).parent().attr('data', pdf_url + '&langIndex=' + 3 + '&display=1');
+				//console.log(pdf_url + '&langIndex=' + id + '&display=1');
+				//$(this).attr('src', pdf_url + '&langIndex=' + id + '&display=1');
+				$(this).src = pdf_url + '&langIndex=' + id + '&display=1';
+				$(this).parent().attr('data', pdf_url + '&langIndex=' + id + '&display=1');
 			}
 		});
 	}
@@ -659,6 +664,9 @@
 			else{
 				doBranching('languages');
 			}
+			
+			//econsent pdf
+			econsent_pdf();
 		}
 	}
 
