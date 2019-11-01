@@ -6,6 +6,18 @@
 	use ExternalModules\AbstractExternalModule;
 	use ExternalModules\ExternalModules;
 	
+	function getName($n) { 
+		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'; 
+		$randomString = ''; 
+	  
+		for ($i = 0; $i < $n; $i++) { 
+			$index = rand(0, strlen($characters) - 1); 
+			$randomString .= $characters[$index]; 
+		} 
+	  
+		return $randomString; 
+	} 
+	
 	/* define("NOAUTH", true);
 	require APP_PATH_DOCROOT . '/Config/init_project.php';
 	define("FPDF_FONTPATH",   APP_PATH_WEBTOOLS . "pdf" . DS . "font" . DS);
@@ -116,10 +128,12 @@
 	}
 	
 	$newFile .= "// Render the PDF\r\n";
-	$newFile .= $pdfFile[1];
+	$newFile .= $pdfFile[1] . "\r\n";
+	$random = getName(10);
+	$newFile .= "unlink('".APP_PATH_DOCROOT."PDF".DS."index_multilingual_$random.php"."');";
 	
-	file_put_contents(APP_PATH_DOCROOT."PDF".DS."index_multilingual.php", $newFile);
-	chmod(775, APP_PATH_DOCROOT."PDF".DS."index_multilingual.php");
+	file_put_contents(APP_PATH_DOCROOT."PDF".DS."index_multilingual_$random.php", $newFile);
+	chmod(775, APP_PATH_DOCROOT."PDF".DS."index_multilingual_$random.php");
 
-	header('Location:' . APP_PATH_WEBROOT . "PDF" . DS . "index_multilingual.php?pid=" . $_GET['pid'] . (isset($_GET['form']) ? "&page=" . $_GET['form'] : '') . "&id=" . $_GET['id'] . (isset($_GET['event_id']) ? "&event_id=" . $_GET['event_id'] : '') . (isset($_GET['instance']) && $_GET['instance'] > 1 ? "&instance=" . $_GET['instance'] : '')); 
+	header('Location:' . APP_PATH_WEBROOT . "PDF" . DS . "index_multilingual_$random.php?pid=" . $_GET['pid'] . (isset($_GET['form']) ? "&page=" . $_GET['form'] : '') . "&id=" . $_GET['id'] . (isset($_GET['event_id']) ? "&event_id=" . $_GET['event_id'] : '') . (isset($_GET['instance']) && $_GET['instance'] > 1 ? "&instance=" . $_GET['instance'] : '')); 
 ?>
