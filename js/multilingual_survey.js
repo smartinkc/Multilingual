@@ -1,5 +1,6 @@
 (function(){
 	//load languages
+	var pdf_url = 'REDCAP_PDF_URL';
 	var ajax_url = 'REDCAP_AJAX_URL';
 	var langVar = 'REDCAP_LANGUAGE_VARIABLE';
 	
@@ -25,6 +26,9 @@
 
 		//change out text for symbols
 		symbols();
+		
+		//econsent pdf
+		econsent_pdf();
 
 		//link to change
 		$('#surveytitle').parent().append(' <div id="changeLang" style="display:none;">' + lang + '</div>');
@@ -160,6 +164,16 @@
 		$('body').append('<div id="p1000Overlay" style="text-align:center;vertical-align:middle;display:none;z-index:10000;position:fixed;top:0px;bottom:0px;right:0px;left:0px;background-color:rgba(0, 0, 0, 0.7);"></div>');
 		$('#p1000Overlay').append('<div id="p1000ChooseLang" style="display:none;position:fixed;top:50%;left:50%;transform: translate(-50%, -50%);width:;"></div>');
 	});
+	
+	function econsent_pdf(){
+		$('iframe').each(function(){
+			if($(this).attr('src').indexOf('compact=1') > -1){
+				console.log(pdf_url + '&langIndex=' + 3 + '&display=1');
+				$(this).attr('src', pdf_url + '&langIndex=' + 3 + '&display=1');
+				$(this).parent().attr('data', pdf_url + '&langIndex=' + 3 + '&display=1');
+			}
+		});
+	}
 
 	function loadSettings(){
 		// Get Settings JSON

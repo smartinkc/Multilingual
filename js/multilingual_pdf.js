@@ -16,8 +16,7 @@
 		var lang = $(this).html().replace(/(<([^>]+)>)/ig,"").trim();
 		
 		$('#pdfExportDropdownDiv').hide();
-		
-		window.location.href = pdf_url + '&id=' + getVariable('id') + '&form=' + getVariable('page') + '&langIndex=' + langIndex;
+		window.location.href = pdf_url + '&id=' + getVariable('id') + '&form=' + getVariable('page') + '&langIndex=' + langIndex + '&event_id=' + getVariable('event_id') + (getVariable('instance') ? '&instance=' + getVariable('instance') : '');
 	});
 	
 	$('body').on('click', '.pdfLangFull', function(){

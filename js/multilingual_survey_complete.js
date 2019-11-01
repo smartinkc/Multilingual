@@ -1,4 +1,5 @@
 (function(){
+	var pdf_url = 'REDCAP_PDF_URL';
 	var ajax_url = 'REDCAP_AJAX_URL';
 	var langVar = 'REDCAP_LANGUAGE_VARIABLE';
 	
@@ -7,6 +8,18 @@
 	var lang = getCookie('p1000Lang');
 	var settings = {};
 	getLanguages();
+	
+	$( document ).ready(function(){
+		downloadPDF();
+	});
+	
+	function downloadPDF(){
+		$('button').each(function(){
+			if($(this).find('span').html() == 'Download'){
+				$(this).attr('onclick', 'window.open("' + pdf_url + '&langIndex=' + lang + '");');
+			}
+		});
+	}
 
 	function getTranslations(){
 		langReady = 0;
@@ -77,7 +90,7 @@
 		}
 		
 		var html = $('#return_code_completed_survey_div').html();
-		if(html != '' && settings['save-return-page-complete-text']['value'][curLang]){
+		if(html != undefined && html != '' && settings['save-return-page-complete-text']['value'][curLang]){
 			//text
 			html = html.split('<div');
 			html[0] = settings['save-return-page-complete-text']['value'][curLang];

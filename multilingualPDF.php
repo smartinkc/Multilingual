@@ -6,7 +6,7 @@
 	use ExternalModules\AbstractExternalModule;
 	use ExternalModules\ExternalModules;
 	
-	define("NOAUTH", true);
+	/* define("NOAUTH", true);
 	require APP_PATH_DOCROOT . '/Config/init_project.php';
 	define("FPDF_FONTPATH",   APP_PATH_WEBTOOLS . "pdf" . DS . "font" . DS);
 	define("_SYSTEM_TTFONTS", APP_PATH_WEBTOOLS . "pdf" . DS . "font" . DS);
@@ -20,7 +20,7 @@
 	$acknowledgement = array();
 	$app_title = 'TEST';
 	$Data = array(0 => null);
-	$filename = 'test.pdf';
+	$filename = 'test.pdf'; */
 	
 	//language choices
 	$languages = $module->getLanguages($_GET['pid']);
@@ -40,7 +40,7 @@
 		}
 	}
 	
-	//chinese
+	/* //chinese
 	if($pdf_encoding == 'chinese_utf8_traditional' || $pdf_encoding == 'chinese_utf8'){
 		require_once APP_PATH_LIBRARIES . "PDF_Unicode.php";
 	}
@@ -51,7 +51,7 @@
 	else{
 		require APP_PATH_LIBRARIES . 'tFPDF.php';
 	}
-	$GLOBALS['project_encoding'] = $pdf_encoding;
+	$GLOBALS['project_encoding'] = $pdf_encoding; */
 	
 	//translations
 	$vars = array('todo' => 1, 'lang' => $language, 'project_id' => $_GET['pid'], 'record_id' => $_GET['id'], 'page' => $_GET['form']);
@@ -94,12 +94,32 @@
 			$metadata[$key]['element_enum'] = rtrim($element_enum, ' \n ');
 		}
 	}
-
-	//get record data
-	$Data = $module->getData($_GET['pid'], $_GET['id']);
 	
-	// Render the PDF
-	header("Content-type:application/pdf");
-	header("Content-Disposition:attachment; filename={$filename}");
-	renderPDF($metadata, $acknowledgement, strip_tags($pdf_title), $Data, isset($_GET['compact']));
+	//split up PDF/index.php file and add details
+	$pdfFile = file_get_contents(APP_PATH_DOCROOT."PDF".DS."index.php");
+	$pdfFile = explode('// Render the PDF', $pdfFile);
+
+	$t = explode('// If a survey response, get record, event, form instance', $pdfFile[0]);
+	$newFile = $t[0];
+	$newFile .= '$project_encoding = "' . $pdf_encoding . '";'. "\r\n";
+	$newFile .= $t[1];
+	$newFile .= '$app_title = "' . $pdf_title . '";' . "\r\n";
+	$newFile .= '$tmp = \'' . str_replace("'", "\'", json_encode($metadata)) . "';\r\n";
+	$newFile .= '$metadata = json_decode($tmp, true);' . "\r\n";
+	if($pdf_title == ''){$pdf_title = 'test.pdf';}
+	if($_GET['display'] == 1){
+		$newFile .= 'header("Content-type:application/pdf");'. "\r\n";
+	}
+	else{
+		$newFile .= 'header("Content-type:application/pdf");'. "\r\n";
+		$newFile .= 'header("Content-Disposition:attachment; filename=' . $pdf_title . '.pdf");' . "\r\n";
+	}
+	
+	$newFile .= "// Render the PDF\r\n";
+	$newFile .= $pdfFile[1];
+	
+	file_put_contents(APP_PATH_DOCROOT."PDF".DS."index_multilingual.php", $newFile);
+	chmod(775, APP_PATH_DOCROOT."PDF".DS."index_multilingual.php");
+
+	header('Location:' . APP_PATH_WEBROOT . "PDF" . DS . "index_multilingual.php?pid=" . $_GET['pid'] . (isset($_GET['form']) ? "&page=" . $_GET['form'] : '') . "&id=" . $_GET['id'] . (isset($_GET['event_id']) ? "&event_id=" . $_GET['event_id'] : '') . (isset($_GET['instance']) && $_GET['instance'] > 1 ? "&instance=" . $_GET['instance'] : '')); 
 ?>
