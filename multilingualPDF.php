@@ -107,6 +107,10 @@
 		}
 	}
 	
+	if(!empty($metadata[0])){
+		$metadata[1] = $metadata[0];
+	}
+	
 	//split up PDF/index.php file and add details
 	$pdfFile = file_get_contents(APP_PATH_DOCROOT."PDF".DS."index.php");
 	$pdfFile = explode('// Render the PDF', $pdfFile);
@@ -130,6 +134,8 @@
 	$newFile .= "// Render the PDF\r\n";
 	$newFile .= $pdfFile[1] . "\r\n";
 	$random = getName(10);
+	
+	//delete file
 	$newFile .= "unlink('".APP_PATH_DOCROOT."PDF".DS."index_multilingual_$random.php"."');";
 	
 	file_put_contents(APP_PATH_DOCROOT."PDF".DS."index_multilingual_$random.php", $newFile);
