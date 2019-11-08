@@ -107,8 +107,11 @@
 		}
 	}
 	
-	if(!empty($metadata[0])){
+	if(!empty($metadata[0]) && $_GET['form'] != ''){
 		$metadata[1] = $metadata[0];
+	}
+	elseif(!$_GET['form']){
+		$metadata[0] = $metadata[1];
 	}
 	
 	//split up PDF/index.php file and add details
