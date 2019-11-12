@@ -107,7 +107,15 @@
 			"type": "checkbox",
 			"repeatable": false,
 			"default": ""
-		},	
+		},
+		{
+			"key": "multilingual-econsent",
+			"name": "Use multilingual PDFs for eConsent/survey download",
+			"required": false,
+			"type": "checkbox",
+			"repeatable": false,
+			"default": ""
+		},		
 		{
 			"key": "multilingual-project-encoding",
 			"name": "PDF Encodings",

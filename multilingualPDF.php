@@ -18,22 +18,6 @@
 		return $randomString; 
 	} 
 	
-	/* define("NOAUTH", true);
-	require APP_PATH_DOCROOT . '/Config/init_project.php';
-	define("FPDF_FONTPATH",   APP_PATH_WEBTOOLS . "pdf" . DS . "font" . DS);
-	define("_SYSTEM_TTFONTS", APP_PATH_WEBTOOLS . "pdf" . DS . "font" . DS);
-	define("USE_UTF8", true);
-	
-	require APP_PATH_DOCROOT . 'PDF/functions.php';
-	define("DEID_TEXT", "[*DATA REMOVED*]");
-	
-	//initialize
-	$metadata = array();
-	$acknowledgement = array();
-	$app_title = 'TEST';
-	$Data = array(0 => null);
-	$filename = 'test.pdf'; */
-	
 	//language choices
 	$languages = $module->getLanguages($_GET['pid']);
 	$language = $languages[$_GET['langIndex']];
@@ -52,19 +36,6 @@
 		}
 	}
 	
-	/* //chinese
-	if($pdf_encoding == 'chinese_utf8_traditional' || $pdf_encoding == 'chinese_utf8'){
-		require_once APP_PATH_LIBRARIES . "PDF_Unicode.php";
-	}
-	//japanese
-	elseif($pdf_encoding == 'japanese_sjis'){
-		require_once APP_PATH_LIBRARIES . "MBFPDF.php";
-	}
-	else{
-		require APP_PATH_LIBRARIES . 'tFPDF.php';
-	}
-	$GLOBALS['project_encoding'] = $pdf_encoding; */
-	
 	//translations
 	$vars = array('todo' => 1, 'lang' => $language, 'project_id' => $_GET['pid'], 'record_id' => $_GET['id'], 'page' => $_GET['form']);
 	ob_start();
@@ -78,7 +49,7 @@
 	//replace labels and element_enum with translations
 	foreach($metadata AS $key => $values){
 		//remove PDF-HIDDEN
-		if(strpos($values['misc'], '@PDF-HIDDEN') !== false){
+		if(strpos($values['misc'], '@PDF-HIDDEN') !== false || strpos($values['misc'], '@HIDDEN-PDF') !== false){
 			unset($metadata[$key]);
 			continue;
 		}
@@ -94,7 +65,7 @@
 		}
 		
 		if($translations['questions'][$values['field_name']]['text']){
-			$metadata[$key]['element_label'] = $translations['questions'][$values['field_name']]['text'];
+			$metadata[$key]['element_label'] = strip_tags($translations['questions'][$values['field_name']]['text']);
 		}
 		
 		if($translations['answers'][$values['field_name']]['text']){
@@ -114,6 +85,13 @@
 		$metadata[0] = $metadata[1];
 	}
 	
+	//generate unique name for files
+	$random = getName(10);
+	
+	//save metadata to file
+	file_put_contents(APP_PATH_DOCROOT."PDF".DS."$random.json", json_encode($metadata));
+	chmod(775, APP_PATH_DOCROOT."PDF".DS."$random.php");
+	
 	//split up PDF/index.php file and add details
 	$pdfFile = file_get_contents(APP_PATH_DOCROOT."PDF".DS."index.php");
 	$pdfFile = explode('// Render the PDF', $pdfFile);
@@ -123,9 +101,9 @@
 	$newFile .= '$project_encoding = "' . $pdf_encoding . '";'. "\r\n";
 	$newFile .= $t[1];
 	$newFile .= '$app_title = "' . $pdf_title . '";' . "\r\n";
-	$newFile .= '$tmp = \'' . str_replace("'", "\'", json_encode($metadata)) . "';\r\n";
-	$newFile .= '$metadata = json_decode($tmp, true);' . "\r\n";
-	if($pdf_title == ''){$pdf_title = 'test.pdf';}
+	$newFile .= '$metadata = json_decode(file_get_contents(\'' . APP_PATH_DOCROOT."PDF".DS."$random.json" . '\'), true);' . "\r\n";
+
+	if($pdf_title == ''){$pdf_title = 'Multilingual';}
 	if($_GET['display'] == 1){
 		$newFile .= 'header("Content-type:application/pdf");'. "\r\n";
 	}
@@ -136,10 +114,10 @@
 	
 	$newFile .= "// Render the PDF\r\n";
 	$newFile .= $pdfFile[1] . "\r\n";
-	$random = getName(10);
 	
-	//delete file
-	$newFile .= "unlink('".APP_PATH_DOCROOT."PDF".DS."index_multilingual_$random.php"."');";
+	//delete files
+	$newFile .= "unlink('".APP_PATH_DOCROOT."PDF".DS."index_multilingual_$random.php"."');\r\n";
+	$newFile .= "unlink('".APP_PATH_DOCROOT."PDF".DS."$random.json"."');\r\n";
 	
 	file_put_contents(APP_PATH_DOCROOT."PDF".DS."index_multilingual_$random.php", $newFile);
 	chmod(775, APP_PATH_DOCROOT."PDF".DS."index_multilingual_$random.php");

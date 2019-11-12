@@ -666,7 +666,9 @@
 			}
 			
 			//econsent pdf
-			econsent_pdf();
+			if(pdf_url.substring(0, 5) != 'false'){
+				econsent_pdf();
+			}
 		}
 	}
 

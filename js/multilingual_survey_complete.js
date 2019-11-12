@@ -10,7 +10,9 @@
 	getLanguages();
 	
 	$( document ).ready(function(){
-		downloadPDF();
+		if(pdf_url.substring(0, 5) != 'false'){
+			downloadPDF();
+		}
 	});
 	
 	function downloadPDF(){
