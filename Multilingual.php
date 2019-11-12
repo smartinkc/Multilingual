@@ -39,7 +39,7 @@ class Multilingual extends AbstractExternalModule
 			echo '<script type="text/javascript">' . str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true, ($api_endpoint == true ? true : false)), file_get_contents($this->getModulePath() . 'js/multilingual_survey_return.js')))) . '</script>';
 			echo '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css', true, ($api_endpoint == true ? true : false)) . '">';
 		}
-		elseif(strpos($_SERVER['REQUEST_URI'], 'DataEntry/index.php') !== false /* || strpos($_SERVER['REQUEST_URI'], 'DataEntry/record_home.php') !== false */){
+		elseif(strpos($_SERVER['REQUEST_URI'], 'DataEntry/index.php') !== false || strpos($_SERVER['REQUEST_URI'], 'DataEntry/record_home.php') !== false){
 			echo '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css') . '">';
 			echo '<script type="text/javascript">' . str_replace('PDF_URL', $this->getUrl("multilingualPDF.php", true), str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true), file_get_contents($this->getModulePath() . 'js/multilingual_pdf.js'))))) . '</script>';
 		}

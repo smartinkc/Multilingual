@@ -78,12 +78,12 @@
 		}
 	}
 	
-	if(!empty($metadata[0]) && $_GET['form'] != ''){
+	/* if(!empty($metadata[0]) && $_GET['form'] != ''){
 		$metadata[1] = $metadata[0];
 	}
 	elseif(!$_GET['form']){
 		$metadata[0] = $metadata[1];
-	}
+	} */
 	
 	//generate unique name for files
 	$random = getName(10);
