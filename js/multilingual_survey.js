@@ -170,6 +170,7 @@
 			}
 		}
 		
+		//change iframe source
 		$('iframe').each(function(){
 			if($(this).attr('src').indexOf('compact=1') > -1){
 				//console.log(pdf_url + '&langIndex=' + id + '&display=1');
@@ -178,6 +179,19 @@
 				$(this).parent().attr('data', pdf_url + '&langIndex=' + id + '&display=1');
 			}
 		});
+		
+		//change econsent checkbox text
+		if($('#econsent_confirm_checkbox_label').is(':visible')){
+			for(id in settings['encoding-language']['value']){
+				if(settings['encoding-language']['value'][id] == lang){
+					break;
+				}
+			}
+			
+			if(settings['econsent-checkbox-text']['value'][id]){
+				$('#econsent_confirm_checkbox_label').html('<input type="checkbox" id="econsent_confirm_checkbox"> ' + settings['econsent-checkbox-text']['value'][id]);
+			}
+		}
 	}
 
 	function loadSettings(){

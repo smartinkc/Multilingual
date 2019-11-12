@@ -118,7 +118,7 @@
 		},		
 		{
 			"key": "multilingual-project-encoding",
-			"name": "PDF Encodings",
+			"name": "PDF Encodings/Translations",
 			"required": false,
 			"type": "sub_settings",
 			"repeatable": true,
@@ -142,6 +142,13 @@
 					"name": "PDF Title",
 					"required": false,
 					"type": "text",
+					"repeatable": false
+				},
+				{
+					"key": "econsent-checkbox-text",
+					"name": "EConsent Checkbox Text",
+					"required": false,
+					"type": "notes",
 					"repeatable": false
 				}
 			]
