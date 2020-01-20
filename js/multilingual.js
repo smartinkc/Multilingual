@@ -138,8 +138,8 @@
 					$('#' + id + '-tr').children('td:first').html(translations['questions'][id]['text']);
 				}
 				else{
-					//$('#' + id + '-tr').children().children().children().children().children().children('td:first').html(translations['questions'][id]['text']);
-					$('#label-' + id).html(translations['questions'][id]['text']);
+					$('#' + id + '-tr').children().children().children().children().children().children('td:first').html(translations['questions'][id]['text']);
+					//$('#label-' + id).html(translations['questions'][id]['text']);
 				}
 			}
 
