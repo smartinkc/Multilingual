@@ -62,7 +62,7 @@
 					$('#redcapValidationErrorPopup').html('');
 					setTimeout(function(){
 						id = id.replace('-tr', '');
-						if(translations['errors'][id] && translations['errors'][id]['text'] != ''){
+						if(translations['errors'] && translations['errors'][id] && translations['errors'][id]['text'] != ''){
 							$('#redcapValidationErrorPopup').html(translations['errors'][id]['text']);
 						}
 						else{
