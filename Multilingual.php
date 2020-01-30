@@ -132,7 +132,7 @@ class Multilingual extends AbstractExternalModule
 			$response[trim($tmp2[0])] = trim($tmp2[1]);
 		}
 
-		if($row['element_type'] == 'text' && strpos($row['element_validation_type'], 'date') !== false){
+		if($row['element_type'] == 'text' && (strpos($row['element_validation_type'], 'date') !== false || strpos($row['element_validation_type'], 'time') !== false)){
 			$response = null;
 			$response['0'] = 'Answer';
 		}
@@ -209,6 +209,9 @@ class Multilingual extends AbstractExternalModule
 							if(strpos($row['element_validation_type'], 'date') !== false){
 								$response['questions'][$row['field_name']]['type'] = 'date';
 							}
+							elseif(strpos($row['element_validation_type'], 'time') !== false){
+								$response['questions'][$row['field_name']]['type'] = 'time';
+							}
 							else{
 								$response['questions'][$row['field_name']]['type'] = $row['element_type'];
 							}
@@ -247,6 +250,9 @@ class Multilingual extends AbstractExternalModule
 							$response['answers'][$row['field_name']]['text'] = $trans;
 							if(strpos($row['element_validation_type'], 'date') !== false){
 								$response['answers'][$row['field_name']]['type'] = 'date';
+							}
+							elseif(strpos($row['element_validation_type'], 'time') !== false){
+								$response['answers'][$row['field_name']]['type'] = 'time';
 							}
 							elseif(strpos($row['element_validation_type'], 'signature') !== false){
 								$response['answers'][$row['field_name']]['type'] = 'signature';
@@ -367,12 +373,31 @@ class Multilingual extends AbstractExternalModule
 				$recordVar = $this->getRecordVar($data);
 				$langVar = $this->getProjectSetting('languages_variable', $data['project_id']);
 				
-				$t = array($recordVar => $data['record_id'], ($langVar != null ? $langVar : 'languages') => $data['lang_id']);
+				$t = array($recordVar => $data['record_id'], ($langVar != null ? $langVar : 'languages') => $data['lang_id'], 'redcap_event_name' => $this->getEventName($data['event_id']));
 				$json_data = json_encode(array($t));
 				$tmp = \REDCap::saveData($data['project_id'], 'json', $json_data, 'normal');
-				return $exist;
+
+				return $tmp;
 			}
 		}
+	}
+	
+	public function getEventName($event_id){
+		global $conn;
+		
+		$query = "SELECT descrip, arm_id FROM redcap_events_metadata WHERE event_id = " . $event_id;
+		$result = mysqli_query($conn, $query);
+		$row = mysqli_fetch_array($result); 
+		
+		$event_name = str_replace(" ", "_", $row['descrip']);
+		
+		$query = "SELECT arm_name FROM redcap_events_arms WHERE arm_id = " . $row['arm_id'];
+		$result = mysqli_query($conn, $query);
+		$row = mysqli_fetch_array($result); 
+		
+		$event_name .= '_' . strtolower(str_replace(" ", "_", $row['arm_name']));
+		
+		return $event_name;
 	}
 
 	//copied from php.net

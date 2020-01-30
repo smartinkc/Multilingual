@@ -7,6 +7,8 @@
 	var setup = 0;
 	var settings = {};
 	getSettings();
+	var closeInterval;
+	var currentTop = '';
 
 	$( document ).ready(function(){
 		getLanguages();
@@ -36,6 +38,11 @@
 					}
 				}
 				checkgetAnswers();
+				
+				//listener to scroll when dialog is closed
+				closeInterval = setInterval(function(){
+					checkClose();
+				}, 500);
 			}
 		});
 		
@@ -73,6 +80,17 @@
 			updateActionTags();
 		});
 	});
+	
+	function checkClose(){
+		if(($('#field_name').is(':visible') || $('#section_header_matrix').is(':visible')) && currentTop == ''){
+			currentTop = $(document).scrollTop();
+		}
+		else if(currentTop != '' && !$('#field_name').is(':visible') && !$('#section_header_matrix').is(':visible')){
+			clearInterval(closeInterval);
+			$(document).scrollTop(currentTop);
+			currentTop = '';
+		}
+	}
 	
 	function getSettings(){
 		var data = {};

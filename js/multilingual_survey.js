@@ -557,7 +557,7 @@
 						});
 					}
 				}
-				else if(translations['answers'][id]['type'] == 'date'){
+				else if(translations['answers'][id]['type'] == 'date' || translations['answers'][id]['type'] == 'time'){
 					//$('#' + id + '-tr').children().last().children().eq(2).children().html(translations['answers'][id]['text'][0]);
 					//$('#' + id + '-tr').children().last().children().eq(1).children().html(translations['answers'][id]['text'][0]);
 					$('#' + id + '-tr').find('button').html(translations['answers'][id]['text'][0]);
