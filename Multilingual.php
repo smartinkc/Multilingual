@@ -389,7 +389,7 @@ class Multilingual extends AbstractExternalModule
 		$result = mysqli_query($conn, $query);
 		$row = mysqli_fetch_array($result); 
 		
-		$event_name = str_replace(" ", "_", $row['descrip']);
+		$event_name = strtolower(str_replace(" ", "_", $row['descrip']));
 		
 		$query = "SELECT arm_name FROM redcap_events_arms WHERE arm_id = " . $row['arm_id'];
 		$result = mysqli_query($conn, $query);
