@@ -38,8 +38,15 @@
 		"redcap_survey_page"
 	],
 
-	"links": [
-	],
+	"links": {
+		"project": [
+			{
+				"name": "Data Dictionary Support",
+				"icon": "gear",
+				"url": "dataDictionaryHelper.php"
+			}
+		]
+	},
 
 	"no-auth-pages": [
 		"index",
