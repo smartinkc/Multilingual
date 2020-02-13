@@ -149,11 +149,12 @@
 					var id2;
 					for(id2 in translations['answers'][id]['text']){
 						$('[name="' + id + '"] option').each(function(){
+							$(this).show();
 							if($(this).val() == id2){
 								$(this).text(translations['answers'][id]['text'][id2]);
-								console.log('Translation found for '+id+' option '+id2);
-							} else {
-								console.log('No Translation for '+id+' option '+id2);
+								$(this).data('lang', lang);
+							} else if(settings['hide-answers-without-translation']['value'] && $(this).val() !== '' && $(this).data('lang') !== lang) {
+								$(this).hide();
 							}
 						});
 					}
@@ -180,9 +181,14 @@
 					var id2;
 					for(id2 in translations['answers'][id]['text']){
 						$('[name="' + id + '___radio"]').each(function(){
+							$(this).parent().contents().last().show();
+							$(this).show();
 							if($(this).val() == id2){
-								//$(this).parent().contents().last().replaceWith(' ' + translations['answers'][id]['text'][id2]);
 								$(this).parent().contents().last().html(' ' + translations['answers'][id]['text'][id2]);
+								$(this).data('lang', lang);
+							} else if(settings['hide-answers-without-translation']['value'] && $(this).data('lang') !== lang) {
+								$(this).parent().contents().last().hide();
+								$(this).hide();
 							}
 						});
 					}
@@ -190,9 +196,14 @@
 				else if(translations['answers'][id]['type'] == 'checkbox'){
 					var id2;
 					for(id2 in translations['answers'][id]['text']){
-						$('[name="__chk__' + id + '_RC_' + id2 + '"]').each(function(){
-							//$(this).parent().contents().last().replaceWith(' ' + translations['answers'][id]['text'][id2]);
-							$(this).parent().contents().last().html(' ' + translations['answers'][id]['text'][id2]);
+						$('#'+id+'-tr .choicevert').each(function(){
+							$(this).show();
+							if($(this).find('[name="__chk__' + id + '_RC_' + id2 + '"]').length) {
+								$(this).contents().last().html(' ' + translations['answers'][id]['text'][id2]);
+								$(this).data('lang', lang);
+							} else if(settings['hide-answers-without-translation']['value'] && $(this).data('lang') !== lang) {
+								$(this).hide();
+							}
 						});
 					}
 				}
