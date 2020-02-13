@@ -552,8 +552,12 @@
 					var id2;
 					for(id2 in translations['answers'][id]['text']){
 						$('[name="' + id + '"] option').each(function(){
+							$(this).show();
 							if($(this).val() == id2){
 								$(this).text(translations['answers'][id]['text'][id2]);
+								$(this).data('lang', lang);
+							} else if($(this).val() !== '' && $(this).data('lang') !== lang) {
+								$(this).hide();
 							}
 						});
 					}
@@ -588,9 +592,14 @@
 					var id2;
 					for(id2 in translations['answers'][id]['text']){
 						$('[name="' + id + '___radio"]').each(function(){
+							$(this).parent().contents().last().show();
+							$(this).show();
 							if($(this).val() == id2){
-								//$(this).parent().contents().last().replaceWith(' ' + translations['answers'][id]['text'][id2]);
 								$(this).parent().contents().last().html(' ' + translations['answers'][id]['text'][id2]);
+								$(this).data('lang', lang);
+							} else if($(this).data('lang') !== lang) {
+								$(this).parent().contents().last().hide();
+								$(this).hide();
 							}
 						});
 					}
@@ -598,8 +607,12 @@
 					for(id2 in translations['answers'][id]['text']){
 						$('.ec').each(function(){
 							var tmp = $(this).parent().attr('comps').split(',');
-							if(tmp[0] == id && tmp[2] == id2){
-								$(this).html(translations['answers'][id]['text'][id2]);
+							$(this).show();
+							if(tmp[0] == id && tmp[2] == id2) {
+								$(this).html(' ' + translations['answers'][id]['text'][id2]);
+								$(this).data('lang', lang);
+							} else if($(this).data('lang') !== lang) {
+								$(this).hide();
 							}
 						});
 					}
@@ -607,17 +620,26 @@
 				else if(translations['answers'][id]['type'] == 'checkbox'){
 					var id2;
 					for(id2 in translations['answers'][id]['text']){
-						$('[name="__chk__' + id + '_RC_' + id2 + '"]').each(function(){
-							//$(this).parent().contents().last().replaceWith(' ' + translations['answers'][id]['text'][id2]);
-							$(this).parent().contents().last().html(' ' + translations['answers'][id]['text'][id2]);
+						$('#'+id+'-tr .choicevert').each(function(){
+							$(this).show();
+							if($(this).find('[name="__chk__' + id + '_RC_' + id2 + '"]').length) {
+								$(this).contents().last().html(' ' + translations['answers'][id]['text'][id2]);
+								$(this).data('lang', lang);
+							} else if($(this).data('lang') !== lang) {
+								$(this).hide();
+							}
 						});
 					}
 					//enhanced checkboxes
 					for(id2 in translations['answers'][id]['text']){
 						$('.ec').each(function(){
 							var tmp = $(this).parent().attr('comps').split(',');
-							if(tmp[0] == id && tmp[2] == id2){
+							$(this).show();
+							if(tmp[0] == id && tmp[2] == id2) {
 								$(this).html(translations['answers'][id]['text'][id2]);
+								$(this).data('lang', lang);
+							} else if($(this).data('lang') !== lang) {
+								$(this).hide();
 							}
 						});
 					}

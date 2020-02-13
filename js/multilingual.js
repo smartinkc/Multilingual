@@ -151,6 +151,9 @@
 						$('[name="' + id + '"] option').each(function(){
 							if($(this).val() == id2){
 								$(this).text(translations['answers'][id]['text'][id2]);
+								console.log('Translation found for '+id+' option '+id2);
+							} else {
+								console.log('No Translation for '+id+' option '+id2);
 							}
 						});
 					}

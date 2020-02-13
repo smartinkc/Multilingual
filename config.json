@@ -116,6 +116,14 @@
 			"default": ""
 		},
 		{
+			"key": "hide-answers-without-translation",
+			"name": "Hide Answers that do not have a translation. (Radio/Dropdown/Checkbox Options without a translation for the current language will not be displayed)",
+			"required": false,
+			"type": "checkbox",
+			"repeatable": false,
+			"default": ""
+		},
+		{
 			"key": "multilingual-econsent",
 			"name": "Use multilingual PDFs for eConsent/survey download",
 			"required": false,
