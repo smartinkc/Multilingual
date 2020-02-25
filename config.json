@@ -124,8 +124,24 @@
 			"default": ""
 		},
 		{
+			"key": "hide-matrix-questions-without-translation",
+			"name": "Hide Matrix Field Questions that do not have a translation on instruments. (Matrix Rows/Questions without a translation for the current language will not be displayed)",
+			"required": false,
+			"type": "checkbox",
+			"repeatable": false,
+			"default": ""
+		},
+		{
 			"key": "hide-answers-without-translation-survey",
 			"name": "Hide Answers that do not have a translation on surveys. (Radio/Dropdown/Checkbox Options without a translation for the current language will not be displayed)",
+			"required": false,
+			"type": "checkbox",
+			"repeatable": false,
+			"default": ""
+		},
+		{
+			"key": "hide-matrix-questions-without-translation-survey",
+			"name": "Hide Matrix Field Questions that do not have a translation on surveys. (Matrix Rows/Questions without a translation for the current language will not be displayed)",
 			"required": false,
 			"type": "checkbox",
 			"repeatable": false,
