@@ -4,6 +4,7 @@ namespace CMH\Multilingual;
 use ExternalModules\AbstractExternalModule;
 use ExternalModules\ExternalModules;
 use \Piping as Piping;
+use REDCap;
 
 class Multilingual extends AbstractExternalModule
 {
@@ -27,6 +28,9 @@ class Multilingual extends AbstractExternalModule
 
 	function redcap_every_page_top($project_id){
 		$api_endpoint = $this->getProjectSetting('use-api-endpoint', $project_id);
+		
+		//$user_rights = REDCap::getUserRights();
+		//echo json_encode($user_rights);
 		
 		if(strpos($_SERVER['REQUEST_URI'], 'online_designer.php') !== false && isset($_GET['page'])){
 			echo '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css') . '">';

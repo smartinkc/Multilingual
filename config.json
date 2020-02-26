@@ -41,7 +41,7 @@
 	"links": {
 		"project": [
 			{
-				"name": "Data Dictionary Support",
+				"name": "Multilingual Data Dictionary Support",
 				"icon": "gear",
 				"url": "dataDictionaryHelper.php"
 			}

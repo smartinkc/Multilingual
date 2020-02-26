@@ -745,7 +745,7 @@
 		data['project_id'] = pid;
 		data['record_id'] = $('[name="' + table_pk + '"]').val();
 		data['event_id'] = event_id;
-		data['page'] = $('#surveytitle').html().replace(/ /g,'_').toLowerCase();
+		//data['page'] = $('#surveytitle').html().replace(/ /g,'_').toLowerCase();
 		var t;
 		for(t in languages){
 			if(languages[t] == lang){
