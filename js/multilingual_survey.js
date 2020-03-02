@@ -531,7 +531,7 @@
 			var id;
 			for(id in translations['questions']){
 				if(translations['questions'][id]['matrix'] != null){
-					if(!(translations['questions'][id]['matrix'] in matrixProcessed) && settings['hide-matrix-questions-without-translation-survey']['value']) {
+					if(!(translations['questions'][id]['matrix'] in matrixProcessed) && settings['hide-matrix-questions-without-translation-survey'] && settings['hide-matrix-questions-without-translation-survey']['value']) {
 						$('tr[mtxgrp="'+translations['questions'][id]['matrix']+'"].mtxfld').each(function(){
 							var curMtxQuestionId = $(this).attr('id');
 							curMtxQuestionId = curMtxQuestionId.replace('-tr', '');
@@ -567,7 +567,7 @@
 							if($(this).val() == id2){
 								$(this).text(translations['answers'][id]['text'][id2]);
 								$(this).data('lang', lang);
-							} else if(settings['hide-answers-without-translation-survey']['value'] && $(this).val() !== '' && $(this).data('lang') !== lang) {
+							} else if(settings['hide-answers-without-translation-survey'] && settings['hide-answers-without-translation-survey']['value'] && $(this).val() !== '' && $(this).data('lang') !== lang) {
 								$(this).hide();
 							}
 						});
@@ -609,7 +609,7 @@
 							if($(this).val() == id2){
 								$(this).parent().contents().last().html(' ' + translations['answers'][id]['text'][id2]);
 								$(this).data('lang', lang);
-							} else if(settings['hide-answers-without-translation-survey']['value'] && $(this).data('lang') !== lang) {
+							} else if(settings['hide-answers-without-translation-survey'] && settings['hide-answers-without-translation-survey']['value'] && $(this).data('lang') !== lang) {
 								$(this).parent().contents().last().hide();
 								$(this).hide();
 							}
@@ -623,7 +623,7 @@
 							if(tmp[0] == id && tmp[2] == id2) {
 								$(this).html(' ' + translations['answers'][id]['text'][id2]);
 								$(this).data('lang', lang);
-							} else if(settings['hide-answers-without-translation-survey']['value'] && $(this).data('lang') !== lang) {
+							} else if(settings['hide-answers-without-translation-survey'] && settings['hide-answers-without-translation-survey']['value'] && $(this).data('lang') !== lang) {
 								$(this).hide();
 							}
 						});
@@ -637,7 +637,7 @@
 							if($(this).find('[name="__chk__' + id + '_RC_' + id2 + '"]').length) {
 								$(this).contents().last().html(' ' + translations['answers'][id]['text'][id2]);
 								$(this).data('lang', lang);
-							} else if(settings['hide-answers-without-translation-survey']['value'] && $(this).data('lang') !== lang) {
+							} else if(settings['hide-answers-without-translation-survey'] && settings['hide-answers-without-translation-survey']['value'] && $(this).data('lang') !== lang) {
 								$(this).hide();
 							}
 						});
@@ -650,7 +650,7 @@
 							if(tmp[0] == id && tmp[2] == id2) {
 								$(this).html(translations['answers'][id]['text'][id2]);
 								$(this).data('lang', lang);
-							} else if(settings['hide-answers-without-translation-survey']['value'] && $(this).data('lang') !== lang) {
+							} else if(settings['hide-answers-without-translation-survey'] && settings['hide-answers-without-translation-survey']['value'] && $(this).data('lang') !== lang) {
 								$(this).hide();
 							}
 						});

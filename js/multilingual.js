@@ -131,7 +131,7 @@
 			var id;
 			for(id in translations['questions']){
 				if(translations['questions'][id]['matrix'] != null){
-					if(!(translations['questions'][id]['matrix'] in matrixProcessed) && settings['hide-matrix-questions-without-translation']['value']) {
+					if(!(translations['questions'][id]['matrix'] in matrixProcessed) && settings['hide-matrix-questions-without-translation'] && settings['hide-matrix-questions-without-translation']['value']) {
 						$('tr[mtxgrp="'+translations['questions'][id]['matrix']+'"].mtxfld').each(function(){
 							var curMtxQuestionId = $(this).attr('id');
 							curMtxQuestionId = curMtxQuestionId.replace('-tr', '');
@@ -166,7 +166,7 @@
 							if($(this).val() == id2){
 								$(this).text(translations['answers'][id]['text'][id2]);
 								$(this).data('lang', lang);
-							} else if(settings['hide-answers-without-translation']['value'] && $(this).val() !== '' && $(this).data('lang') !== lang) {
+							} else if(settings['hide-answers-without-translation'] && settings['hide-answers-without-translation']['value'] && $(this).val() !== '' && $(this).data('lang') !== lang) {
 								$(this).hide();
 							}
 						});
@@ -199,7 +199,7 @@
 							if($(this).val() == id2){
 								$(this).parent().contents().last().html(' ' + translations['answers'][id]['text'][id2]);
 								$(this).data('lang', lang);
-							} else if(settings['hide-answers-without-translation']['value'] && $(this).data('lang') !== lang) {
+							} else if(settings['hide-answers-without-translation'] && settings['hide-answers-without-translation']['value'] && $(this).data('lang') !== lang) {
 								$(this).parent().contents().last().hide();
 								$(this).hide();
 							}
@@ -214,7 +214,7 @@
 							if($(this).find('[name="__chk__' + id + '_RC_' + id2 + '"]').length) {
 								$(this).contents().last().html(' ' + translations['answers'][id]['text'][id2]);
 								$(this).data('lang', lang);
-							} else if(settings['hide-answers-without-translation']['value'] && $(this).data('lang') !== lang) {
+							} else if(settings['hide-answers-without-translation'] && settings['hide-answers-without-translation']['value'] && $(this).data('lang') !== lang) {
 								$(this).hide();
 							}
 						});
