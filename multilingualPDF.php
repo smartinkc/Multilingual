@@ -90,7 +90,6 @@
 	
 	//save metadata to file
 	file_put_contents(APP_PATH_DOCROOT."PDF".DS."$random.json", json_encode($metadata));
-	chmod(775, APP_PATH_DOCROOT."PDF".DS."$random.php");
 	
 	//split up PDF/index.php file and add details
 	$pdfFile = file_get_contents(APP_PATH_DOCROOT."PDF".DS."index.php");
