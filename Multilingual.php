@@ -370,6 +370,24 @@ class Multilingual extends AbstractExternalModule
 		return $row['field_name'];
 	}
 	
+	public function getSavedLang($data){
+		if($data['record_id'] != ''){
+			$langVar = $this->getProjectSetting('languages_variable', $data['project_id']);
+			$tmp = json_decode(REDCap::getData($data['project_id'], 'json', array($data['record_id']), array($langVar)),true);
+			if(!empty($tmp)){
+				header('Content-Type: application/json');
+				echo json_encode($tmp[0][$langVar]);
+			}
+			else{
+				return null;
+			}
+		}
+		else{
+			return null;
+		}
+		
+	}
+	
 	public function updateLangVar($data){
 		if($data['record_id'] != ''){
 			$exist = json_decode(\REDCap::getData($data['project_id'], 'json', $data['record_id']), true);

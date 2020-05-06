@@ -1,8 +1,11 @@
-(function(){
+var Multilingual = (function(){
 	//load languages
 	var pdf_url = 'REDCAP_PDF_URL';
 	var ajax_url = 'REDCAP_AJAX_URL';
 	var langVar = 'REDCAP_LANGUAGE_VARIABLE';
+	
+	//get language choice from url
+	getURLLanguage();
 	
 	var project_id = getVariable('pid');
 	//var languages = {1: 'en', 2: 'es', 3: 'fr'};
@@ -192,6 +195,14 @@
 			if(settings['econsent-checkbox-text']['value'][id]){
 				$('#econsent_confirm_checkbox_label').html('<input type="checkbox" id="econsent_confirm_checkbox"> ' + settings['econsent-checkbox-text']['value'][id]);
 			}
+		}
+	}
+	
+	function getURLLanguage(){
+		//use url
+		if(getVariable(langVar)){
+			setNormalCookie('p1000Lang', getVariable(langVar), .04);
+			return;
 		}
 	}
 
@@ -579,10 +590,10 @@
 					$('#' + id + '-tr').find('button').html(translations['answers'][id]['text'][0]);
 				}
 				else if(translations['answers'][id]['type'] == 'signature'){
-					$('#' + id + '-tr').children().last().children().eq(3).children().eq(1).html(translations['answers'][id]['text'][0]);
+					$('#' + id + '-tr').find('.fileuploadlink').html(translations['answers'][id]['text'][0]);
 				}
 				else if(translations['answers'][id]['type'] == 'file'){
-					$('#' + id + '-tr').children().last().children().eq(2).children().eq(1).html(translations['answers'][id]['text'][0]);
+					$('#' + id + '-tr').find('.fileuploadlink').html(translations['answers'][id]['text'][0]);
 				}
 				else if(translations['answers'][id]['type'] == 'slider'){
 					if (translations['answers'][id]['text'][0] != null) $('#sldrlaba-' + id).html(translations['answers'][id]['text'][0]);
@@ -633,7 +644,7 @@
 					var id2;
 					for(id2 in translations['answers'][id]['text']){
 						$('#'+id+'-tr .choicevert').each(function(){
-							$(this).show();
+							//$(this).show();
 							if($(this).find('[name="__chk__' + id + '_RC_' + id2 + '"]').length) {
 								$(this).contents().last().html(' ' + translations['answers'][id]['text'][id2]);
 								$(this).data('lang', lang);
@@ -646,7 +657,7 @@
 					for(id2 in translations['answers'][id]['text']){
 						$('.ec').each(function(){
 							var tmp = $(this).parent().attr('comps').split(',');
-							$(this).show();
+							//$(this).show();
 							if(tmp[0] == id && tmp[2] == id2) {
 								$(this).html(translations['answers'][id]['text'][id2]);
 								$(this).data('lang', lang);

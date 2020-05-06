@@ -19,6 +19,9 @@
 			case 3:
 				$module->getSettings($data);
 				break;
+			case 4:
+				$module->getSavedLang($data);
+				break;
 			default:
 				exit;
 		}
