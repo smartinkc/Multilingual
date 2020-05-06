@@ -732,11 +732,16 @@ var Multilingual = (function(){
 			piping();
 			stopText();
 			controlText();
+		
 			if(settings['languages_variable'] && settings['languages_variable']['value']){
-				doBranching(settings['languages_variable']['value']);
+				if($('#' + settings['languages_variable']['value'] + '-tr').length){
+					doBranching(settings['languages_variable']['value']);
+				}
 			}
 			else{
-				doBranching('languages');
+				if($('#languages-tr').length){
+					doBranching('languages');
+				}
 			}
 			
 			//econsent pdf
