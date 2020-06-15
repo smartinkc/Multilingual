@@ -163,6 +163,7 @@ var Multilingual = (function(){
 
 		//startUp
 		$('body').append('<div id="p1000Overlay" style="text-align:center;vertical-align:middle;display:none;z-index:10000;position:fixed;top:0px;bottom:0px;right:0px;left:0px;background-color:rgba(0, 0, 0, 0.7);"></div>');
+		$('body').append('<div id="p1000Overlay" style="text-align:center;vertical-align:middle;display:none;z-index:10000;position:fixed;top:0px;bottom:0px;right:0px;left:0px;background-color:rgba(0, 0, 0, 0.7);"><div id="closeOverlay" onclick="$(\'#p1000Overlay\').hide();">✖</div></div>');
 		$('#p1000Overlay').append('<div id="p1000ChooseLang" style="display:none;position:fixed;top:50%;left:50%;transform: translate(-50%, -50%);width:;"></div>');
 	});
 	
@@ -604,10 +605,8 @@ var Multilingual = (function(){
 					var id2;
 					var counter = 1;
 					for(id2 in translations['answers'][id]['text']){
-						//translations['answers'][id]['text'][id2]);
-						//$('#' + translations['answers'][id]['matrix'] + '-mtxhdr-tr').children('td').eq(1).children().children().children().children('td').eq(counter).html(translations['answers'][id]['text'][id2]);
 						$('#matrixheader-' + translations['answers'][id]['matrix'] + '-' + id2).html(translations['answers'][id]['text'][id2]);
-						// $('#matrixheader-' + translations['answers'][id]['matrix'] + '-' + id2).html('Answer');
+						$('.floatMtxHdr').find('#matrixheader-' + translations['answers'][id]['matrix'] + '-' + id2).html(translations['answers'][id]['text'][id2]);
 						counter++;
 					}
 				}
