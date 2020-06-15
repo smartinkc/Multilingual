@@ -79,6 +79,48 @@ class Multilingual extends AbstractExternalModule
 		}
 		return $langVar;
 	}
+	
+	public function getSurveySettings($data) {
+		$instruments = $this->getProjectSetting('instruments');
+		
+		if (!empty($instruments)) {
+			$instruments = json_decode($instruments);
+			$name = htmlspecialchars($data['instrument']);
+			$instrument = $instruments->$name;
+		} else {
+			$instruments = new \stdClass();
+		}
+		
+		header('Content-Type: application/json');
+		echo json_encode($instrument);
+	}
+	
+	public function saveSurveySettings($data) {
+		$instruments = $this->getProjectSetting('instruments');
+		$instrument = htmlspecialchars($data['instrument']);
+		$lang = htmlspecialchars($data['language']);
+		if (empty($instruments)) {
+			$instruments = new \stdClass();
+		} else {
+			$instruments = json_decode($instruments);
+		}
+		if (empty($instruments->$instrument)) {
+			$instruments->$instrument = new \stdClass();
+		}
+		if (empty($instruments->$instrument->$lang)) {
+			$instruments->$instrument->$lang = new \stdClass();
+		}
+		foreach ($data['collections'] as $coll_name => $coll) {
+			$instruments->$instrument->$lang->$coll_name = new \stdClass();
+			
+			// add each setting to collection after encoding HTML
+			foreach ($coll as $sname => $setting) {
+				$instruments->$instrument->$lang->$coll_name->$sname = htmlspecialchars($setting);
+			}
+		}
+		
+		$this->setProjectSetting('instruments', json_encode($instruments));
+	}
 
 	public function getSettings($data){
 		$response = $this->getProjectSettings($data['project_id']);
@@ -344,6 +386,26 @@ class Multilingual extends AbstractExternalModule
 							}
 						}
 					}
+				}
+			}
+		}
+		
+		// override
+		$instruments = $this->getProjectSetting('instruments');
+		if (!empty($instruments)) {
+			$instruments = json_decode($instruments);
+			$form_name = $data['page'];
+			$this_lang = $data['lang'];
+			$simple_settings = $instruments->$form_name->$this_lang;
+			if (!empty($simple_settings)) {
+				$general_settings = $simple_settings->survey_settings;
+				if (!empty($general_settings)) {
+					if (!empty($general_settings->title) || $general_settings->title == "")
+						$response['surveytext']['surveytitle'] = html_entity_decode($general_settings->title);
+					if (!empty($general_settings->instructions) || $general_settings->instructions == "")
+						$response['surveytext']['surveyinstructions'] = html_entity_decode($general_settings->instructions);
+					if (!empty($general_settings->acknowledgement) || $general_settings->acknowledgement == "")
+						$response['surveytext']['surveyacknowledgment'] = html_entity_decode($general_settings->acknowledgement);
 				}
 			}
 		}
