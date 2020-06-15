@@ -11,7 +11,13 @@ class Multilingual extends AbstractExternalModule
 	function redcap_survey_page($project_id, $record, $instrument, $event_id, $group_id, $survey_hash, $response_id, $repeat_instance){
 		$api_endpoint = $this->getProjectSetting('use-api-endpoint', $project_id);
 		// Update and add multilingual_survey.js
-		echo '<script type="text/javascript">' . str_replace('REDCAP_PDF_URL', ($this->getProjectSetting('multilingual-econsent', $project_id) ? $this->getUrl("multilingualPDF.php", true, ($api_endpoint == true ? true : false)) : 'false') . '&id=' . $record . '&form=' . $instrument . '&event_id=' . $event_id . '&instance=' . $repeat_instance, str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true, ($api_endpoint == true ? true : false)), file_get_contents($this->getModulePath() . 'js/multilingual_survey.js'))))) . '</script>';
+		echo '<script type="text/javascript">' . 
+		str_replace('REDCAP_PDF_URL', ($this->getProjectSetting('multilingual-econsent', $project_id) ? $this->getUrl("multilingualPDF.php", true, ($api_endpoint == true ? true : false)) : 'false') . '&id=' . $record . '&form=' . $instrument . '&event_id=' . $event_id . '&instance=' . $repeat_instance, 
+		str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, 
+		str_replace('REDCAP_INSTRUMENT_NAME', $instrument, 
+		str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), 
+		str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true, ($api_endpoint == true ? true : false)), 
+		file_get_contents($this->getModulePath() . 'js/multilingual_survey.js')))))) . '</script>';
 		echo '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css', true, $api_endpoint == true) . '">';
 	}
 
@@ -28,6 +34,7 @@ class Multilingual extends AbstractExternalModule
 
 	function redcap_every_page_top($project_id){
 		$api_endpoint = $this->getProjectSetting('use-api-endpoint', $project_id);
+		$at_survey_settings = strpos($_SERVER['REQUEST_URI'], 'Surveys/edit_info.php') !== false || strpos($_SERVER['REQUEST_URI'], 'Surveys/create_survey.php') !== false;
 		
 		//$user_rights = REDCap::getUserRights();
 		//echo json_encode($user_rights);
@@ -39,13 +46,32 @@ class Multilingual extends AbstractExternalModule
 		elseif(strpos($_SERVER['REQUEST_URI'], 'DataExport/index.php') !== false){
 			echo '<script type="text/javascript">' . str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true), file_get_contents($this->getModulePath() . 'js/multilingual_export.js'))) . '</script>';
 		}
-		elseif($_GET['__return'] == 1){
-			echo '<script type="text/javascript">' . str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true, ($api_endpoint == true ? true : false)), file_get_contents($this->getModulePath() . 'js/multilingual_survey_return.js')))) . '</script>';
+		elseif($_GET['__return'] == 1 or (isset($_GET['s']) && !isset($_GET['__page__']))){
+			// $instrument = $this->getInstrumentNameFromSurveyHash($project_id);
+			$instrument = $_GET['page'];
+			echo '<script type="text/javascript">' . 
+			str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, 
+			str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), 
+			str_replace('REDCAP_INSTRUMENT_NAME', $instrument, 
+			str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true, ($api_endpoint == true ? true : false)), 
+			file_get_contents($this->getModulePath() . 'js/multilingual_survey_return.js'))))) . '</script>';
+			
 			echo '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css', true, ($api_endpoint == true ? true : false)) . '">';
 		}
 		elseif(strpos($_SERVER['REQUEST_URI'], 'DataEntry/index.php') !== false || strpos($_SERVER['REQUEST_URI'], 'DataEntry/record_home.php') !== false){
 			echo '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css') . '">';
 			echo '<script type="text/javascript">' . str_replace('PDF_URL', $this->getUrl("multilingualPDF.php", true), str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true), file_get_contents($this->getModulePath() . 'js/multilingual_pdf.js'))))) . '</script>';
+		}
+		elseif($at_survey_settings && isset($_GET['page'])){
+			$index_url = $this->getUrl("index.php", true, ($api_endpoint == true ? true : false));
+			$language_var = $this->languageVariable($project_id);
+			$stylesheet = '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css') . '">';
+			$ml_survey_settings_js = '<script type="text/javascript">' . file_get_contents($this->getUrl('js/multilingual_survey_settings.js')) . '</script>';
+			$ml_survey_settings_js = str_replace('REDCAP_AJAX_URL', $index_url, $ml_survey_settings_js);
+			$ml_survey_settings_js = str_replace('REDCAP_LANGUAGE_VARIABLE', $language_var, $ml_survey_settings_js);
+			
+			echo $stylesheet;
+			echo $ml_survey_settings_js;
 		}
 	}
 
