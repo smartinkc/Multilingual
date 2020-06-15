@@ -3,6 +3,7 @@ var Multilingual = (function(){
 	var pdf_url = 'REDCAP_PDF_URL';
 	var ajax_url = 'REDCAP_AJAX_URL';
 	var langVar = 'REDCAP_LANGUAGE_VARIABLE';
+	var instrument_name = 'REDCAP_INSTRUMENT_NAME';
 	
 	//get language choice from url
 	getURLLanguage();
@@ -21,6 +22,8 @@ var Multilingual = (function(){
 	var errorChecking = 0;
 	var anyTranslated = false;
 	var matrixProcessed = {};
+	var settingsRetrieved = false;
+	var languagesRetrieved = false;
 
 	//document ready change language
 	$( document ).ready(function(){
@@ -228,6 +231,9 @@ var Multilingual = (function(){
 				data: 'data=' + json,
 				success: function (r) {
 					settings = r;
+					settingsRetrieved = true;
+					if (languagesRetrieved)
+						loadFormSettings();
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
 				   console.log(textStatus, errorThrown);
@@ -240,6 +246,9 @@ var Multilingual = (function(){
 				data: 'data=' + json2,
 				success: function (r) {
 					languages = r;
+					languagesRetrieved = true;
+					if (settingsRetrieved)
+						loadFormSettings();
 					totalLanguages = Object.keys(languages).length;
 					getLanguage();
 				},
@@ -349,26 +358,30 @@ var Multilingual = (function(){
 			}
 		}
 		
-		if(langKey > -1){
+		if(langKey > -1 || (form_settings & form_settings.save_and_return_survey)){
+			var title = "<b>" + settings['save-return-later-corner']['value'][langKey] + "</b> " + (form_settings.save_and_return_survey.popup_title);
+			var popup_text = settings['save-return-later-text']['value'][langKey];
+			var popup_button = settings['save-return-later-continue-button']['value'][langKey];
+			var save_button = settings['save-return-later-button']['value'][langKey];
+			var corner_text = settings['save-return-later-corner']['value'][langKey];
+			
 			//save and return button
-			$('[name="submit-btn-savereturnlater"]').html(settings['save-return-later-button']['value'][langKey]);
+			$('[name="submit-btn-savereturnlater"]').html(save_button);
 			
 			//save and return corner
-			$('#return_corner').html(settings['save-return-later-corner']['value'][langKey]);
+			$('#return_corner').html(corner_text);
 			
-			//save and return continue button
-			var b = '';
-			var t = '';
-			try{
-				t = $('#dpop').children().children().children(1).children().children().children().children().find('button')[0].innerHTML;
-				b = $('#dpop').children().children().children(1).children().children().children().children().find('button')[0].outerHTML.replace(t, settings['save-return-later-continue-button']['value'][langKey]);
-			}
-			catch(e){
-				//console.log(e.message);
-			}
 			
-			//save and return popup text
-			$('#dpop').children().children().children(1).children().children().children().children().html(settings['save-return-later-text']['value'][langKey] + '<br>' + b);
+			var popup = $('#dpop .popup-contents tbody tr td');
+			
+			// popup title
+			$(popup).find('span:eq(1)').html(title);
+			
+			// popup text
+			$(popup).find('div')[0].previousSibling.textContent = popup_text;
+			
+			// popup button
+			$(popup).find('button').html(popup_button);
 		}
 	}
 
@@ -873,6 +886,32 @@ var Multilingual = (function(){
 		});
 	}
 
+	function loadFormSettings() {
+		// overwrite project-level $settings with form-specific $form_settings
+		var sess_lang = getCookie('p1000Lang');
+		if (settings.instruments) {
+			settings.instruments = JSON.parse(settings.instruments.value)
+			form_settings = settings.instruments[instrument_name]
+			if (form_settings) {
+				form_settings = form_settings[sess_lang];
+				
+				var mapping = {
+					"save-return-later-button": {collection: 'save_and_return_survey', setting: 'button'},
+					"save-return-later-corner": {collection: 'save_and_return_survey', setting: 'popup_hint'},
+					"save-return-later-text": {collection: 'save_and_return_survey', setting: 'popup_text'},
+					"save-return-later-continue-button": {collection: 'save_and_return_survey', setting: 'popup_button'}
+				};
+				
+				for (let [name, entry] of Object.entries(mapping)) {
+					if (form_settings && form_settings[entry.collection] &&  form_settings[entry.collection][entry.setting]) {
+						settings[name]['value'] = [form_settings[entry.collection][entry.setting]]
+						// console.log('saved setting ' + name + ':', form_settings[entry.collection][entry.setting])
+					}
+				}
+			}
+		}
+	}
+	
 	//generic functions
 	function getVariable(variable){
 		var query = window.location.search.substring(1);

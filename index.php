@@ -8,6 +8,12 @@
 
 	if(isset($data) && $data != ''){
 		$data = json_decode($data, true);
+		
+		if ($data['action'] == 'SAVE_SURVEY_SETTINGS') {
+			$module->saveSurveySettings($data);
+		} else if ($data['action'] == 'GET_SURVEY_SETTINGS') {
+			$module->getSurveySettings($data);
+		}
 
 		switch($data['todo']){
 			case 1:
