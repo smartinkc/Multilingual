@@ -2,12 +2,14 @@
 	//load languages
 	var ajax_url = 'REDCAP_AJAX_URL';
 	var langVar = 'REDCAP_LANGUAGE_VARIABLE';
+	var instrument_name = 'REDCAP_INSTRUMENT_NAME';
 	
 	var project_id = getVariable('pid');
 	//var languages = {1: 'en', 2: 'es', 3: 'fr'};
 	var languages = {1: 'en', 2: 'es'};
 	var totalLanguages = 2;
 	var settings = {};
+	var form_settings = {};
 	settings['empty'] = true;
 	var lang = 'en';
 	var errorChecking = 0;
@@ -16,6 +18,13 @@
 	//document ready change language
 	$( document ).ready(function(){
 		getLanguages();
+		
+		// translate close button for all modals (except first modal which doesn't trigger this listener)
+		$('body').on('dialogopen', '.simpleDialog', function() {
+			if (form_settings.save_and_return_modals && form_settings.save_and_return_modals.close) {
+				$(this).closest("div[role='dialog']").find('.ui-dialog-buttonset button').html(form_settings.save_and_return_modals.close);
+			}
+		});
 		
 		//error messages (invalid input in text boxes)
 		$('body').on('blur', 'input', function(){
@@ -53,6 +62,21 @@
 							$(this).children().html('<img alt="Page" src="APP_PATH_IMAGESexclamation_frame.png">');
 						}
 					});
+					
+					// apply instrument-specific settings
+					var errorModal = $('#redcapValidationErrorPopup').closest("div[role='dialog']");
+					if (errorModal.length && form_settings) {
+						if (form_settings.save_and_return_modals) {
+							// translate modal title
+							if (form_settings.save_and_return_modals.error_title) {
+								$(errorModal).find('.ui-dialog-title').html(form_settings.save_and_return_modals.error_title);
+							}
+							// body
+							if (form_settings.save_and_return_modals.error_body) {
+								$(errorModal).find('.ui-dialog-content').html(form_settings.save_and_return_modals.error_body);
+							}
+						}
+					}
 					errorChecking = 0;
 				}, 200);
 			}
@@ -63,7 +87,7 @@
 	function translate(){
 		//get current language
 		lang = getCookie('p1000Lang');
-		var curLang = 0;
+		var curLang = null;
 		var id;
 		for(id in settings['save-return-later-lang']['value']){
 			if(settings['save-return-later-lang']['value'][id] == lang){
@@ -72,7 +96,62 @@
 			}
 		}
 		
-		if($('#return_instructions').length && curLang > 0 && settings['save-return-page-popup-title']['value'][curLang]){
+		var configurations_set = (settings['save-return-page-popup-title']['value'][curLang] || form_settings);
+		if($('#return_instructions').length && curLang != null && configurations_set){
+			var text = ""
+			
+			// translate 'Enter email address' modal title/close button
+			if (form_settings.save_and_return_modals) {
+				title = form_settings.save_and_return_modals.error_title;
+				body = form_settings.save_and_return_saved.email_input;
+				close = form_settings.save_and_return_modals.close;
+				
+				text = $("#sendLinkBtn").attr('onclick');
+				// from base.js: function simpleDialog(content,title,id,width,onCloseJs,closeBtnTxt,okBtnJs,okBtnTxt) {
+				
+				simpleDialogCall = "simpleDialog('" + body + "','" + title + "',null,null,'document.getElementById(\"email\").focus();', '" + close + "');"
+				$("#sendLinkBtn").attr('onclick', text.replace(/simpleDialog(.*);/, simpleDialogCall));
+				delete title;
+				delete body;
+				delete close;
+			}
+			
+			// translate #email placeholder text
+			if (form_settings.save_and_return_saved.email_input) {
+				var translation = form_settings.save_and_return_saved.email_input;
+				$("#email").attr('value', translation);
+				
+				// update js on[x] events too
+				text = $("#email").attr('onblur');
+				var newOnBlur = text.replace(/Enter email address/g, translation);
+				$("#email").attr('onblur', text.replace(/Enter email address/g, translation));
+				
+				text = $("#email").attr('onfocus');
+				$("#email").attr('onfocus', text.replace(/Enter email address/g, translation));
+				
+				text = $("#email").attr('onclick');
+				$("#email").attr('onclick', text.replace(/Enter email address/g, translation));
+				
+				// update #sendLinkBtn onclick
+				text = $("#sendLinkBtn").attr('onclick');
+				$("#sendLinkBtn").attr('onclick', text.replace(/'Enter email address'/g, "'" + translation + "'"));
+			}
+			
+			// translate Email sent! modal title and body
+			if (form_settings && form_settings.save_and_return_modals) {
+				title = form_settings.save_and_return_modals.email_title || "Email sent";
+				body = form_settings.save_and_return_modals.email_body || "The email was successfully sent to ";
+				arg_string = "'" + body + "', '" + title + "'";
+				
+				text = $("#sendLinkBtn").attr('onclick');
+				text = text.replace(/'The email was successfully sent to', 'Email sent!'/, arg_string); 
+				$("#sendLinkBtn").attr('onclick', text);
+				
+				delete title;
+				delete body;
+				delete arg_string;
+			}
+			
 			//popup 
 			if($('#ui-id-1').is(':visible')){
 				$('#ui-id-1').html(settings['save-return-page-popup-title']['value'][curLang]);
@@ -80,7 +159,12 @@
 				var html = $('#codePopupReminderTextCode').html();
 				html = html.split('<span');
 				$('#codePopupReminderTextCode').html('<b>' + settings['save-return-page-popup-return-code']['value'][curLang] + ':</b> <span' + html[1]);
+				
+				// translate modal button
 				$('.ui-dialog-buttonpane').find('button').html('&#x2716;');
+				if (form_settings && form_settings.save_and_return_modals && form_settings.save_and_return_modals.close) {
+					$('.ui-dialog-buttonpane').find('button').html(form_settings.save_and_return_modals.close);
+				}
 				
 				hasCode = 1;
 			}
@@ -115,6 +199,16 @@
 				
 				$('#return_instructions').find('span').eq(4).html('');
 				$('#return_instructions').find('span').eq(1).html('');
+				
+				// translate footnotes 1-2
+				$('#return_instructions').find('span').eq(1).html('');
+				if (form_settings && form_settings.save_and_return_saved && form_settings.save_and_return_saved.footnote1) {
+					$('#return_instructions').find('span').eq(1).html(form_settings.save_and_return_saved.footnote1);
+				}
+				$('#return_instructions').find('span').eq(4).html('');
+				if (form_settings && form_settings.save_and_return_saved && form_settings.save_and_return_saved.footnote2) {
+					$('#return_instructions').find('span').eq(4).html(form_settings.save_and_return_saved.footnote2);
+				}
 			}
 			else{
 				$('#return_instructions').find('div').eq(0).html(settings['save-return-page-instructions']['value'][curLang]);
@@ -130,15 +224,37 @@
 				$('#return_continue_form').find('button').eq(0).html(settings['save-return-later-continue-button']['value'][curLang]);
 			}
 		}
-		else if($('#surveytitle').length && curLang > 0 && settings['save-return-page-survey-title']['value'][curLang]){
+		else if($('#surveytitle').length && curLang != null && settings['save-return-page-survey-title']['value'][curLang]){
 			//continue page if cookie still set
 			$('#surveytitle').html(settings['save-return-page-survey-title']['value'][curLang]);
 			$('#return_code_form_instructions').html(settings['save-return-page-continue-text']['value'][curLang]);
 			$('#return_code_form').find('button').html(settings['save-return-later-continue-button']['value'][curLang]);
 			
+			if (form_settings.save_and_return_returned) {
+				if (form_settings.save_and_return_returned.submit_code)
+					$('#return_code_form').find('button').html(form_settings.save_and_return_returned.submit_code);
+			}
+			
 			//start over
 			$('#start_over_form').find('p').html(settings['save-return-page-startover-text']['value'][curLang]);
 			$('#start_over_form').find('input').val(settings['save-return-page-startover-button']['value'][curLang]);
+		}
+		
+		errorDiv = $("div.red");
+		if (form_settings.save_and_return_returned) {
+			errorTranslation = form_settings.save_and_return_returned.error
+		}
+		if (errorDiv.length && errorTranslation) {
+			contents = $(errorDiv).html();
+			$(errorDiv).html(contents.replace(/<b>.*<\/b>/, errorTranslation));
+		}
+		
+		// translate start over alert
+		if (form_settings.save_and_return_returned) {
+			var prompt_text = form_settings.save_and_return_returned.start_over_prompt;
+			if (prompt_text) {
+				$("#start_over_form form input[type='submit']").attr('onclick', "return confirm('" + prompt_text + "');");
+			}
 		}
 	}
 	
@@ -154,6 +270,41 @@
 			data: 'data=' + json,
 			success: function (r) {
 				settings = r;
+				
+				// overwrite project-level settings with form-specific settings
+				var sess_lang = getCookie('p1000Lang');
+				if (settings.instruments) {
+					settings.instruments = JSON.parse(settings.instruments.value)
+					form_settings = settings.instruments[instrument_name]
+					if (form_settings) {
+						form_settings = form_settings[sess_lang];
+						
+						var mapping = {
+							"save-return-page-title": {collection: 'save_and_return_saved', setting: 'title'},
+							"save-return-page-instructions": {collection: 'save_and_return_saved', setting: 'instructions1'},
+							"save-return-page-popup-return-code": {collection: 'save_and_return_saved', setting: 'return_code'},
+							"save-return-page-return-code-instructions": {collection: 'save_and_return_saved', setting: 'req_note'},
+							"save-return-page-survey-link-title": {collection: 'save_and_return_saved', setting: 'heading1'},
+							"save-return-page-email-instructions": {collection: 'save_and_return_saved', setting: 'instructions2'},
+							"save-return-page-email-button": {collection: 'save_and_return_saved', setting: 'send_link'},
+							"save-return-page-continue-title": {collection: 'save_and_return_saved', setting: 'instructions3'},
+							"save-return-later-continue-button": {collection: 'save_and_return_saved', setting: 'continue'},
+							"save-return-page-popup-title": {collection: 'save_and_return_modals', setting: 'intro_title'},
+							"save-return-page-survey-title": {collection: 'survey_settings', setting: 'title'},
+							"save-return-page-continue-text": {collection: 'save_and_return_returned', setting: 'instructions'},
+							"save-return-page-startover-text": {collection: 'save_and_return_returned', setting: 'start_over_instructions'},
+							"save-return-page-startover-button": {collection: 'save_and_return_returned', setting: 'start_over_button'}
+						};
+						
+						for (let [name, entry] of Object.entries(mapping)) {
+							if (form_settings && form_settings[entry.collection] &&  form_settings[entry.collection][entry.setting]) {
+								settings[name]['value'] = [form_settings[entry.collection][entry.setting]]
+								// console.log('saved setting ' + name + ':', form_settings[entry.collection][entry.setting])
+							}
+						}
+					}
+				}
+				
 				translate();
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
@@ -167,6 +318,7 @@
 		data['todo'] = 2;
 		data['project_id'] = pid;
 		data['field_name'] = langVar;
+		data['instrument'] = instrument_name;
 		var json = encodeURIComponent(JSON.stringify(data));
 
 		$.ajax({

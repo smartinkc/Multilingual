@@ -76,3 +76,12 @@
 	cursor:pointer;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3), 0 6px 20px 0 rgba(0, 0, 0, 0.30);
 }
+
+label.ml-mod {
+	display: inline;
+	margin: 0px 4px 0px 124px;
+}
+
+select#ml-mod-language {
+	min-width: 80px;
+}
