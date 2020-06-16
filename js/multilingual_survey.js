@@ -24,6 +24,7 @@ var Multilingual = (function(){
 	var matrixProcessed = {};
 	var settingsRetrieved = false;
 	var languagesRetrieved = false;
+	var form_settings = null;
 
 	//document ready change language
 	$( document ).ready(function(){
@@ -232,8 +233,7 @@ var Multilingual = (function(){
 				success: function (r) {
 					settings = r;
 					settingsRetrieved = true;
-					if (languagesRetrieved)
-						loadFormSettings();
+					loadFormSettings();
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
 				   console.log(textStatus, errorThrown);
@@ -247,10 +247,9 @@ var Multilingual = (function(){
 				success: function (r) {
 					languages = r;
 					languagesRetrieved = true;
-					if (settingsRetrieved)
-						loadFormSettings();
 					totalLanguages = Object.keys(languages).length;
 					getLanguage();
+					loadFormSettings();
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
 				   console.log(textStatus, errorThrown);
@@ -358,22 +357,63 @@ var Multilingual = (function(){
 			}
 		}
 		
-		if(langKey > -1 || (form_settings & form_settings.save_and_return_survey)){
-			var title = "<b>" + settings['save-return-later-corner']['value'][langKey] + "</b> " + (form_settings.save_and_return_survey.popup_title);
-			var popup_text = settings['save-return-later-text']['value'][langKey];
-			var popup_button = settings['save-return-later-continue-button']['value'][langKey];
-			var save_button = settings['save-return-later-button']['value'][langKey];
-			var corner_text = settings['save-return-later-corner']['value'][langKey];
-			
+		if(langKey > -1){
 			//save and return button
 			$('[name="submit-btn-savereturnlater"]').html(save_button);
-			
+			$('[name="submit-btn-savereturnlater"]').html(settings['save-return-later-button']['value'][langKey]);
+
 			//save and return corner
 			$('#return_corner').html(corner_text);
-			
-			
+			$('#return_corner').html(settings['save-return-later-corner']['value'][langKey]);
+
+			//save and return continue button^M
+			var b = '';
+			var t = '';
+			try{
+				t = $('#dpop').children().children().children(1).children().children().children().children().find('button')[0].innerHTML;
+				b = $('#dpop').children().children().children(1).children().children().children().children().find('button')[0].outerHTML.replace(t, settings['save-return-later-continue-button']['value'][langKey]);
+			}
+			catch(e){
+				//console.log(e.message);
+			}
+			//save and return popup text
+			$('#dpop').children().children().children(1).children().children().children().children().html(settings['save-return-later-text']['value'][langKey] + '<br>' + b);
+		}
+		
+		// form specific translation from Survey Settings
+		if (form_settings && form_settings[lang] && form_settings[lang].save_and_return_survey) {
 			var popup = $('#dpop .popup-contents tbody tr td');
-			
+
+			// copy existing text
+			var save_button = $('[name="submit-btn-savereturnlater"]').html();
+			var corner_text = $('#return_corner').html();
+			var title = $(popup).find('span:eq(1)').html();
+			var popup_text = $(popup).find('div')[0].previousSibling.textContent;
+			var popup_button = $(popup).find('button').html();
+
+			// translate where possible (setting exists)
+			if (form_settings[lang].save_and_return_survey.button) {
+				save_button = form_settings[lang].save_and_return_survey.button;
+			}
+			if (form_settings[lang].save_and_return_survey.popup_hint) {
+				corner_text = form_settings[lang].save_and_return_survey.popup_hint;
+			}
+			if (form_settings[lang].save_and_return_survey.popup_title) {
+				title = "<b>" + corner_text + "</b> " + form_settings[lang].save_and_return_survey.popup_title;
+			}
+			if (form_settings[lang].save_and_return_survey.popup_text) {
+				popup_text = form_settings[lang].save_and_return_survey.popup_text;
+			}
+			if (form_settings[lang].save_and_return_survey.popup_button) {
+				popup_button = form_settings[lang].save_and_return_survey.popup_button;
+			}
+
+			//save and return button
+			$('[name="submit-btn-savereturnlater"]').html(save_button);
+
+			//save and return corner
+			$('#return_corner').html(corner_text);
+
 			// popup title
 			$(popup).find('span:eq(1)').html(title);
 			
@@ -886,27 +926,12 @@ var Multilingual = (function(){
 
 	function loadFormSettings() {
 		// overwrite project-level $settings with form-specific $form_settings
-		var sess_lang = getCookie('p1000Lang');
-		if (settings.instruments) {
+		if (!settingsRetrieved || !languagesRetrieved)
+			return;
+		
+		if (settings.instruments && form_settings === null) {
 			settings.instruments = JSON.parse(settings.instruments.value)
-			form_settings = settings.instruments[instrument_name]
-			if (form_settings) {
-				form_settings = form_settings[sess_lang];
-				
-				var mapping = {
-					"save-return-later-button": {collection: 'save_and_return_survey', setting: 'button'},
-					"save-return-later-corner": {collection: 'save_and_return_survey', setting: 'popup_hint'},
-					"save-return-later-text": {collection: 'save_and_return_survey', setting: 'popup_text'},
-					"save-return-later-continue-button": {collection: 'save_and_return_survey', setting: 'popup_button'}
-				};
-				
-				for (let [name, entry] of Object.entries(mapping)) {
-					if (form_settings && form_settings[entry.collection] &&  form_settings[entry.collection][entry.setting]) {
-						settings[name]['value'] = [form_settings[entry.collection][entry.setting]]
-						// console.log('saved setting ' + name + ':', form_settings[entry.collection][entry.setting])
-					}
-				}
-			}
+			form_settings = settings.instruments[instrument_name];
 		}
 	}
 	
