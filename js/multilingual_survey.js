@@ -383,14 +383,16 @@ var Multilingual = (function(){
 		// form specific translation from Survey Settings
 		if (form_settings && form_settings[lang] && form_settings[lang].save_and_return_survey) {
 			var popup = $('#dpop .popup-contents tbody tr td');
-
+			if (popup.length == 0)
+				return;
+			
 			// copy existing text
 			var save_button = $('[name="submit-btn-savereturnlater"]').html();
 			var corner_text = $('#return_corner').html();
 			var title = $(popup).find('span:eq(1)').html();
 			var popup_text = $(popup).find('div')[0].previousSibling.textContent;
 			var popup_button = $(popup).find('button').html();
-
+			
 			// translate where possible (setting exists)
 			if (typeof form_settings[lang].save_and_return_survey.button === 'string') {
 				save_button = form_settings[lang].save_and_return_survey.button;
@@ -407,19 +409,19 @@ var Multilingual = (function(){
 			if (typeof form_settings[lang].save_and_return_survey.popup_button === 'string') {
 				popup_button = form_settings[lang].save_and_return_survey.popup_button;
 			}
-
+			
 			//save and return button
 			$('[name="submit-btn-savereturnlater"]').html(save_button);
-
+			
 			//save and return corner
 			$('#return_corner').html(corner_text);
-
+			
 			// popup title
 			$(popup).find('span:eq(1)').html(title);
 			
 			// popup text
 			$(popup).find('div')[0].previousSibling.textContent = popup_text;
-			
+			s
 			// popup button
 			$(popup).find('button').html(popup_button);
 		}
@@ -813,6 +815,21 @@ var Multilingual = (function(){
 			if(pdf_url.substring(0, 5) != 'false'){
 				econsent_pdf();
 			}
+			
+			// overwrite e-consent texts with form-specific translations provided via Survey Settings
+			if (form_settings && form_settings[lang] && form_settings[lang].econsent) {
+				if ($("input#econsent_confirm_checkbox").length == 0)
+					return;
+				if (typeof form_settings[lang].econsent.top === 'string') {
+					$("div#pagecontent div:eq(5)").html(form_settings[lang].econsent.top);
+				}
+				if (typeof form_settings[lang].econsent.checkbox === 'string') {
+					$("input#econsent_confirm_checkbox")[0].nextSibling.textContent = form_settings[lang].econsent.checkbox;
+				}
+				if (typeof form_settings[lang].econsent.bottom === 'string') {
+					$("div#pagecontent div:eq(8)").html(form_settings[lang].econsent.bottom);
+				}
+			}
 		}
 	}
 
@@ -933,6 +950,7 @@ var Multilingual = (function(){
 			settings.instruments = JSON.parse(settings.instruments.value)
 			form_settings = settings.instruments[instrument_name];
 		}
+		console.log('form_settings', form_settings)
 	}
 	
 	//generic functions
