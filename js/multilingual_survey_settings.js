@@ -2,6 +2,12 @@ var Multilingual = {}
 Multilingual.ajax_url = 'REDCAP_AJAX_URL';
 Multilingual.langVar = 'REDCAP_LANGUAGE_VARIABLE';
 Multilingual.languages = {1: 'en', 2: 'es'};
+Multilingual.collection_names = [
+	"save_and_return_survey",
+	"save_and_return_saved",
+	"save_and_return_modals",
+	"save_and_return_returned"
+];
 
 Multilingual.getSettings = function() {
 	var data = {};
@@ -233,14 +239,7 @@ Multilingual.saveSurveySettings = function() {
 	data.collections.survey_settings = survey_settings
 	
 	// add 'Save and Return Later' setting collections
-	let coll_names = [
-		"save_and_return_survey",
-		"save_and_return_saved",
-		"save_and_return_modals",
-		"save_and_return_error",
-		"save_and_return_returned"
-	]
-	coll_names.forEach(function(coll_name, i) {
+	Multilingual.collection_names.forEach(function(coll_name, i) {
 		data.collections[coll_name] = {}
 		$(".ml-text-setting[data-collection='" + coll_name + "']").each(function(i, setting) {
 			data.collections[coll_name][$(setting).attr('data-setting')] = $(setting).val()
@@ -273,14 +272,7 @@ Multilingual.getSurveySettings = function() {
 	Multilingual.defaults.survey_settings.acknowledgement = tinymce.editors.acknowledgement.getContent();
 	
 	// store default 'Save and Return Later' settings as well
-	let coll_names = [
-		"save_and_return_survey",
-		"save_and_return_saved",
-		"save_and_return_modals",
-		"save_and_return_error",
-		"save_and_return_returned"
-	]
-	coll_names.forEach(function(coll_name, i) {
+	Multilingual.collection_names.forEach(function(coll_name, i) {
 		Multilingual.defaults[coll_name] = {}
 		$(".ml-text-setting[data-collection='" + coll_name + "']").each(function(i, setting) {
 			Multilingual.defaults[coll_name][$(setting).attr('data-setting')] = $(setting).val()
@@ -323,9 +315,10 @@ Multilingual.loadSurveySettings = function() {
 	var collections = this.defaults
 	if (this.selectedLanguage && typeof(this.settings) !== 'undefined') {
 		if (typeof(this.settings[this.selectedLanguage]) !== 'undefined') {
-			collections = this.settings[this.selectedLanguage];
+			collections = this.settings[this.selectedLanguage]
 		}
 	}
+		
 	
 	// handles setting input values for settings that exist in every REDCap survey
 	$("input[name='title']").val(collections.survey_settings.title)
@@ -337,10 +330,10 @@ Multilingual.loadSurveySettings = function() {
 	$(".ml-text-setting[data-collection][data-setting]").each(function(i, setting) {
 		var coll_name = $(this).attr('data-collection')
 		var setting_name = $(this).attr('data-setting')
-		// console.log('hit element with coll name, setting_name: ', coll_name + " " + setting_name)
-		
 		if (collections[coll_name]) {
-			$(this).val(collections[coll_name][setting_name] || this.defaults[coll_name][setting_name])
+			if (typeof collections[coll_name][setting_name] === 'string') {
+				$(this).val(collections[coll_name][setting_name]);
+			}
 		}
 	})
 }

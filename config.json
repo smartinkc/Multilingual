@@ -15,7 +15,8 @@
 		{"1.8": "Piping for answers"},
 		{"1.8.1": "Bug fix for validation popup"},
 		{"1.8.2": "Bug fix for removing html on the data entry page"},
-		{"1.8.3": "Translate notes/slider, default validation messages translations, stop action translations, bug fixes"}
+		{"1.8.3": "Translate notes/slider, default validation messages translations, stop action translations, bug fixes"},
+		{"1.10.0": "Added form-specific text translation settings in the Survey Settings page"}
 	],
 
 	"authors": [
