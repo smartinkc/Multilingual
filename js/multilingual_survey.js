@@ -392,19 +392,19 @@ var Multilingual = (function(){
 			var popup_button = $(popup).find('button').html();
 
 			// translate where possible (setting exists)
-			if (form_settings[lang].save_and_return_survey.button) {
+			if (typeof form_settings[lang].save_and_return_survey.button === 'string') {
 				save_button = form_settings[lang].save_and_return_survey.button;
 			}
-			if (form_settings[lang].save_and_return_survey.popup_hint) {
+			if (typeof form_settings[lang].save_and_return_survey.popup_hint === 'string') {
 				corner_text = form_settings[lang].save_and_return_survey.popup_hint;
 			}
-			if (form_settings[lang].save_and_return_survey.popup_title) {
+			if (typeof form_settings[lang].save_and_return_survey.popup_title === 'string') {
 				title = "<b>" + corner_text + "</b> " + form_settings[lang].save_and_return_survey.popup_title;
 			}
-			if (form_settings[lang].save_and_return_survey.popup_text) {
+			if (typeof form_settings[lang].save_and_return_survey.popup_text === 'string') {
 				popup_text = form_settings[lang].save_and_return_survey.popup_text;
 			}
-			if (form_settings[lang].save_and_return_survey.popup_button) {
+			if (typeof form_settings[lang].save_and_return_survey.popup_button === 'string') {
 				popup_button = form_settings[lang].save_and_return_survey.popup_button;
 			}
 
