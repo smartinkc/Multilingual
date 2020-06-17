@@ -2,6 +2,13 @@ var Multilingual = {}
 Multilingual.ajax_url = 'REDCAP_AJAX_URL';
 Multilingual.langVar = 'REDCAP_LANGUAGE_VARIABLE';
 Multilingual.languages = {1: 'en', 2: 'es'};
+Multilingual.collection_names = [
+	"save_and_return_survey",
+	"save_and_return_saved",
+	"save_and_return_modals",
+	"save_and_return_returned",
+	"econsent"
+];
 
 Multilingual.getSettings = function() {
 	var data = {};
@@ -188,6 +195,39 @@ Multilingual.addSaveAndReturnSection = function() {
 	$("#save_and_return-tr").next("tr").before(newRow, surveypage_tr, saved_tr, saved_intro_modal_tr, saved_email_modal_tr, saved_error_modal_tr, return_tr);
 }
 
+Multilingual.addEconsentSection = function() {
+	// add a section for Save and Return text translation settings in the Survey Settings page form table
+	
+	// add section header tr
+	var emIcon = "<i class='fas fa-cube fs14' style='position:relative;top:1px;margin-right:1px;margin-left:1px;'></i>";
+	var newRow = "<tr id='ml_econsent-tr'><td colspan=3><div class='header' style='padding:7px 10px 5px;margin:0 -7px 10px; background-color: #fb8;>'";
+	newRow += "<span>" + emIcon + " Multilingual Module - e-Consent Text Translations</span></div></td></tr>"
+	
+	// prepare section tr template
+	var blank_tr = $("<tr class='ml-econsent-settings'>\
+		<td valign='top' style='width:20px;'></td>\
+		<td valign='top' style='width:290px;'></td>\
+		<td valign='top' style='padding-left:15px;padding-bottom:5px;'></td>\
+	</tr>")
+	
+	// Survery Page Texts <tr>
+	var tr1 = blank_tr.clone()
+	$(tr1).find('td:nth-child(2)').append("<b>e-Consent Page</b>")
+	$(tr1).find('td:nth-child(3)').append("\
+	<span style='display:block;'>The following text appears at the top of the survey page while the participant is reviewing their e-Consent PDF:</span>\
+	<textarea style='width:98%;height:60px;font-size:12px;' class='tinyNoEditor ml-text-setting' data-collection='econsent' data-setting='top'>Displayed below is a read-only copy of your survey responses. Please review it and the options at the bottom.</textarea>\
+	\
+	<span style='display:block;'>The following text appears in a checkbox below their e-Consent PDF, asking the user to verify their survey answers:</span>\
+	<textarea style='width:98%;height:80px;font-size:12px;' class='tinyNoEditor ml-text-setting' data-collection='econsent' data-setting='checkbox'>I certify that all the information in the document above is correct. I understand that clicking 'Submit' will electronically sign the form and that signing this form electronically is the equivalent of signing a physical document.</textarea>\
+	\
+	<span style='display:block;'>The following text appears to inform the participant that they can click the 'Previous Page' button to return to the survey and change their responses:</span>\
+	<textarea style='width:98%;height:60px;font-size:12px;' class='tinyNoEditor ml-text-setting' data-collection='econsent' data-setting='bottom'>If any information above is not correct, you may click the 'Previous Page' button to go back and correct it.</textarea>\
+	")
+	
+	// insert these table rows into DOM
+	$("input[name='pdf_auto_archive']").closest("tr").after(newRow, tr1);
+}
+
 Multilingual.disableTextSettings = function() {
 	$("input[name='title']").attr('disabled', true)
 	$("input[name='title']").css('background-color', "#ccc")
@@ -233,14 +273,7 @@ Multilingual.saveSurveySettings = function() {
 	data.collections.survey_settings = survey_settings
 	
 	// add 'Save and Return Later' setting collections
-	let coll_names = [
-		"save_and_return_survey",
-		"save_and_return_saved",
-		"save_and_return_modals",
-		"save_and_return_error",
-		"save_and_return_returned"
-	]
-	coll_names.forEach(function(coll_name, i) {
+	Multilingual.collection_names.forEach(function(coll_name, i) {
 		data.collections[coll_name] = {}
 		$(".ml-text-setting[data-collection='" + coll_name + "']").each(function(i, setting) {
 			data.collections[coll_name][$(setting).attr('data-setting')] = $(setting).val()
@@ -273,14 +306,7 @@ Multilingual.getSurveySettings = function() {
 	Multilingual.defaults.survey_settings.acknowledgement = tinymce.editors.acknowledgement.getContent();
 	
 	// store default 'Save and Return Later' settings as well
-	let coll_names = [
-		"save_and_return_survey",
-		"save_and_return_saved",
-		"save_and_return_modals",
-		"save_and_return_error",
-		"save_and_return_returned"
-	]
-	coll_names.forEach(function(coll_name, i) {
+	Multilingual.collection_names.forEach(function(coll_name, i) {
 		Multilingual.defaults[coll_name] = {}
 		$(".ml-text-setting[data-collection='" + coll_name + "']").each(function(i, setting) {
 			Multilingual.defaults[coll_name][$(setting).attr('data-setting')] = $(setting).val()
@@ -323,9 +349,10 @@ Multilingual.loadSurveySettings = function() {
 	var collections = this.defaults
 	if (this.selectedLanguage && typeof(this.settings) !== 'undefined') {
 		if (typeof(this.settings[this.selectedLanguage]) !== 'undefined') {
-			collections = this.settings[this.selectedLanguage];
+			collections = this.settings[this.selectedLanguage]
 		}
 	}
+		
 	
 	// handles setting input values for settings that exist in every REDCap survey
 	$("input[name='title']").val(collections.survey_settings.title)
@@ -337,10 +364,10 @@ Multilingual.loadSurveySettings = function() {
 	$(".ml-text-setting[data-collection][data-setting]").each(function(i, setting) {
 		var coll_name = $(this).attr('data-collection')
 		var setting_name = $(this).attr('data-setting')
-		// console.log('hit element with coll name, setting_name: ', coll_name + " " + setting_name)
-		
 		if (collections[coll_name]) {
-			$(this).val(collections[coll_name][setting_name] || this.defaults[coll_name][setting_name])
+			if (typeof collections[coll_name][setting_name] === 'string') {
+				$(this).val(collections[coll_name][setting_name]);
+			}
 		}
 	})
 }
@@ -381,4 +408,17 @@ $( document ).ready(function() {
 		}
 	})
 	$("select[name='save_and_return']").trigger('change')
+	
+	Multilingual.addEconsentSection();
+	$("input[name='pdf_auto_archive']")
+	$("input[name='pdf_auto_archive']").on('change', function() {
+		if ($(this).val() == '2') {
+			$("#ml_econsent-tr").show()
+			$("tr.ml-econsent-settings").show()
+		} else {
+			$("#ml_econsent-tr").hide()
+			$("tr.ml-econsent-settings").hide()
+		}
+	})
+	$("input[name='pdf_auto_archive']").trigger('change')
 })
