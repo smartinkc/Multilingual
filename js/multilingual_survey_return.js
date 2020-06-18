@@ -92,90 +92,93 @@
 	function translate(){
 		//get current language
 		lang = getCookie('p1000Lang');
-		var curLang = null;
-		var id;
-		for(id in settings['save-return-later-lang']['value']){
-			if(settings['save-return-later-lang']['value'][id] == lang){
-				curLang = id;
-				break;
+		try {
+			var curLang = null;
+			var id;
+			for(id in settings['save-return-later-lang']['value']){
+				if(settings['save-return-later-lang']['value'][id] == lang){
+					curLang = id;
+					break;
+				}
 			}
-		}
-		
-		if($('#return_instructions').length && curLang != null && settings['save-return-page-popup-title']['value'][curLang]){
-			//popup 
-			if($('#ui-id-1').is(':visible')){
-				$('#ui-id-1').html(settings['save-return-page-popup-title']['value'][curLang]);
-				$('#codePopupReminderText').html(settings['save-return-page-popup-body']['value'][curLang]);
-				var html = $('#codePopupReminderTextCode').html();
-				html = html.split('<span');
-				$('#codePopupReminderTextCode').html('<b>' + settings['save-return-page-popup-return-code']['value'][curLang] + ':</b> <span' + html[1]);
-				
-				// translate modal button
-				$('.ui-dialog-buttonpane').find('button').html('&#x2716;');
-				
-				hasCode = 1;
-			}
-		
-			//return page-popup-body
-			$('#return_instructions').find('h4').html('<b>' + settings['save-return-page-title']['value'][curLang]  + '</b>');
 			
-			if(hasCode == 1){
-				html = $('#return_instructions').find('div').html().split('<div');
-				html[0] = settings['save-return-page-instructions']['value'][curLang];
+			if($('#return_instructions').length && curLang != null && settings['save-return-page-popup-title']['value'][curLang]){
+				//popup 
+				if($('#ui-id-1').is(':visible')){
+					$('#ui-id-1').html(settings['save-return-page-popup-title']['value'][curLang]);
+					$('#codePopupReminderText').html(settings['save-return-page-popup-body']['value'][curLang]);
+					var html = $('#codePopupReminderTextCode').html();
+					html = html.split('<span');
+					$('#codePopupReminderTextCode').html('<b>' + settings['save-return-page-popup-return-code']['value'][curLang] + ':</b> <span' + html[1]);
+					
+					// translate modal button
+					$('.ui-dialog-buttonpane').find('button').html('&#x2716;');
+					
+					hasCode = 1;
+				}
+			
+				//return page-popup-body
+				$('#return_instructions').find('h4').html('<b>' + settings['save-return-page-title']['value'][curLang]  + '</b>');
 				
-				html[1] = html[1].split(/<br>/g);
-				html[1][1] = settings['save-return-page-return-code-instructions']['value'][curLang];
-				
-				html[1][2] = html[1][2].split('<span');
-				html[1][2][0] = settings['save-return-page-popup-return-code']['value'][curLang];
-				html[1][2] = html[1][2][0] + '<span' + html[1][2][1];
-				
-				html[1] = html[1][0] + '<br>' + html[1][1] + '<br>' + html[1][2] + '<br>' + html[1][3] + '<br>';
-				
-				$('#return_instructions').find('div').html(html[0] + '<div' + html[1] + '<div' + html[2] + '<div' + html[3] + '<div' + html[4]);
-				$('#return_instructions').find('u').eq(0).html(settings['save-return-page-popup-return-code']['value'][curLang]);
-				$('#return_instructions').find('u').eq(1).html(settings['save-return-page-survey-link-title']['value'][curLang]);
-				
-				html = $('#provideEmail').html().split('<br>');
-				$('#provideEmail').html(settings['save-return-page-email-instructions']['value'][curLang] + '<br>' + html[1] + '<br>' + html[2] + '<br>' + html[3]);
-				
-				$('#sendLinkBtn').html(settings['save-return-page-email-button']['value'][curLang]);
-				
-				$('#return_continue_form').find('b').eq(0).html(settings['save-return-page-continue-title']['value'][curLang]);
-				$('#return_continue_form').find('button').eq(0).html(settings['save-return-later-continue-button']['value'][curLang]);
-				
-				$('#return_instructions').find('span').eq(4).html('');
-				$('#return_instructions').find('span').eq(1).html('');
-				
-				// translate footnotes 1-2
-				$('#return_instructions').find('span').eq(1).html('');
-				$('#return_instructions').find('span').eq(4).html('');
-			}
-			else{
-				$('#return_instructions').find('div').eq(0).html(settings['save-return-page-instructions']['value'][curLang]);
-				$('#return_instructions').find('div').eq(1).find('u').eq(0).html(settings['save-return-page-survey-link-title']['value'][curLang]);
-				
-				var html = $('#provideEmail').html().split('<br>');
-				html[0] = settings['save-return-page-email-instructions']['value'][curLang];
+				if(hasCode == 1){
+					html = $('#return_instructions').find('div').html().split('<div');
+					html[0] = settings['save-return-page-instructions']['value'][curLang];
+					
+					html[1] = html[1].split(/<br>/g);
+					html[1][1] = settings['save-return-page-return-code-instructions']['value'][curLang];
+					
+					html[1][2] = html[1][2].split('<span');
+					html[1][2][0] = settings['save-return-page-popup-return-code']['value'][curLang];
+					html[1][2] = html[1][2][0] + '<span' + html[1][2][1];
+					
+					html[1] = html[1][0] + '<br>' + html[1][1] + '<br>' + html[1][2] + '<br>' + html[1][3] + '<br>';
+					
+					$('#return_instructions').find('div').html(html[0] + '<div' + html[1] + '<div' + html[2] + '<div' + html[3] + '<div' + html[4]);
+					$('#return_instructions').find('u').eq(0).html(settings['save-return-page-popup-return-code']['value'][curLang]);
+					$('#return_instructions').find('u').eq(1).html(settings['save-return-page-survey-link-title']['value'][curLang]);
+					
+					html = $('#provideEmail').html().split('<br>');
+					$('#provideEmail').html(settings['save-return-page-email-instructions']['value'][curLang] + '<br>' + html[1] + '<br>' + html[2] + '<br>' + html[3]);
+					
+					$('#sendLinkBtn').html(settings['save-return-page-email-button']['value'][curLang]);
+					
+					$('#return_continue_form').find('b').eq(0).html(settings['save-return-page-continue-title']['value'][curLang]);
+					$('#return_continue_form').find('button').eq(0).html(settings['save-return-later-continue-button']['value'][curLang]);
+					
+					$('#return_instructions').find('span').eq(4).html('');
+					$('#return_instructions').find('span').eq(1).html('');
+					
+					// translate footnotes 1-2
+					$('#return_instructions').find('span').eq(1).html('');
+					$('#return_instructions').find('span').eq(4).html('');
+				}
+				else{
+					$('#return_instructions').find('div').eq(0).html(settings['save-return-page-instructions']['value'][curLang]);
+					$('#return_instructions').find('div').eq(1).find('u').eq(0).html(settings['save-return-page-survey-link-title']['value'][curLang]);
+					
+					var html = $('#provideEmail').html().split('<br>');
+					html[0] = settings['save-return-page-email-instructions']['value'][curLang];
 
-				$('#provideEmail').html(html[0] + '<br>' + html[1] + '<br>' + html[2] + '<br>');
-				$('#provideEmail').find('button').eq(0).html(settings['save-return-page-email-button']['value'][curLang]);
-				
-				$('#return_continue_form').find('b').eq(0).html(settings['save-return-page-continue-title']['value'][curLang]);
-				$('#return_continue_form').find('button').eq(0).html(settings['save-return-later-continue-button']['value'][curLang]);
+					$('#provideEmail').html(html[0] + '<br>' + html[1] + '<br>' + html[2] + '<br>');
+					$('#provideEmail').find('button').eq(0).html(settings['save-return-page-email-button']['value'][curLang]);
+					
+					$('#return_continue_form').find('b').eq(0).html(settings['save-return-page-continue-title']['value'][curLang]);
+					$('#return_continue_form').find('button').eq(0).html(settings['save-return-later-continue-button']['value'][curLang]);
+				}
 			}
+			else if($('#surveytitle').length && curLang != null && settings['save-return-page-survey-title']['value'][curLang]){
+				//continue page if cookie still set
+				$('#surveytitle').html(settings['save-return-page-survey-title']['value'][curLang]);
+				$('#return_code_form_instructions').html(settings['save-return-page-continue-text']['value'][curLang]);
+				$('#return_code_form').find('button').html(settings['save-return-later-continue-button']['value'][curLang]);
+				
+				//start over
+				$('#start_over_form').find('p').html(settings['save-return-page-startover-text']['value'][curLang]);
+				$('#start_over_form').find('input').val(settings['save-return-page-startover-button']['value'][curLang]);
+			}
+		} catch(err) {
+			console.log('translation error: ' + err);
 		}
-		else if($('#surveytitle').length && curLang != null && settings['save-return-page-survey-title']['value'][curLang]){
-			//continue page if cookie still set
-			$('#surveytitle').html(settings['save-return-page-survey-title']['value'][curLang]);
-			$('#return_code_form_instructions').html(settings['save-return-page-continue-text']['value'][curLang]);
-			$('#return_code_form').find('button').html(settings['save-return-later-continue-button']['value'][curLang]);
-			
-			//start over
-			$('#start_over_form').find('p').html(settings['save-return-page-startover-text']['value'][curLang]);
-			$('#start_over_form').find('input').val(settings['save-return-page-startover-button']['value'][curLang]);
-		}
-		
 		form_translate();
 	}
 	
