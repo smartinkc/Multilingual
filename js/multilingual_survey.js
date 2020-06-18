@@ -25,7 +25,7 @@ var Multilingual = (function(){
 	var settingsRetrieved = false;
 	var languagesRetrieved = false;
 	var form_settings = null;
-
+	
 	//document ready change language
 	$( document ).ready(function(){
 		setNormalCookie('p1000pid', pid, .04);
@@ -225,7 +225,7 @@ var Multilingual = (function(){
 		data2['project_id'] = pid;
 		data2['field_name'] = langVar;
 		var json2 = encodeURIComponent(JSON.stringify(data2));
-
+		
 		$.when(
 			// Get Settings
 			$.ajax({
@@ -234,6 +234,7 @@ var Multilingual = (function(){
 				data: 'data=' + json,
 				success: function (r) {
 					settings = r;
+					console.log("settings", r);
 					settingsRetrieved = true;
 					loadFormSettings();
 				},
@@ -361,11 +362,9 @@ var Multilingual = (function(){
 		
 		if(langKey > -1){
 			//save and return button
-			$('[name="submit-btn-savereturnlater"]').html(save_button);
 			$('[name="submit-btn-savereturnlater"]').html(settings['save-return-later-button']['value'][langKey]);
 
 			//save and return corner
-			$('#return_corner').html(corner_text);
 			$('#return_corner').html(settings['save-return-later-corner']['value'][langKey]);
 
 			//save and return continue button^M
@@ -818,11 +817,14 @@ var Multilingual = (function(){
 			
 			// overwrite e-consent texts with form-specific translations provided via Survey Settings
 			if ($("input#econsent_confirm_checkbox").length != 0) {
-				$("div#pagecontent div:eq(5)").html(form_settings.econsent.top);
+				$("#resetSignatureValuesDialog").next('div').html(form_settings.econsent.top);
 				$("input#econsent_confirm_checkbox")[0].nextSibling.textContent = form_settings.econsent.checkbox;
-				$("div#pagecontent div:eq(8)").html(form_settings.econsent.bottom);
+				$("#econsent_confirm_checkbox_div").next('div').html(form_settings.econsent.bottom);
 			}
 			
+			// translate survey acknowledgement
+			if ($("#surveyacknowledgment").length)
+				$("#surveyacknowledgment").html(form_settings.survey_settings.acknowledgement);
 		}
 	}
 
@@ -949,6 +951,31 @@ var Multilingual = (function(){
 			form_settings = settings.instruments[instrument_name][lang];
 		} else {
 			form_settings = null;
+		}
+		console.log("form_settings", form_settings);
+		
+		// if survey acknowledgement text is shown, add buttons so user can translate survey acknowledgement text
+		if ($("#surveyacknowledgment").length && !$("#language_buttons").length) {
+			$("#pagecontent").prepend("<div id='language_buttons'></div>");
+			for (let [lang, s] of Object.entries(settings.instruments[instrument_name])) {
+				$("#language_buttons").append("<button>" + lang + "</button>")
+			}
+			$("#language_buttons button").css('width', "100px");
+			$("#language_buttons").show();
+			
+			$("#language_buttons").on('click', 'button', function() {
+				var lang = $(this).html();
+				form_settings = settings.instruments[instrument_name][lang]
+				var textArea = document.createElement('textarea');
+				textArea.innerHTML = form_settings.survey_settings.acknowledgement;
+				
+				// translate acknowledgement 
+				$("#surveyacknowledgment").html(textArea.value);
+				
+				// translate return code form
+				$("#return_code_completed_survey_div img")[0].nextSibling.textContent = form_settings.save_and_return_saved.survey_complete;
+				$("#return_code_completed_survey_div div:eq(0) span")[0].previousSibling.textContent = form_settings.save_and_return_saved.return_code + ": ";
+			});
 		}
 	}
 	

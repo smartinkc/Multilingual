@@ -191,8 +191,15 @@ Multilingual.addSaveAndReturnSection = function() {
 	<textarea data-collection='save_and_return_returned' data-setting='start_over_prompt' style='width:98%;height:60px;font-size:12px;' class='tinyNoEditor ml-text-setting'>ERASE YOUR RESPONSES? Are you sure you wish to start the survey over from the beginning? Please note that doing so will erase ALL your responses already entered for this survey.</textarea>\
 	")
 	
+	// Survey Complete <tr>
+	var complete_tr = blank_tr.clone()
+	$(complete_tr).find('td:nth-child(2)').append("<b>Upon Survey Completion</b>")
+	$(complete_tr).find('td:nth-child(3)').append("<span style='display:block;'>Upon completing a survey, the user will be presented with the return code and a message letting them know they can return to the survey in the future if they wish:</span>\
+	<textarea data-collection='save_and_return_saved' data-setting='survey_complete' style='width:98%;height:60px;font-size:12px;' class='tinyNoEditor ml-text-setting'>You may return to this survey in the future to modify your responses by navigating to the survey URL and entering the code below.</textarea>\
+	")
+	
 	// insert these table rows into DOM
-	$("#save_and_return-tr").next("tr").before(newRow, surveypage_tr, saved_tr, saved_intro_modal_tr, saved_email_modal_tr, saved_error_modal_tr, return_tr);
+	$("#save_and_return-tr").next("tr").before(newRow, surveypage_tr, saved_tr, saved_intro_modal_tr, saved_email_modal_tr, saved_error_modal_tr, return_tr, complete_tr);
 }
 
 Multilingual.addEconsentSection = function() {
