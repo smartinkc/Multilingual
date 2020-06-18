@@ -47,7 +47,6 @@ class Multilingual extends AbstractExternalModule
 			echo '<script type="text/javascript">' . str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true), file_get_contents($this->getModulePath() . 'js/multilingual_export.js'))) . '</script>';
 		}
 		elseif($_GET['__return'] == 1 or (isset($_GET['s']) && !isset($_GET['__page__']))){
-			// $instrument = $this->getInstrumentNameFromSurveyHash($project_id);
 			$instrument = $_GET['page'];
 			echo '<script type="text/javascript">' . 
 			str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, 
@@ -72,6 +71,17 @@ class Multilingual extends AbstractExternalModule
 			
 			echo $stylesheet;
 			echo $ml_survey_settings_js;
+		} elseif (strpos($_SERVER['REQUEST_URI'], 'surveys/') !== false && isset($_GET['s'])) {
+			$api_endpoint = $this->getProjectSetting('use-api-endpoint', $project_id);
+			$instrument = $_GET['page'];
+			
+			echo '<script type="text/javascript">' . 
+			str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, 
+			str_replace('REDCAP_INSTRUMENT_NAME', $instrument, 
+			str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), 
+			str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true, ($api_endpoint == true ? true : false)), 
+			file_get_contents($this->getModulePath() . 'js/multilingual_survey.js'))))) . '</script>';
+			echo '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css', true, $api_endpoint == true) . '">';
 		}
 	}
 

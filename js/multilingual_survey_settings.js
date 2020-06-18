@@ -231,7 +231,7 @@ Multilingual.addEconsentSection = function() {
 Multilingual.disableTextSettings = function() {
 	$("input[name='title']").attr('disabled', true)
 	$("input[name='title']").css('background-color', "#ccc")
-	$("textarea[name='response_limit_custom_text']").attr('disabled', true)
+	// $("textarea[name='response_limit_custom_text']").attr('disabled', true)
 	tinyMCE.editors["instructions"].getBody().setAttribute('contenteditable', false)
 	tinyMCE.editors["instructions"].getBody().style.backgroundColor = "#ccc"
 	tinyMCE.editors["acknowledgement"].getBody().setAttribute('contenteditable', false)
@@ -244,7 +244,7 @@ Multilingual.disableTextSettings = function() {
 Multilingual.enableTextSettings = function() {
 	$("input[name='title']").attr('disabled', false)
 	$("input[name='title']").css('background-color', "#fff")
-	$("textarea[name='response_limit_custom_text']").attr('disabled', false)
+	// $("textarea[name='response_limit_custom_text']").attr('disabled', false)
 	tinyMCE.editors["instructions"].getBody().setAttribute('contenteditable', true);
 	tinyMCE.editors["instructions"].getBody().style.backgroundColor = "#fff"
 	tinyMCE.editors["acknowledgement"].getBody().setAttribute('contenteditable', true);
@@ -268,7 +268,7 @@ Multilingual.saveSurveySettings = function() {
 	var survey_settings = {}
 	survey_settings.title = $("input[name=title]").val()
 	survey_settings.instructions = tinymce.editors.instructions.getContent()
-	survey_settings.response_limit = $("textarea[name=response_limit_custom_text]").val()
+	// survey_settings.response_limit = $("textarea[name=response_limit_custom_text]").val()
 	survey_settings.acknowledgement = tinymce.editors.acknowledgement.getContent()
 	data.collections.survey_settings = survey_settings
 	
@@ -302,7 +302,7 @@ Multilingual.getSurveySettings = function() {
 	Multilingual.defaults.survey_settings = {}
 	Multilingual.defaults.survey_settings.title = $("input[name=title]").val();
 	Multilingual.defaults.survey_settings.instructions = tinymce.editors.instructions.getContent();
-	Multilingual.defaults.survey_settings.response_limit = $("textarea[name=response_limit_custom_text]").val();
+	// Multilingual.defaults.survey_settings.response_limit = $("textarea[name=response_limit_custom_text]").val();
 	Multilingual.defaults.survey_settings.acknowledgement = tinymce.editors.acknowledgement.getContent();
 	
 	// store default 'Save and Return Later' settings as well
@@ -357,7 +357,7 @@ Multilingual.loadSurveySettings = function() {
 	// handles setting input values for settings that exist in every REDCap survey
 	$("input[name='title']").val(collections.survey_settings.title)
 	tinyMCE.editors.instructions.setContent(collections.survey_settings.instructions);
-	$("textarea[name='response_limit_custom_text']").val(collections.survey_settings.response_limit)
+	// $("textarea[name='response_limit_custom_text']").val(collections.survey_settings.response_limit)
 	tinyMCE.editors.acknowledgement.setContent(collections.survey_settings.acknowledgement);
 	
 	// handles all settings that are added by ML module itself
