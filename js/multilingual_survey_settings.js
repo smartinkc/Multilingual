@@ -7,7 +7,8 @@ Multilingual.collection_names = [
 	"save_and_return_saved",
 	"save_and_return_modals",
 	"save_and_return_returned",
-	"econsent"
+	"econsent",
+	"field_validation"
 ];
 
 Multilingual.getSettings = function() {
@@ -235,6 +236,78 @@ Multilingual.addEconsentSection = function() {
 	$("input[name='pdf_auto_archive']").closest("tr").after(newRow, tr1);
 }
 
+Multilingual.addFieldValidationSection = function() {
+	// add a section for Save and Return text translation settings in the Survey Settings page form table
+	
+	// add section header tr
+	var emIcon = "<i class='fas fa-cube fs14' style='position:relative;top:1px;margin-right:1px;margin-left:1px;'></i>";
+	var newRow = "<tr id='ml_field_validation-tr'><td colspan=3><div class='header' style='padding:7px 10px 5px;margin:0 -7px 10px; background-color: #fb8;>'";
+	newRow += "<span>" + emIcon + " Multilingual Module - Field Validation Text Translations</span></div></td></tr>"
+	
+	// prepare section tr template
+	var blank_tr = $("<tr class='ml-field-validation-settings'>\
+		<td valign='top' style='width:20px;'></td>\
+		<td valign='top' style='width:290px;'></td>\
+		<td valign='top' style='padding-left:15px;padding-bottom:5px;'></td>\
+	</tr>")
+	
+	// Survery Page Texts <tr>
+	var tr1 = blank_tr.clone()
+	$(tr1).find('td:nth-child(2)').append("<b>Field Types</b>")
+	$(tr1).find('td:nth-child(3)').append("\
+	<span style='display:block;'>Text Box (Short Text, Number, Date/Time, ...):</span>\
+	<div><input data-collection='field_validation' data-setting='text_box' class='ml-text-setting' value='* must provide value' style='width:80%'></div>\
+	\
+	<span style='display:block;'>Notes Box (Paragraph Text):</span>\
+	<input data-collection='field_validation' data-setting='notes_box' class='ml-text-setting' value='* must provide value' style='width:80%'>\
+	\
+	<span style='display:block;'>Multiple Choice - Drop-down List (Single Answer):</span>\
+	<input data-collection='field_validation' data-setting='mc_list' class='ml-text-setting' value='* must provide value' style='width:80%'>\
+	\
+	<span style='display:block;'>Multiple Choice - Radio Buttons (Single Answer):</span>\
+	<input data-collection='field_validation' data-setting='mc_buttons' class='ml-text-setting' value='* must provide value' style='width:80%'>\
+	\
+	<span style='display:block;'>Checkboxes (Multiple Answers):</span>\
+	<input data-collection='field_validation' data-setting='checkboxes' class='ml-text-setting' value='* must provide value' style='width:80%'>\
+	\
+	<span style='display:block;'>Yes - No:</span>\
+	<input data-collection='field_validation' data-setting='yes_no' class='ml-text-setting' value='* must provide value' style='width:80%'>\
+	\
+	<span style='display:block;'>True - False:</span>\
+	<input data-collection='field_validation' data-setting='true_false' class='ml-text-setting' value='* must provide value' style='width:80%'>\
+	\
+	<span style='display:block;'>Signature (draw signature with mouse or finger):</span>\
+	<input data-collection='field_validation' data-setting='signature' class='ml-text-setting' value='* must provide value' style='width:80%'>\
+	\
+	<span style='display:block;'>File Upload (for users to upload files):</span>\
+	<input data-collection='field_validation' data-setting='file_upload' class='ml-text-setting' value='* must provide value' style='width:80%'>\
+	\
+	<span style='display:block;'>Slider / Visual Analog Scale:</span>\
+	<input data-collection='field_validation' data-setting='slider' class='ml-text-setting' value='* must provide value' style='width:80%'>\
+	\
+	<span style='display:block;'>Dynamic Query (SQL):</span>\
+	<input data-collection='field_validation' data-setting='sql' class='ml-text-setting' value='* must provide value' style='width:80%'>\
+	<div></div><br>\
+	");
+	
+	// Missing value modal <tr>
+	var tr2 = blank_tr.clone()
+	$(tr2).find('td:nth-child(2)').append("<b>Missing values alert modal</b>")
+	$(tr2).find('td:nth-child(3)').append("\
+	<span style='display:block;'>Missing values modal title:</span>\
+	<input data-collection='field_validation' data-setting='modal_title' class='ml-text-setting' value='NOTE: Some fields are required!' style='width:80%'>\
+	\
+	<span style='display:block;'>Missing values modal instructions:</span>\
+	<textarea style='width:98%;height:60px;font-size:12px;' class='tinyNoEditor ml-text-setting' data-collection='field_validation' data-setting='instructions'>Your data was successfully saved, but you did not provide a value for some fields that require a value. Please enter a value for the fields on this page that are listed below.</textarea>\
+	\
+	<span style='display:block;'>Missing values modal close button:</span>\
+	<input data-collection='field_validation' data-setting='modal_close' class='ml-text-setting' value='Okay' style='width:60%'>\
+	")
+	
+	// insert these table rows into DOM
+	$("input[name='pdf_auto_archive']").closest("tr").after(newRow, tr1, tr2);
+}
+
 Multilingual.disableTextSettings = function() {
 	$("input[name='title']").attr('disabled', true)
 	$("input[name='title']").css('background-color', "#ccc")
@@ -403,6 +476,8 @@ $( document ).ready(function() {
 	$("#surveySettingsSubmit").on('click', function() {
 		Multilingual.saveSurveySettings();
 	});
+	
+	Multilingual.addFieldValidationSection();
 	
 	Multilingual.addSaveAndReturnSection();
 	$("select[name='save_and_return']").on('change', function() {
