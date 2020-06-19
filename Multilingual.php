@@ -1,5 +1,5 @@
 <?php
-namespace CMH\Multilingual;
+namespace VUMC\Multilingual;
 
 use ExternalModules\AbstractExternalModule;
 use ExternalModules\ExternalModules;
@@ -301,7 +301,7 @@ class Multilingual extends AbstractExternalModule
 
 							//layout
 							if($layout_set == 0){
-								if(\CMH\Multilingual\Multilingual::is_arabic($trans) === true){
+								if(\VUMC\Multilingual\Multilingual::is_arabic($trans) === true){
 									$response['layout'] = 'rtl';
 								}
 								else{
@@ -545,7 +545,7 @@ class Multilingual extends AbstractExternalModule
 		$total_count = 0;
 		foreach($chars as $char) {
 			//$pos = ord($char); we cant use that, its not binary safe
-			$pos = \CMH\Multilingual\Multilingual::uniord($char);
+			$pos = \VUMC\Multilingual\Multilingual::uniord($char);
 			//echo $char ." --> ".$pos.PHP_EOL;
 
 			if($pos >= 1536 && $pos <= 1791) {

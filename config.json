@@ -1,7 +1,7 @@
 {
 	"name": "Multilingual",
 
-	"namespace": "CMH\\Multilingual",
+	"namespace": "VUMC\\Multilingual",
 
 	"description": "Allow survey's and data entry forms to be translated into multiple languages. Add translations via the Online Designer.",
 

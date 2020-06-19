@@ -1,7 +1,7 @@
 <?php
 	//currently js adds download links to a specific Data Entry Form as we test
 
-	namespace CMH\Multilingual;
+	namespace VUMC\Multilingual;
 	
 	use ExternalModules\AbstractExternalModule;
 	use ExternalModules\ExternalModules;
