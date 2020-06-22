@@ -3,12 +3,14 @@ Multilingual.ajax_url = 'REDCAP_AJAX_URL';
 Multilingual.langVar = 'REDCAP_LANGUAGE_VARIABLE';
 Multilingual.languages = {1: 'en', 2: 'es'};
 Multilingual.collection_names = [
+	"basic_settings",
+	"download_response",
 	"save_and_return_survey",
 	"save_and_return_saved",
 	"save_and_return_modals",
 	"save_and_return_returned",
 	"econsent",
-	"field_validation"
+	"field_level"
 ];
 
 Multilingual.getSettings = function() {
@@ -82,7 +84,60 @@ Multilingual.onLanguageSelect = function() {
 		this.loadSurveySettings();
 	}
 }
+
+Multilingual.addBasicSurveySection = function () {
+	// prepare section tr template
+	var blank_tr = $("<tr class='ml-basic-settings'>\
+		<td valign='top' style='width:20px;'></td>\
+		<td valign='top' style='width:290px;'></td>\
+		<td valign='top' style='padding-left:15px;padding-bottom:5px;'></td>\
+	</tr>")
 	
+	// Survery Page Texts <tr>
+	var tr1 = blank_tr.clone()
+	$(tr1).find('td:nth-child(2)').append("<b>General Survey Text Translations</b>")
+	$(tr1).find('td:nth-child(3)').append("\
+	<span style='display:block;'>Text for the buttons used to navigate back/forth through survey pages:</span>\
+	<div><input data-collection='basic_settings' data-setting='previous' class='ml-text-setting' value='Previous Page' style='width:80%'></div>\
+	<div><input data-collection='basic_settings' data-setting='next' class='ml-text-setting' value='Next Page' style='width:80%'></div>\
+	<br>\
+	<span style='display:block;'>Text for submit survey response and close survey page buttons:</span>\
+	<div><input data-collection='basic_settings' data-setting='submit' class='ml-text-setting' value='Submit' style='width:60%'></div>\
+	<div><input data-collection='basic_settings' data-setting='close' class='ml-text-setting' value='Close Survey' style='width:80%'></div>\
+	<br>\
+	<span style='display:block;'>Text that appears above [+] and [-] buttons which resize survey text:</span>\
+	<div><input data-collection='basic_settings' data-setting='resize_font' class='ml-text-setting' value='Resize Font' style='width:80%'></div>\
+	<br>\
+	");
+	
+	// insert these table rows into DOM
+	$("[name='instructions']").closest("tr").after(tr1);
+}
+
+Multilingual.addDownloadResponsesSection = function () {
+	// prepare section tr template
+	var blank_tr = $("<tr class='ml-download-response-settings'>\
+		<td valign='top' style='width:20px;'></td>\
+		<td valign='top' style='width:290px;'></td>\
+		<td valign='top' style='padding-left:15px;padding-bottom:5px;'></td>\
+	</tr>")
+	
+	// Survery Page Texts <tr>
+	var tr1 = blank_tr.clone()
+	$(tr1).find('td:nth-child(2)').append("<b>Download PDF Response Text Translations</b>")
+	$(tr1).find('td:nth-child(3)').append("\
+	<span style='display:block;'>Provide text translations for the button and label prompting the user to download their survey response as PDF:</span>\
+	<br>\
+	<div><input data-collection='download_response' data-setting='button' class='ml-text-setting' value='Download' style='width:80%'></div>\
+	<br>\
+	<div><input data-collection='download_response' data-setting='label' class='ml-text-setting' value='Download your survey response (PDF):' style='width:80%'></div>\
+	<br>\
+	");
+	
+	// insert these table rows into DOM
+	$("[name='end_of_survey_pdf_download']").closest("tr").after(tr1);
+}
+
 Multilingual.addSurveySettingsLanguageRow = function(languages) {
 	// make language select element
 	var langSelect = "<select id='ml-mod-language' name='ml-mod-language' class='x-form-text x-form-field' onchange='Multilingual.onLanguageSelect();'>"
@@ -230,22 +285,36 @@ Multilingual.addEconsentSection = function() {
 	\
 	<span style='display:block;'>The following text appears to inform the participant that they can click the 'Previous Page' button to return to the survey and change their responses:</span>\
 	<textarea style='width:98%;height:60px;font-size:12px;' class='tinyNoEditor ml-text-setting' data-collection='econsent' data-setting='bottom'>If any information above is not correct, you may click the 'Previous Page' button to go back and correct it.</textarea>\
+	<br>\
+	");
+	
+	// Signature Field(s) Erase Modal
+	var tr2 = blank_tr.clone()
+	$(tr2).addClass('ml-signature-settings')
+	$(tr2).find('td:nth-child(2)').append("<b>Signature Field(s) Erase Modal</b>")
+	$(tr2).find('td:nth-child(3)').append("\
+	<span style='display:block;'>Text translation settings for 'Force signature field(s) to be erased...' e-Consent feature:</span>\
+	<div style='margin:1px 0px;'><input class='ml-text-setting' data-collection='econsent' data-setting='erase_title' value='Erase your signature(s) in this survey?' style='width:80%'></div>\
+	<textarea style='width:98%;height:80px;font-size:12px;' class='tinyNoEditor ml-text-setting' data-collection='econsent' data-setting='erase_text'>You have provided your signature on an earlier page in this survey. This may include typing your name, a PIN, and/or signing your signature. You are allowed to return to a previous page in the survey, but if you do so, please be advised that your signature(s) will be automatically removed, after which you will need to provide it again before you can complete the survey. You will also be able to modify any of your existing responses to the questions in this survey. If this is okay, you may proceed to an earlier page in the survey by clicking the button below.</textarea>\
+	<div style='margin:1px 0px;'><input class='ml-text-setting' data-collection='econsent' data-setting='cancel_button' value='Erase my signature(s) and go to earlier page' style='width:60%'></div>\
+	<div style='margin:1px 0px;'><input class='ml-text-setting' data-collection='econsent' data-setting='erase_button' value='Cancel' style='width:80%'></div>\
+	<br>\
 	")
 	
 	// insert these table rows into DOM
-	$("input[name='pdf_auto_archive']").closest("tr").after(newRow, tr1);
+	$("input[name='pdf_auto_archive']").closest("tr").after(newRow, tr1, tr2);
 }
 
-Multilingual.addFieldValidationSection = function() {
+Multilingual.addFieldLevelSection = function() {
 	// add a section for Save and Return text translation settings in the Survey Settings page form table
 	
 	// add section header tr
 	var emIcon = "<i class='fas fa-cube fs14' style='position:relative;top:1px;margin-right:1px;margin-left:1px;'></i>";
-	var newRow = "<tr id='ml_field_validation-tr'><td colspan=3><div class='header' style='padding:7px 10px 5px;margin:0 -7px 10px; background-color: #fb8;>'";
-	newRow += "<span>" + emIcon + " Multilingual Module - Field Validation Text Translations</span></div></td></tr>"
+	var newRow = "<tr id='ml_field_specific-tr'><td colspan=3><div class='header' style='padding:7px 10px 5px;margin:0 -7px 10px; background-color: #fb8;>'";
+	newRow += "<span>" + emIcon + " Multilingual Module - Field Related Text Translations</span></div></td></tr>"
 	
 	// prepare section tr template
-	var blank_tr = $("<tr class='ml-field-validation-settings'>\
+	var blank_tr = $("<tr class='ml-field-specific-settings'>\
 		<td valign='top' style='width:20px;'></td>\
 		<td valign='top' style='width:290px;'></td>\
 		<td valign='top' style='padding-left:15px;padding-bottom:5px;'></td>\
@@ -253,59 +322,88 @@ Multilingual.addFieldValidationSection = function() {
 	
 	// Survery Page Texts <tr>
 	var tr1 = blank_tr.clone()
-	$(tr1).find('td:nth-child(2)').append("<b>Field Types</b>")
+	$(tr1).find('td:nth-child(2)').append("<b>Field Related Text Translations</b>")
 	$(tr1).find('td:nth-child(3)').append("\
-	<span style='display:block;'>Text Box (Short Text, Number, Date/Time, ...):</span>\
-	<div><input data-collection='field_validation' data-setting='text_box' class='ml-text-setting' value='* must provide value' style='width:80%'></div>\
-	\
-	<span style='display:block;'>Notes Box (Paragraph Text):</span>\
-	<input data-collection='field_validation' data-setting='notes_box' class='ml-text-setting' value='* must provide value' style='width:80%'>\
-	\
-	<span style='display:block;'>Multiple Choice - Drop-down List (Single Answer):</span>\
-	<input data-collection='field_validation' data-setting='mc_list' class='ml-text-setting' value='* must provide value' style='width:80%'>\
-	\
-	<span style='display:block;'>Multiple Choice - Radio Buttons (Single Answer):</span>\
-	<input data-collection='field_validation' data-setting='mc_buttons' class='ml-text-setting' value='* must provide value' style='width:80%'>\
-	\
-	<span style='display:block;'>Checkboxes (Multiple Answers):</span>\
-	<input data-collection='field_validation' data-setting='checkboxes' class='ml-text-setting' value='* must provide value' style='width:80%'>\
-	\
-	<span style='display:block;'>Yes - No:</span>\
-	<input data-collection='field_validation' data-setting='yes_no' class='ml-text-setting' value='* must provide value' style='width:80%'>\
-	\
-	<span style='display:block;'>True - False:</span>\
-	<input data-collection='field_validation' data-setting='true_false' class='ml-text-setting' value='* must provide value' style='width:80%'>\
-	\
-	<span style='display:block;'>Signature (draw signature with mouse or finger):</span>\
-	<input data-collection='field_validation' data-setting='signature' class='ml-text-setting' value='* must provide value' style='width:80%'>\
-	\
-	<span style='display:block;'>File Upload (for users to upload files):</span>\
-	<input data-collection='field_validation' data-setting='file_upload' class='ml-text-setting' value='* must provide value' style='width:80%'>\
-	\
-	<span style='display:block;'>Slider / Visual Analog Scale:</span>\
-	<input data-collection='field_validation' data-setting='slider' class='ml-text-setting' value='* must provide value' style='width:80%'>\
-	\
-	<span style='display:block;'>Dynamic Query (SQL):</span>\
-	<input data-collection='field_validation' data-setting='sql' class='ml-text-setting' value='* must provide value' style='width:80%'>\
-	<div></div><br>\
+	<span style='display:block;'>The 'reset' link appears next to many field types allowing a user to quickly and easily remove their answer for a given field:</span>\
+	<div><input data-collection='field_level' data-setting='reset' class='ml-text-setting' value='reset' style='width:60%'></div>\
+	<br>\
+	<span style='display:block;'>The 'Expand' link below a textarea allows a survey participant to increase the size of the textarea input:</span>\
+	<div><input data-collection='field_level' data-setting='expand' class='ml-text-setting' value='Expand' style='width:80%'></div>\
+	<br>");
+	
+	// Signature Field <tr>
+	var tr2 = blank_tr.clone()
+	$(tr2).find('td:nth-child(2)').append("<b>Signature Field Type Translations</b>")
+	$(tr2).find('td:nth-child(3)').append("\
+	<span style='display:block;'>The following texts are associated with the 'Signature' field type:</span>\
+	<div><input data-collection='field_level' data-setting='add_signature' class='ml-text-setting' value='Add signature' style='width:80%'> (link to open signature modal)</div>\
+	<br>\
+	<span style='display:block;'>The modal text instructing the user to provide a signature</span>\
+	<textarea style='width:98%;height:40px;font-size:12px;' class='tinyNoEditor ml-text-setting' data-collection='field_level' data-setting='instructions'>Signature (draw signature with mouse or finger)</textarea>\
+	<div><input data-collection='field_level' data-setting='save_signature' class='ml-text-setting' value='Save signature' style='width:80%'> (button to save signature)</div>\
+	<br>\
+	");
+	
+	// File Upload Field <tr>
+	var tr3 = blank_tr.clone()
+	$(tr3).find('td:nth-child(2)').append("<b>File Upload Field Type Translations</b>")
+	$(tr3).find('td:nth-child(3)').append("\
+	<span style='display:block;'>The following texts are associated with the 'File Upload' field type:</span>\
+	<div><input data-collection='field_level' data-setting='upload_file' class='ml-text-setting' value='Upload file' style='width:80%'> (link to open file upload modal)</div>\
+	<br>\
+	<span style='display:block;'>The following fields apply to the 'Upload file' modal:</span>\
+	<br>\
+	<span style='display:block;'>(modal instructions text)</span>\
+	<div><input data-collection='field_level' data-setting='upload_text' class='ml-text-setting' value='Select a file then click the &apos;Upload File&apos; button' style='width:80%'></div>\
+	<span style='display:block;'>(button to open file dialog)</span>\
+	<div><input data-collection='field_level' data-setting='choose_file' class='ml-text-setting' value='Choose File' style='width:80%'></div>\
+	<span style='display:block;'>(shown when user hasn't uploaded a file)</span>\
+	<div><input data-collection='field_level' data-setting='no_file' class='ml-text-setting' value='No file chosen' style='width:80%'></div>\
+	<span style='display:block;'>(note to user)</span>\
+	<div><input data-collection='field_level' data-setting='max_size' class='ml-text-setting' value='Max file size: 128 MB' style='width:80%'></div>\
+	<span style='display:block;'>(button to close modal and submit file)</span>\
+	<div><input data-collection='field_level' data-setting='upload_button' class='ml-text-setting' value='Upload File' style='width:80%'></div>\
+	<br>\
 	");
 	
 	// Missing value modal <tr>
-	var tr2 = blank_tr.clone()
-	$(tr2).find('td:nth-child(2)').append("<b>Missing values alert modal</b>")
-	$(tr2).find('td:nth-child(3)').append("\
+	var tr4 = blank_tr.clone()
+	$(tr4).find('td:nth-child(2)').append("<b>Missing Values Alert Modal</b>")
+	$(tr4).find('td:nth-child(3)').append("\
 	<span style='display:block;'>Missing values modal title:</span>\
-	<input data-collection='field_validation' data-setting='modal_title' class='ml-text-setting' value='NOTE: Some fields are required!' style='width:80%'>\
-	\
+	<div><input data-collection='field_level' data-setting='modal_title' class='ml-text-setting' value='NOTE: Some fields are required!' style='width:80%'></div>\
+	<br>\
 	<span style='display:block;'>Missing values modal instructions:</span>\
-	<textarea style='width:98%;height:60px;font-size:12px;' class='tinyNoEditor ml-text-setting' data-collection='field_validation' data-setting='instructions'>Your data was successfully saved, but you did not provide a value for some fields that require a value. Please enter a value for the fields on this page that are listed below.</textarea>\
-	\
+	<textarea style='width:98%;height:60px;font-size:12px;' class='tinyNoEditor ml-text-setting' data-collection='field_level' data-setting='instructions'>Your data was successfully saved, but you did not provide a value for some fields that require a value. Please enter a value for the fields on this page that are listed below.</textarea>\
+	<br>\
 	<span style='display:block;'>Missing values modal close button:</span>\
-	<input data-collection='field_validation' data-setting='modal_close' class='ml-text-setting' value='Okay' style='width:60%'>\
+	<div><input data-collection='field_level' data-setting='modal_close' class='ml-text-setting' value='Okay' style='width:60%'></div>\
+	<br>\
 	")
 	
 	// insert these table rows into DOM
-	$("input[name='pdf_auto_archive']").closest("tr").after(newRow, tr1, tr2);
+	$("input[name='pdf_auto_archive']").closest("tr").after(newRow, tr1, tr2, tr3, tr4);
+}
+
+Multilingual.addMustProvideValueSetting = function() {
+	// prepare section tr template
+	var blank_tr = $("<tr class='ml-must-provide-value-setting'>\
+		<td valign='top' style='width:20px;'></td>\
+		<td valign='top' style='width:290px;'></td>\
+		<td valign='top' style='padding-left:15px;padding-bottom:5px;'></td>\
+	</tr>")
+	
+	// Survery Page Texts <tr>
+	var tr1 = blank_tr.clone()
+	$(tr1).find('td:nth-child(2)').append("'Must Provide Value' Text Translation")
+	$(tr1).find('td:nth-child(3)').append("\
+	<span style='display:block;'>If enabled, this text appears below a field label to let a user know their input is required:</span>\
+	<div><input data-collection='field_level' data-setting='text' class='ml-text-setting' value='* must provide a value' style='width:80%'></div>\
+	<br>\
+	");
+	
+	// insert these table rows into DOM
+	$("[name='show_required_field_text']").closest("tr").after(tr1);
 }
 
 Multilingual.disableTextSettings = function() {
@@ -477,30 +575,70 @@ $( document ).ready(function() {
 		Multilingual.saveSurveySettings();
 	});
 	
-	Multilingual.addFieldValidationSection();
-	
+	Multilingual.addBasicSurveySection();
+	Multilingual.addFieldLevelSection();
 	Multilingual.addSaveAndReturnSection();
+	Multilingual.addEconsentSection();
+	Multilingual.addDownloadResponsesSection();
+	Multilingual.addMustProvideValueSetting();
+	
+	// show save and return settings only when feature is enabled
 	$("select[name='save_and_return']").on('change', function() {
 		if ($(this).val() == '1') {
-			$("#ml_save_and_return-tr").show()
-			$("tr.ml-snr-settings").show()
+			$("#ml_save_and_return-tr").show(250)
+			$("tr.ml-snr-settings").show(250)
 		} else {
-			$("#ml_save_and_return-tr").hide()
-			$("tr.ml-snr-settings").hide()
+			$("#ml_save_and_return-tr").hide(250)
+			$("tr.ml-snr-settings").hide(250)
 		}
 	})
 	$("select[name='save_and_return']").trigger('change')
 	
-	Multilingual.addEconsentSection();
-	$("input[name='pdf_auto_archive']")
+	// show e-Consent text settings only when feature is enabled
 	$("input[name='pdf_auto_archive']").on('change', function() {
 		if ($(this).val() == '2') {
-			$("#ml_econsent-tr").show()
-			$("tr.ml-econsent-settings").show()
+			$("#ml_econsent-tr").show(250)
+			$("tr.ml-econsent-settings").show(250)
 		} else {
-			$("#ml_econsent-tr").hide()
-			$("tr.ml-econsent-settings").hide()
+			$("#ml_econsent-tr").hide(250)
+			$("tr.ml-econsent-settings").hide(250)
 		}
 	})
 	$("input[name='pdf_auto_archive']").trigger('change')
+	
+	// show erase signature text settings only when feature is enabled
+	$("body").on('change', "[name*='pdf_econsent_signature_field']", function() {
+		// iterate over all present selects, if any set to an actual field, then show appropriate text translation settings
+		$("tr.ml-signature-settings").hide(250);
+		$("[name*='pdf_econsent_signature_field']").each(function(i, e) {
+			if ($(this).val()) {
+				$("tr.ml-signature-settings").show(250);
+				return;
+			}
+		})
+	})
+	$("[name='pdf_econsent_signature_field1']").trigger('change')
+	
+	// show Download PDF text settings only when feature is enabled
+	$("select[name='end_of_survey_pdf_download']").on('change', function() {
+		// console.log('changed select, new val: ' + $(this).val());
+		if ($(this).val() == '1') {
+			$("tr.ml-download-response-settings").show(250)
+		} else {
+			$("tr.ml-download-response-settings").hide(250)
+		}
+	})
+	$("select[name='end_of_survey_pdf_download']").trigger('change')
+	
+	// only show 'must provide value' translation option when feature enabled
+	$("[name='show_required_field_text']").on('change', function() {
+		// console.log('changed select, new val: ' + $(this).val());
+		if ($(this).val() == '1') {
+			$("tr.ml-must-provide-value-setting").show(250)
+		} else {
+			$("tr.ml-must-provide-value-setting").hide(250)
+		}
+	})
+	$("[name='show_required_field_text']").trigger('change')
+	
 })
