@@ -1,3 +1,4 @@
+console.log('multilingual_survey_complete.js');
 (function(){
 	var pdf_url = 'REDCAP_PDF_URL';
 	var ajax_url = 'REDCAP_AJAX_URL';

@@ -100,9 +100,6 @@ Multilingual.addBasicSurveySection = function () {
 	<span style='display:block;'>Text for the buttons used to navigate back/forth through survey pages:</span>\
 	<div><input data-collection='basic_settings' data-setting='previous' class='ml-text-setting' value='Previous Page' style='width:80%'></div>\
 	<div><input data-collection='basic_settings' data-setting='next' class='ml-text-setting' value='Next Page' style='width:80%'></div>\
-	<br>\
-	<span style='display:block;'>Text for submit survey response and close survey page buttons:</span>\
-	<div><input data-collection='basic_settings' data-setting='submit' class='ml-text-setting' value='Submit' style='width:60%'></div>\
 	<div><input data-collection='basic_settings' data-setting='close' class='ml-text-setting' value='Close Survey' style='width:80%'></div>\
 	<br>\
 	<span style='display:block;'>Text that appears above [+] and [-] buttons which resize survey text:</span>\
@@ -339,7 +336,7 @@ Multilingual.addFieldLevelSection = function() {
 	<div><input data-collection='field_level' data-setting='add_signature' class='ml-text-setting' value='Add signature' style='width:80%'> (link to open signature modal)</div>\
 	<br>\
 	<span style='display:block;'>The modal text instructing the user to provide a signature</span>\
-	<textarea style='width:98%;height:40px;font-size:12px;' class='tinyNoEditor ml-text-setting' data-collection='field_level' data-setting='instructions'>Signature (draw signature with mouse or finger)</textarea>\
+	<textarea style='width:98%;height:40px;font-size:12px;' class='tinyNoEditor ml-text-setting' data-collection='field_level' data-setting='signature_prompt'>Signature (draw signature with mouse or finger)</textarea>\
 	<div><input data-collection='field_level' data-setting='save_signature' class='ml-text-setting' value='Save signature' style='width:80%'> (button to save signature)</div>\
 	<br>\
 	");
@@ -354,17 +351,21 @@ Multilingual.addFieldLevelSection = function() {
 	<span style='display:block;'>The following fields apply to the 'Upload file' modal:</span>\
 	<br>\
 	<span style='display:block;'>(modal instructions text)</span>\
-	<div><input data-collection='field_level' data-setting='upload_text' class='ml-text-setting' value='Select a file then click the &apos;Upload File&apos; button' style='width:80%'></div>\
-	<span style='display:block;'>(button to open file dialog)</span>\
-	<div><input data-collection='field_level' data-setting='choose_file' class='ml-text-setting' value='Choose File' style='width:80%'></div>\
-	<span style='display:block;'>(shown when user hasn't uploaded a file)</span>\
-	<div><input data-collection='field_level' data-setting='no_file' class='ml-text-setting' value='No file chosen' style='width:80%'></div>\
+	<div><input data-collection='field_level' data-setting='upload_prompt1' class='ml-text-setting' value='File Upload (for users to upload files)' style='width:80%'></div>\
+	<div><input data-collection='field_level' data-setting='upload_prompt2' class='ml-text-setting' value='Select a file then click the &apos;Upload File&apos; button' style='width:80%'></div>\
 	<span style='display:block;'>(note to user)</span>\
 	<div><input data-collection='field_level' data-setting='max_size' class='ml-text-setting' value='Max file size: 128 MB' style='width:80%'></div>\
 	<span style='display:block;'>(button to close modal and submit file)</span>\
 	<div><input data-collection='field_level' data-setting='upload_button' class='ml-text-setting' value='Upload File' style='width:80%'></div>\
 	<br>\
 	");
+	
+	/*	unsupported settings -- choose file :fileinput text and label
+	<span style='display:block;'>(button to open file dialog)</span>\
+	<div><input data-collection='field_level' data-setting='choose_file' class='ml-text-setting' value='Choose File' style='width:80%'></div>\
+	<span style='display:block;'>(shown when user hasn't uploaded a file)</span>\
+	<div><input data-collection='field_level' data-setting='no_file' class='ml-text-setting' value='No file chosen' style='width:80%'></div>\
+	*/
 	
 	// Missing value modal <tr>
 	var tr4 = blank_tr.clone()
@@ -374,7 +375,8 @@ Multilingual.addFieldLevelSection = function() {
 	<div><input data-collection='field_level' data-setting='modal_title' class='ml-text-setting' value='NOTE: Some fields are required!' style='width:80%'></div>\
 	<br>\
 	<span style='display:block;'>Missing values modal instructions:</span>\
-	<textarea style='width:98%;height:60px;font-size:12px;' class='tinyNoEditor ml-text-setting' data-collection='field_level' data-setting='instructions'>Your data was successfully saved, but you did not provide a value for some fields that require a value. Please enter a value for the fields on this page that are listed below.</textarea>\
+	<textarea style='width:98%;height:80px;font-size:12px;' class='tinyNoEditor ml-text-setting' data-collection='field_level' data-setting='instructions'>Your data was successfully saved, but you did not provide a value for some fields that require a value. Please enter a value for the fields on this page that are listed below.\
+	Provide a value for...</textarea>\
 	<br>\
 	<span style='display:block;'>Missing values modal close button:</span>\
 	<div><input data-collection='field_level' data-setting='modal_close' class='ml-text-setting' value='Okay' style='width:60%'></div>\
@@ -642,3 +644,9 @@ $( document ).ready(function() {
 	$("[name='show_required_field_text']").trigger('change')
 	
 })
+
+// add Espanol to all added survey text translation settings
+// $(".ml-text-setting").each(function(i, e) {
+	// var text = $(e).val();
+    // $(e).val(text + " (Español)");
+// })
