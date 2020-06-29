@@ -85,3 +85,6 @@ label.ml-mod {
 select#ml-mod-language {
 	min-width: 80px;
 }
+button[name="submit-btn-saverecord"], button[name="submit-btn-saveprevpage"] {
+    max-width: 220px !important;
+}
