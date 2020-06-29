@@ -1066,7 +1066,8 @@ var Multilingual = (function(){
 				if(!anyTranslated && (r == null || (r['questions'] == null && r['answers'] == null && r['notes'] == null))){
 					clearInterval(interval);
 					$('#changeLang').remove();
-					setCookie('p1000Lang', 'en', -1);
+					// commenting out to prevent issue where overlay is shown again
+					// setCookie('p1000Lang', 'en', -1);
 				} else {
 					// if language is not previously set in cookies, let user choose
 					if(getCookie('p1000Lang') == "-1"){
