@@ -627,14 +627,6 @@ var Multilingual = (function(){
 			if (!form_settings)
 				$('.requiredlabel').remove();
 			$('.multilingual').remove();
-			
-			// local function for handling radio question translation on mobile viewports
-			var translateMobileQuestion = function(label, replacement) {
-				label.find('div:first-child p').remove()
-				var remains = label.children('div:first-child').contents()
-				label.html(replacement)
-				label.children('div:first-child').append(remains)
-			}
 
 			//questions
 			var id;
@@ -662,13 +654,13 @@ var Multilingual = (function(){
 						//$('#' + id + '-tr').children('td').eq(1).html(translations['questions'][id]['text'] + ' <' + tmp[1]);
 					}
 				} else {
-					if ($('#label-' + id).has('input').length > 0) {
-						// translate assuming it's mobile style where input is nested in label element
-						translateMobileQuestion($('#label-' + id), translations['questions'][id]['text']);
-					} else {
-						// translate as normal
-						$('#label-' + id).html(translations['questions'][id]['text']);
-					}
+					var nodes = $('#label-' + id).contents()
+					for (var i = 0; i < nodes.length; i++) {
+						if (nodes[i].nodeType === 3) {
+							nodes[i].textContent = translations['questions'][id]['text'];
+							break;
+						}
+					};
 				}
 			}
 
