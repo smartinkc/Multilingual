@@ -1,5 +1,5 @@
 <?php
-	namespace VUMC\Multilingual;
+	namespace CMH\Multilingual;
 	
 	use ExternalModules\AbstractExternalModule;
 	use ExternalModules\ExternalModules;
