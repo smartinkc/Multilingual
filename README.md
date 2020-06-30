@@ -21,6 +21,12 @@ Jen Hoitenga, Children's Mercy Hospital, Kansas City, MO
 
 - If you have just one instrument, you can just add the survey`_text`_finish variable and add the Title, Instructions and Completion Text to it.
 
+###Survey Settings (v1.11+)
+- Version 1.11 of the module introduces the ability to specify Save & Return Later, e-Consent, and general survey text translations at an instrument's Survey Settings page.
+- After creating a 'languages' field for the instrument, navigate to REDCap's Online Designer and click 'Survey Settings'.
+- Select a translation language from the drop down below the Survey Status row. This will enable you to change the various text trasnlation settings available.
+- After saving your changes, the provided translations will be available to survey participants.
+
 ###More Documentation
 - <a href="https://cmhredcap.cmh.edu/plugins/media/7610-how-to-use-multilingual-external-module.docx">Click Here</a>
 
