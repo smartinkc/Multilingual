@@ -18,7 +18,7 @@
 		{"1.8.3": "Translate notes/slider, default validation messages translations, stop action translations, bug fixes"},
 		{"1.10.0": "Added form-specific text translation settings in the Survey Settings page"},
 		{"1.10.1": "Fix bugs that might prevent Survey Settings module values from loading or translation would fail on the surey page"},
-		{"1.11.0": "Added eConsent, basic navigation, and field-specific translation settings"}
+		{"1.11.2": "Added eConsent, basic navigation, and field-specific translation settings"}
 	],
 
 	"authors": [
