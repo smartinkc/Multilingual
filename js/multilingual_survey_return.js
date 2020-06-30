@@ -1,4 +1,3 @@
-console.log('multilingual_survey_return.js');
 (function(){
 	//load languages
 	var ajax_url = 'REDCAP_AJAX_URL';

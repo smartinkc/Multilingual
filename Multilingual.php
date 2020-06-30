@@ -155,7 +155,6 @@ class Multilingual extends AbstractExternalModule
 			}
 		}
 		
-		file_put_contents("C:/vumc/log.txt", "\$instruments: " . print_r($instruments, true) . "\n", FILE_APPEND);
 		$this->setProjectSetting('instruments', json_encode($instruments));
 	}
 

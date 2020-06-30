@@ -119,6 +119,14 @@
 			"default": ""
 		},
 		{
+			"key": "show-all-lang-buttons",
+			"name": "Always show all language select buttons",
+			"required": false,
+			"type": "checkbox",
+			"repeatable": false,
+			"default": ""
+		},
+		{
 			"key": "hide-answers-without-translation",
 			"name": "Hide Answers that do not have a translation on instruments. (Radio/Dropdown/Checkbox Options without a translation for the current language will not be displayed)",
 			"required": false,

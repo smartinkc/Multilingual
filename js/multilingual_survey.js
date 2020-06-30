@@ -1,4 +1,3 @@
-console.log('multilingual_survey.js');
 var Multilingual = (function(){
 	//load languages
 	var pdf_url = 'REDCAP_PDF_URL';
@@ -181,7 +180,6 @@ var Multilingual = (function(){
 		$('body').on('dialogopen', '.simpleDialog', function() {
 			if (form_settings) {
 				var modal = $("div.simpleDialog").parent();
-				console.log('opened modal', modal);
 				
 				// translate erase signatures modal
 				if ($(modal).find("div#resetSignatureValuesDialog").length) {
@@ -288,7 +286,9 @@ var Multilingual = (function(){
 				data: 'data=' + json,
 				success: function (r) {
 					settings = r;
-					console.log("settings", r);
+					if (settings['show-all-lang-buttons'] && settings['show-all-lang-buttons'].value) {
+						addAllLangButtons();
+					}
 					settingsRetrieved = true;
 					loadFormSettings();
 				},
@@ -303,6 +303,9 @@ var Multilingual = (function(){
 				data: 'data=' + json2,
 				success: function (r) {
 					languages = r;
+					if (settings['show-all-lang-buttons'] && settings['show-all-lang-buttons'].value) {
+						addAllLangButtons();
+					}
 					languagesRetrieved = true;
 					totalLanguages = Object.keys(languages).length;
 					getLanguage();
@@ -579,11 +582,23 @@ var Multilingual = (function(){
 			timing += 150;
 		});
 	}
-
+	
+	function addAllLangButtons() {
+		$(".setLangButtons").remove();
+		// if ($('#p1000Overlay').length)
+			$("#p1000Overlay").remove();
+		// if ($('#changeLang').length)
+			$("#changeLang").remove();
+		Object.values(languages).forEach(function(language, i) {
+			$('#surveytitle').parent().append("<div class='setLangButtons' name='" + language + "'>" + language + "</div>");
+		});
+	}
+	
 	function translate(){
 		if(langReady == 1 && !settings['empty']){
 			clearInterval(interval);
-			$('#changeLang').show();
+			if ($('#changeLang').length)
+				$('#changeLang').show();
 
 			//add buttons to startUp
 			if($('#p1000Overlay').is(':visible') && $('#p1000ChooseLang').html() == ''){
@@ -607,21 +622,23 @@ var Multilingual = (function(){
 
 			//required fields popup
 			translatePopup();
-
-			$('#changeLang').html(lang);
-			if(lang.length > 2){
-				$('#changeLang').css('width', (settings['button-width'] && settings['button-width']['value'] ? settings['button-width']['value'] : '100px'));
-				$('#changeLang').css('padding-left','8px');
-				$('#changeLang').css('padding-right','8px');
+			
+			if ($('#changeLang').length) {
+				$('#changeLang').html(lang);
+				if(lang.length > 2){
+					$('#changeLang').css('width', (settings['button-width'] && settings['button-width']['value'] ? settings['button-width']['value'] : '100px'));
+					$('#changeLang').css('padding-left','8px');
+					$('#changeLang').css('padding-right','8px');
+				}
+				else{
+					$('#changeLang').css('width', (settings['button-width'] && settings['button-width']['value'] ? settings['button-width']['value'] : '30px'));
+					$('#changeLang').css('padding-left','');
+					$('#changeLang').css('padding-right','');
+				}
+				$('#changeLang').css('background', (settings['background-color'] && settings['background-color']['value'] ? settings['background-color']['value'] : ''));
+				$('#changeLang').css('color', (settings['font-color'] && settings['font-color']['value'] ? settings['font-color']['value'] : ''));
+				$('#changeLang').css('opacity','1');
 			}
-			else{
-				$('#changeLang').css('width', (settings['button-width'] && settings['button-width']['value'] ? settings['button-width']['value'] : '30px'));
-				$('#changeLang').css('padding-left','');
-				$('#changeLang').css('padding-right','');
-			}
-			$('#changeLang').css('background', (settings['background-color'] && settings['background-color']['value'] ? settings['background-color']['value'] : ''));
-			$('#changeLang').css('color', (settings['font-color'] && settings['font-color']['value'] ? settings['font-color']['value'] : ''));
-			$('#changeLang').css('opacity','1');
 			
 			//remove required english label
 			if (!form_settings)
@@ -992,7 +1009,6 @@ var Multilingual = (function(){
 		langReady = 0;
 		if(newLang == null){
 			lang = getCookie('p1000Lang');
-
 			if(lang == "-1"){
 				//lang = languages[Object.keys(languages)[0]];
 
@@ -1057,7 +1073,10 @@ var Multilingual = (function(){
 				//hide if no translations
 				if(!anyTranslated && (r == null || (r['questions'] == null && r['answers'] == null && r['notes'] == null))){
 					clearInterval(interval);
-					$('#changeLang').remove();
+					
+					if ($('#changeLang').length)
+						$('#changeLang').remove();
+					
 					// commenting out to prevent issue where overlay is shown again
 					// setCookie('p1000Lang', 'en', -1);
 				} else {
@@ -1093,7 +1112,6 @@ var Multilingual = (function(){
 		} else {
 			form_settings = null;
 		}
-		console.log("form_settings", form_settings);
 		
 		// if survey acknowledgement text is shown, add buttons so user can translate survey acknowledgement text
 		if ($("#surveyacknowledgment").length && !$("#language_buttons").length) {
