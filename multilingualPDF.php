@@ -19,13 +19,13 @@
 	} 
 	
 	//language choices
-	$languages = $module->getLanguages($_GET['pid']);
-	$language = $languages[$_GET['langIndex']];
+	$languages = $module->getLanguages(intval($_GET['pid']));
+	$language = $languages[intval($_GET['langIndex'])];
 	
 	//encoding
-	$encodingLanguage = $module->getProjectSetting('encoding-language', $_GET['pid']);
-	$encoding = $module->getProjectSetting('encoding-type', $_GET['pid']);
-	$languageTitles = $module->getProjectSetting('pdf-title', $_GET['pid']);
+	$encodingLanguage = $module->getProjectSetting('encoding-language', intval($_GET['pid']));
+	$encoding = $module->getProjectSetting('encoding-type', intval($_GET['pid']));
+	$languageTitles = $module->getProjectSetting('pdf-title', intval($_GET['pid']));
 	
 	$pdf_encoding = '';
 	$pdf_title = '';
@@ -37,14 +37,14 @@
 	}
 	
 	//translations
-	$vars = array('todo' => 1, 'lang' => $language, 'project_id' => $_GET['pid'], 'record_id' => $_GET['id'], 'page' => $_GET['form']);
+	$vars = array('todo' => 1, 'lang' => $language, 'project_id' => intval($_GET['pid']), 'record_id' => $_GET['id'], 'page' => $_GET['form']);
 	ob_start();
 	$module->getTranslations($vars, $module->getProjectSettings());
 	$translations = json_decode(ob_get_clean(), true);
 	ob_end_clean();
 	
 	//get metadata
-	$metadata = $module->getMetaData($_GET['pid'], $_GET['form']);
+	$metadata = $module->getMetaData(intval(intval($_GET['pid'])), $_GET['form']);
 
 	//replace labels and element_enum with translations
 	foreach($metadata AS $key => $values){
@@ -121,5 +121,5 @@
 	file_put_contents(APP_PATH_DOCROOT."PDF".DS."index_multilingual_$random.php", $newFile);
 	chmod(775, APP_PATH_DOCROOT."PDF".DS."index_multilingual_$random.php");
 
-	header('Location:' . APP_PATH_WEBROOT . "PDF" . DS . "index_multilingual_$random.php?pid=" . $_GET['pid'] . (isset($_GET['form']) ? "&page=" . $_GET['form'] : '') . "&id=" . $_GET['id'] . (isset($_GET['event_id']) ? "&event_id=" . $_GET['event_id'] : '') . (isset($_GET['instance']) && $_GET['instance'] > 1 ? "&instance=" . $_GET['instance'] : '')); 
+	header('Location:' . APP_PATH_WEBROOT . "PDF" . DS . "index_multilingual_$random.php?pid=" . intval($_GET['pid']) . (isset($_GET['form']) ? "&page=" . $_GET['form'] : '') . "&id=" . $_GET['id'] . (isset($_GET['event_id']) ? "&event_id=" . $_GET['event_id'] : '') . (isset($_GET['instance']) && $_GET['instance'] > 1 ? "&instance=" . $_GET['instance'] : '')); 
 ?>
