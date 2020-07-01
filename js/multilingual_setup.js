@@ -227,7 +227,7 @@
 		}
 		else{
 			//display
-			var display = '<div id="multilingual"><p><b>Multilingual</b></p><p><span style="color:blue;">Questions</span></p><table>';
+			var display = '<div id="multilingual"><p><b>Multilingual</b></p><p><span style="color:blue;">Field Labels</span></p><table>';
 			
 			//questions
 			var id;
@@ -252,7 +252,7 @@
 			//answers
 			if(r[""] != ""){
 				var id2;
-				display += '<p><span style="color:blue;">Answers</span><p><table>';
+				display += '<p><span style="color:blue;">Choices</span><p><table>';
 				for(id in languages){
 					for(id2 in r){
 						display += '<tr><td>' + languages[id] + ': ' + id2 + ' </td><td> <input class="p1000_answers" type="text" style="color:black;" value="' + (answers[languages[id]]!= null && answers[languages[id]][id2] != null ? answers[languages[id]][id2] : '') + '" size=30 name="a' + id + '-' + id2 + '" id="a' + id + '-' + id2 + '">' + '</td></tr>';
