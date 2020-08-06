@@ -412,10 +412,10 @@ Multilingual.disableTextSettings = function() {
 	$("input[name='title']").attr('disabled', true)
 	$("input[name='title']").css('background-color', "#ccc")
 	// $("textarea[name='response_limit_custom_text']").attr('disabled', true)
-	tinyMCE.editors["instructions"].getBody().setAttribute('contenteditable', false)
-	tinyMCE.editors["instructions"].getBody().style.backgroundColor = "#ccc"
-	tinyMCE.editors["acknowledgement"].getBody().setAttribute('contenteditable', false)
-	tinyMCE.editors["acknowledgement"].getBody().style.backgroundColor = "#ccc"
+	Multilingual.instructions_mce.getBody().setAttribute('contenteditable', false)
+	Multilingual.instructions_mce.getBody().style.backgroundColor = "#ccc"
+	Multilingual.acknowledgement_mce.getBody().setAttribute('contenteditable', false)
+	Multilingual.acknowledgement_mce.getBody().style.backgroundColor = "#ccc"
 	
 	// disable save and return later added settings
 	$("textarea.ml-text-setting, input.ml-text-setting").attr('disabled', true)
@@ -425,10 +425,10 @@ Multilingual.enableTextSettings = function() {
 	$("input[name='title']").attr('disabled', false)
 	$("input[name='title']").css('background-color', "#fff")
 	// $("textarea[name='response_limit_custom_text']").attr('disabled', false)
-	tinyMCE.editors["instructions"].getBody().setAttribute('contenteditable', true);
-	tinyMCE.editors["instructions"].getBody().style.backgroundColor = "#fff"
-	tinyMCE.editors["acknowledgement"].getBody().setAttribute('contenteditable', true);
-	tinyMCE.editors["acknowledgement"].getBody().style.backgroundColor = "#fff"
+	Multilingual.instructions_mce.getBody().setAttribute('contenteditable', true);
+	Multilingual.instructions_mce.getBody().style.backgroundColor = "#fff"
+	Multilingual.acknowledgement_mce.getBody().setAttribute('contenteditable', true);
+	Multilingual.acknowledgement_mce.getBody().style.backgroundColor = "#fff"
 	
 	// disable save and return later added settings
 	$("textarea.ml-text-setting, input.ml-text-setting").attr('disabled', null)
@@ -447,9 +447,9 @@ Multilingual.saveSurveySettings = function() {
 	// build survey_settings collection of settings
 	var survey_settings = {}
 	survey_settings.title = $("input[name=title]").val()
-	survey_settings.instructions = tinymce.editors.instructions.getContent()
+	survey_settings.instructions = Multilingual.instructions_mce.getContent()
 	// survey_settings.response_limit = $("textarea[name=response_limit_custom_text]").val()
-	survey_settings.acknowledgement = tinymce.editors.acknowledgement.getContent()
+	survey_settings.acknowledgement = Multilingual.acknowledgement_mce.getContent()
 	data.collections.survey_settings = survey_settings
 	
 	// add 'Save and Return Later' setting collections
@@ -481,9 +481,9 @@ Multilingual.getSurveySettings = function() {
 	Multilingual.defaults = {}
 	Multilingual.defaults.survey_settings = {}
 	Multilingual.defaults.survey_settings.title = $("input[name=title]").val();
-	Multilingual.defaults.survey_settings.instructions = tinymce.editors.instructions.getContent();
+	Multilingual.defaults.survey_settings.instructions = Multilingual.instructions_mce.getContent();
 	// Multilingual.defaults.survey_settings.response_limit = $("textarea[name=response_limit_custom_text]").val();
-	Multilingual.defaults.survey_settings.acknowledgement = tinymce.editors.acknowledgement.getContent();
+	Multilingual.defaults.survey_settings.acknowledgement = Multilingual.acknowledgement_mce.getContent();
 	
 	// store default 'Save and Return Later' settings as well
 	Multilingual.collection_names.forEach(function(coll_name, i) {
@@ -536,9 +536,9 @@ Multilingual.loadSurveySettings = function() {
 	
 	// handles setting input values for settings that exist in every REDCap survey
 	$("input[name='title']").val(collections.survey_settings.title)
-	tinyMCE.editors.instructions.setContent(collections.survey_settings.instructions);
+	Multilingual.instructions_mce.setContent(collections.survey_settings.instructions);
 	// $("textarea[name='response_limit_custom_text']").val(collections.survey_settings.response_limit)
-	tinyMCE.editors.acknowledgement.setContent(collections.survey_settings.acknowledgement);
+	Multilingual.acknowledgement_mce.setContent(collections.survey_settings.acknowledgement);
 	
 	// handles all settings that are added by ML module itself
 	$(".ml-text-setting[data-collection][data-setting]").each(function(i, setting) {
@@ -556,16 +556,18 @@ Multilingual.getSettings();
 
 $( document ).ready(function() {
 	Multilingual.getLanguages();
+	Multilingual.instructions_mce = tinyMCE.get('mce_0');
+	Multilingual.acknowledgement_mce = tinyMCE.get('mce_2');
 	
 	// disable text settings when both tinyMCE editors are init'ed
-	tinyMCE.editors["instructions"].on('init', function(e) {
+	Multilingual.instructions_mce.on('init', function(e) {
 		Multilingual.instructionsEditorReady = true;
 		if (Multilingual.acknowledgementEditorReady && Multilingual.instructionsEditorReady) {
 			Multilingual.disableTextSettings();
 			Multilingual.getSurveySettings();
 		}
 	})
-	tinyMCE.editors["acknowledgement"].on('init', function(e) {
+	Multilingual.acknowledgement_mce.on('init', function(e) {
 		Multilingual.acknowledgementEditorReady = true;
 		if (Multilingual.acknowledgementEditorReady && Multilingual.instructionsEditorReady) {
 			Multilingual.disableTextSettings();
