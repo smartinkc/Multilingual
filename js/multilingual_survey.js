@@ -671,13 +671,22 @@ var Multilingual = (function(){
 						//$('#' + id + '-tr').children('td').eq(1).html(translations['questions'][id]['text'] + ' <' + tmp[1]);
 					}
 				} else {
-					var nodes = $('#label-' + id).contents()
-					for (var i = 0; i < nodes.length; i++) {
-						if (nodes[i].nodeType === 3) {
-							nodes[i].textContent = translations['questions'][id]['text'];
-							break;
-						}
-					};
+					var translation = $(translations['questions'][id]['text']);
+					if (typeof translation == 'string') {
+						var nodes = $('#label-' + id).contents();
+						for (var i = 0; i < nodes.length; i++) {
+							if (nodes[i].nodeType === 3) {
+								nodes[i].textContent = translations['questions'][id]['text'];
+								break;
+							}
+						};
+					} else if (translation.length && translation instanceof jQuery) {
+						var translation_tagname = $(translation).prop("tagName");
+						var children = $('#label-' + id).children(translation_tagname.toLowerCase())
+						var first_child = $('#label-' + id).children(translation_tagname.toLowerCase()).first()
+						if (first_child)
+							$(first_child).replaceWith(translation);
+					}
 				}
 			}
 

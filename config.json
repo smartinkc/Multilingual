@@ -19,7 +19,8 @@
 		{"1.10.0": "Added form-specific text translation settings in the Survey Settings page"},
 		{"1.10.1": "Fix bugs that might prevent Survey Settings module values from loading or translation would fail on the surey page"},
 		{"1.11.3": "Added eConsent, basic navigation, and field-specific translation settings"},
-		{"1.11.4": "Survey Settings page will now correctly find the instructions and acknowlegement tinyMCE editors in REDCap 10.2+"}
+		{"1.11.4": "Survey Settings page will now correctly find the instructions and acknowlegement tinyMCE editors in REDCap 10.2+"},
+		{"1.11.5": "Fixed a bug where question labels with embedded HTML were renderly incorrectly"}
 	],
 
 	"authors": [
