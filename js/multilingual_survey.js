@@ -150,7 +150,7 @@ var Multilingual = (function(){
 
 					$('#redcapValidationErrorPopup').html('');
 					setTimeout(function(){
-						if(translations['errors'][id] != undefined && translations['errors'][id]['text'] != ''){
+						if(translations && translations['errors'] && translations['errors'][id] && translations['errors'][id]['text'] != ''){
 							$('#redcapValidationErrorPopup').html(translations['errors'][id]['text']);
 						}
 						else{
@@ -594,6 +594,31 @@ var Multilingual = (function(){
 		});
 	}
 	
+	// from stackoverflow
+	// https://stackoverflow.com/questions/298750/how-do-i-select-text-nodes-with-jquery
+	function getTextNodesIn(node, includeWhitespaceNodes = false) {
+		// return $(el).find(":not(iframe)").addBack().contents().filter(function() {
+			// return this.nodeType == 3;
+		// });
+		
+		 var textNodes = [], nonWhitespaceMatcher = /\S/;
+
+		function getTextNodes(node) {
+			if (node.nodeType == 3) {
+				if (includeWhitespaceNodes || nonWhitespaceMatcher.test(node.nodeValue)) {
+					textNodes.push(node);
+				}
+			} else {
+				for (var i = 0, len = node.childNodes.length; i < len; ++i) {
+					getTextNodes(node.childNodes[i]);
+				}
+			}
+		}
+
+		getTextNodes(node);
+		return textNodes;
+	}
+	
 	function translate(){
 		if(langReady == 1 && !settings['empty']){
 			clearInterval(interval);
@@ -671,21 +696,32 @@ var Multilingual = (function(){
 						//$('#' + id + '-tr').children('td').eq(1).html(translations['questions'][id]['text'] + ' <' + tmp[1]);
 					}
 				} else {
-					var translation = $(translations['questions'][id]['text']);
-					if (typeof translation == 'string') {
+					var translation = null;
+					var translate_mode = 'html';
+					try {
+						translation = $(translations['questions'][id]['text']);
+					} catch(err) {
+						translation = translations['questions'][id]['text'];
+						translate_mode = 'text';
+					}
+					
+					if (translate_mode == 'text') {
 						var nodes = $('#label-' + id).contents();
 						for (var i = 0; i < nodes.length; i++) {
+							// replace textContent of first text type node
 							if (nodes[i].nodeType === 3) {
-								nodes[i].textContent = translations['questions'][id]['text'];
+								nodes[i].textContent = translation;
 								break;
 							}
 						};
-					} else if (translation.length && translation instanceof jQuery) {
-						var translation_tagname = $(translation).prop("tagName");
-						var children = $('#label-' + id).children(translation_tagname.toLowerCase())
-						var first_child = $('#label-' + id).children(translation_tagname.toLowerCase()).first()
-						if (first_child)
-							$(first_child).replaceWith(translation);
+					} else {
+						// replace text node content sequentially
+						var tnodes1 = getTextNodesIn($('#label-' + id)[0])
+						var tnodes2 = getTextNodesIn(translation[0]);
+						
+						tnodes2.forEach(function(el, i) {
+							tnodes1[i].textContent = el.textContent;
+						});
 					}
 				}
 			}
