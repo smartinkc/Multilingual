@@ -97,10 +97,11 @@ Multilingual.addBasicSurveySection = function () {
 	var tr1 = blank_tr.clone()
 	$(tr1).find('td:nth-child(2)').append("<b>General Survey Text Translations</b>")
 	$(tr1).find('td:nth-child(3)').append("\
-	<span style='display:block;'>Text for the buttons used to navigate back/forth through survey pages:</span>\
+	<span style='display:block;'>Text for the buttons used to navigate surveys:</span>\
 	<div><input data-collection='basic_settings' data-setting='previous' class='ml-text-setting' value='Previous Page' style='width:80%'></div>\
 	<div><input data-collection='basic_settings' data-setting='next' class='ml-text-setting' value='Next Page' style='width:80%'></div>\
 	<div><input data-collection='basic_settings' data-setting='close' class='ml-text-setting' value='Close Survey' style='width:80%'></div>\
+	<div><input data-collection='basic_settings' data-setting='submit' class='ml-text-setting' value='Submit' style='width:80%'></div>\
 	<br>\
 	<span style='display:block;'>Text that appears above [+] and [-] buttons which resize survey text:</span>\
 	<div><input data-collection='basic_settings' data-setting='resize_font' class='ml-text-setting' value='Resize Font' style='width:80%'></div>\

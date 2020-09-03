@@ -319,6 +319,7 @@ var Multilingual = (function(){
 			// Now that settings and language calls are complete process survey control text
 			stopText();
 			controlText();
+			form_translate();
 		});
 	}
 
@@ -922,8 +923,18 @@ var Multilingual = (function(){
 			}
 			if ($("#changeFont").length)	// resize font
 				$("#changeFont div").eq(0).html(form_settings.basic_settings.resize_font)
-			if ($("[name='submit-btn-saverecord']").length) // next page
-				$("[name='submit-btn-saverecord']").html(form_settings.basic_settings.next + " >>");
+			
+			// overwrite Submit/Next Page button
+			if ($("[name='submit-btn-saverecord']").length) {
+				if($('[name="submit-btn-saverecord"]').text() == "Submit" || $('[name="submit-btn-saverecord"]').text() == "✔") {
+					$("[name='submit-btn-saverecord']").html(form_settings.basic_settings.submit);
+				} else {
+					$("[name='submit-btn-saverecord']").html(form_settings.basic_settings.next + " >>");
+				}
+			}
+			
+
+				
 			if ($("[name='submit-btn-saveprevpage']").length) // prev page
 				$("[name='submit-btn-saveprevpage']").html("<< " + form_settings.basic_settings.previous);
 			$("button").each(function(i, e) { // "close survey" button
