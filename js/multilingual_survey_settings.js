@@ -93,10 +93,20 @@ Multilingual.addBasicSurveySection = function () {
 		<td valign='top' style='padding-left:15px;padding-bottom:5px;'></td>\
 	</tr>")
 	
-	// Survery Page Texts <tr>
+	// Language Enable/Disable <tr>
 	var tr1 = blank_tr.clone()
-	$(tr1).find('td:nth-child(2)').append("<b>General Survey Text Translations</b>")
+	$(tr1).find('td:nth-child(2)').append("<b>Hide language</b>")
 	$(tr1).find('td:nth-child(3)').append("\
+	<label style='display:block;'>Hide this language for this form:\
+	<input type='checkbox' id='hide_lang'>\
+	</label>\
+	<br>\
+	");
+	
+	// Survery Page Texts <tr>
+	var tr2 = blank_tr.clone()
+	$(tr2).find('td:nth-child(2)').append("<b>General Survey Text Translations</b>")
+	$(tr2).find('td:nth-child(3)').append("\
 	<span style='display:block;'>Text for the buttons used to navigate surveys:</span>\
 	<div><input data-collection='basic_settings' data-setting='previous' class='ml-text-setting' value='Previous Page' style='width:80%'></div>\
 	<div><input data-collection='basic_settings' data-setting='next' class='ml-text-setting' value='Next Page' style='width:80%'></div>\
@@ -109,7 +119,7 @@ Multilingual.addBasicSurveySection = function () {
 	");
 	
 	// insert these table rows into DOM
-	$("[name='instructions']").closest("tr").after(tr1);
+	$("[name='instructions']").closest("tr").after(tr1).after(tr2);
 }
 
 Multilingual.addDownloadResponsesSection = function () {
@@ -433,6 +443,9 @@ Multilingual.enableTextSettings = function() {
 	
 	// disable save and return later added settings
 	$("textarea.ml-text-setting, input.ml-text-setting").attr('disabled', null)
+	
+	// enable hide_lang checkbox too
+	$("#hide_lang").attr('disabled', false);
 }
 
 Multilingual.saveSurveySettings = function() {
@@ -460,6 +473,13 @@ Multilingual.saveSurveySettings = function() {
 			data.collections[coll_name][$(setting).attr('data-setting')] = $(setting).val()
 		})
 	})
+	
+	// remember hide option setting
+	if ($("#hide_lang").is(':checked')) {
+		data.collections.basic_settings.hide_lang = true;
+	} else {
+		data.collections.basic_settings.hide_lang = false;
+	}
 	
 	var json = encodeURIComponent(JSON.stringify(data));
 	
@@ -551,6 +571,9 @@ Multilingual.loadSurveySettings = function() {
 			}
 		}
 	})
+	
+	// update hide_lang checkbox
+	$("#hide_lang").prop('checked', collections.basic_settings.hide_lang)
 }
 
 Multilingual.getSettings();
@@ -646,6 +669,7 @@ $( document ).ready(function() {
 	})
 	$("[name='show_required_field_text']").trigger('change')
 	
+	$("#hide_lang").attr('disabled', true);
 })
 
 // add Espanol to all added survey text translation settings
