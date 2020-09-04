@@ -1243,12 +1243,13 @@ var Multilingual = (function(){
 	
 	function langIsHidden(lang) {
 		if (!settings || !settings.instruments || !settings.instruments[instrument_name] || !settings.instruments[instrument_name][lang] || !settings.instruments[instrument_name][lang].basic_settings)
-			return false;
+			return null;
 		
 		var slice = settings.instruments[instrument_name][lang].basic_settings;
-		if (slice.hide_lang == '1')
+		if (slice.hide_lang == '1') {
 			return true;
-		
-		return false;
+		} else {
+			return false;
+		}
 	}
 })();
