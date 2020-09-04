@@ -1236,5 +1236,15 @@ var Multilingual = (function(){
 		var expires = "expires="+ d.toUTCString();
 		document.cookie = cname + "=" + cvalue + "; " + expires;
 	}
-
+	
+	function langIsHidden(lang) {
+		if (!settings || !settings.instruments || !settings.instruments[instrument_name] || !settings.instruments[instrument_name][lang] || !settings.instruments[instrument_name][lang].basic_settings)
+			return false;
+		
+		var slice = settings.instruments[instrument_name][lang].basic_settings;
+		if (slice.hide_lang == '1')
+			return true;
+		
+		return false;
+	}
 })();
