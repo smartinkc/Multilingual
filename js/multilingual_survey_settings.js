@@ -430,6 +430,9 @@ Multilingual.disableTextSettings = function() {
 	
 	// disable save and return later added settings
 	$("textarea.ml-text-setting, input.ml-text-setting").attr('disabled', true)
+	
+	// disable hide_lang checkbox too
+	$("#hide_lang").attr('disabled', true);
 }
 
 Multilingual.enableTextSettings = function() {
@@ -476,9 +479,9 @@ Multilingual.saveSurveySettings = function() {
 	
 	// remember hide option setting
 	if ($("#hide_lang").is(':checked')) {
-		data.collections.basic_settings.hide_lang = true;
+		data.collections.basic_settings.hide_lang = '1';
 	} else {
-		data.collections.basic_settings.hide_lang = false;
+		data.collections.basic_settings.hide_lang = null;
 	}
 	
 	var json = encodeURIComponent(JSON.stringify(data));
@@ -553,7 +556,6 @@ Multilingual.loadSurveySettings = function() {
 			collections = this.settings[this.selectedLanguage]
 		}
 	}
-		
 	
 	// handles setting input values for settings that exist in every REDCap survey
 	$("input[name='title']").val(collections.survey_settings.title)
@@ -573,7 +575,12 @@ Multilingual.loadSurveySettings = function() {
 	})
 	
 	// update hide_lang checkbox
-	$("#hide_lang").prop('checked', collections.basic_settings.hide_lang)
+	if (collections.basic_settings.hide_lang == '1') {
+		$("#hide_lang").prop('checked', true)
+	} else {
+		$("#hide_lang").prop('checked', false)
+	}
+	
 }
 
 Multilingual.getSettings();
@@ -668,8 +675,6 @@ $( document ).ready(function() {
 		}
 	})
 	$("[name='show_required_field_text']").trigger('change')
-	
-	$("#hide_lang").attr('disabled', true);
 })
 
 // add Espanol to all added survey text translation settings
