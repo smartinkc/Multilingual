@@ -317,7 +317,7 @@ var Multilingual = (function(){
 			})
 		).then(function() {
 			// Now that settings and language calls are complete process survey control text
-			console.log('settings', settings);
+			// console.log('settings', settings);
 			
 			// if only one language unhidden, translate using it
 			var vis_langs = [];
@@ -325,7 +325,7 @@ var Multilingual = (function(){
 				if (langIsHidden(language) === false)
 					vis_langs.push(language);
 			});
-			console.log('vis_langs', vis_langs);
+			// console.log('vis_langs', vis_langs);
 			if (vis_langs.length == 1) {
 				getLanguage(vis_langs.pop());
 				$(".setLangButtons").remove();
@@ -1066,7 +1066,7 @@ var Multilingual = (function(){
 		
 		Object.values(languages).forEach(function(language, i) {
 			if (langIsHidden(language) === true) {
-				console.log('removing ' + language + ' button');
+				// console.log('removing ' + language + ' button');
 				$(".setLangButtons[name=" + language + "]").remove();
 			}
 		});
@@ -1089,12 +1089,12 @@ var Multilingual = (function(){
 	}
 
 	function translateReady(){
-		interval = setInterval(translate, 200);
+		interval = setInterval(translate, 0);
 	}
 
 	function getLanguage(newLang){
 		langReady = 0;
-		console.log('getLanugage(' + JSON.stringify(newLang) + ')');
+		// console.log('getLanguage(' + JSON.stringify(newLang) + ')');
 		/*
 			if newLang null or undefined,
 				try to set language using cookies
@@ -1120,8 +1120,10 @@ var Multilingual = (function(){
 			}
 		} else {
 			if (langIsHidden(newLang) === true) {
+				// console.log('	language hidden!');
 				return;
 			} else {
+				// console.log('	translating to ' + newLang);
 				setCookie('p1000Lang', newLang, .04);
 				lang = newLang;
 				translateReady();
