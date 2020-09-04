@@ -605,6 +605,8 @@ var Multilingual = (function(){
 		 var textNodes = [], nonWhitespaceMatcher = /\S/;
 
 		function getTextNodes(node) {
+			if (!node || !node.nodeType)
+				return;
 			if (node.nodeType == 3) {
 				if (includeWhitespaceNodes || nonWhitespaceMatcher.test(node.nodeValue)) {
 					textNodes.push(node);
@@ -710,6 +712,9 @@ var Multilingual = (function(){
 						var nodes = $('#label-' + id).contents();
 						for (var i = 0; i < nodes.length; i++) {
 							// replace textContent of first text type node
+							
+							if (!nodes[i] || !nodes[i].nodeType)
+								continue;
 							if (nodes[i].nodeType === 3) {
 								nodes[i].textContent = translation;
 								break;
