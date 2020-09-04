@@ -926,7 +926,9 @@ var Multilingual = (function(){
 			
 			// overwrite Submit/Next Page button
 			if ($("[name='submit-btn-saverecord']").length) {
-				if($('[name="submit-btn-saverecord"]').text() == "Submit" || $('[name="submit-btn-saverecord"]').text() == "✔") {
+				var button =$('[name="submit-btn-saverecord"]')
+				
+				if (button.hasClass('multilingual-final-submit')) {
 					$("[name='submit-btn-saverecord']").html(form_settings.basic_settings.submit);
 				} else {
 					$("[name='submit-btn-saverecord']").html(form_settings.basic_settings.next + " >>");
