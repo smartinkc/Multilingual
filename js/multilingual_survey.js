@@ -1069,15 +1069,18 @@ var Multilingual = (function(){
 			lang = getCookie('p1000Lang');
 			if(lang == "-1"){
 				//lang = languages[Object.keys(languages)[0]];
-
-				lang = languages[1];
+				
+				if (!langIsHidden(languages[1]))
+					lang = languages[1];
 				//setCookie('p1000Lang', lang, .04);
 			}
 		}
 		else{
-			setCookie('p1000Lang', newLang, .04);
-			lang = newLang;
-			translateReady();
+			if (!langIsHidden(newLang)) {
+				setCookie('p1000Lang', newLang, .04);
+				lang = newLang;
+				translateReady();
+			}
 		}
 
 		//set languages variable to current language
