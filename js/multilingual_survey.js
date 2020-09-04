@@ -317,6 +317,20 @@ var Multilingual = (function(){
 			})
 		).then(function() {
 			// Now that settings and language calls are complete process survey control text
+			console.log('settings', settings);
+			
+			// if only one language unhidden, translate using it
+			var vis_langs = [];
+			Object.values(languages).forEach(function(language, i) {
+				if (langIsHidden(language) === false)
+					vis_langs.push(language);
+			});
+			console.log('vis_langs', vis_langs);
+			if (vis_langs.length == 1) {
+				getLanguage(vis_langs.pop());
+				$(".setLangButtons").remove();
+			}
+			
 			stopText();
 			controlText();
 			form_translate();
@@ -574,6 +588,8 @@ var Multilingual = (function(){
 		var i;
 		for(i in languages){
 			//id="changeLang1"
+			if (langIsHidden(languages[i]) === true)
+				continue;
 			$('#p1000ChooseLang').append('<p><div class="setLangButtons" name="' + languages[i] + '" style="display:none;float:left;width:' + (settings['button-width'] && settings['button-width']['value'] ? settings['button-width']['value'] : '100px') + ';color:' + (settings['font-color'] && settings['font-color']['value'] ? settings['font-color']['value'] : '') + ';background:' + (settings['background-color'] && settings['background-color']['value'] ? settings['background-color']['value'] : '') + ';margin-top:20px;" onclick="$(\'#p1000Overlay\').fadeOut();$(\'#p1000ChooseLang\').fadeOut();">' + languages[i] + '</div></p>');
 		}
 		
@@ -591,6 +607,8 @@ var Multilingual = (function(){
 		// if ($('#changeLang').length)
 			$("#changeLang").remove();
 		Object.values(languages).forEach(function(language, i) {
+			if (langIsHidden(language) === true)
+				return;
 			$('#surveytitle').parent().append("<div class='setLangButtons' name='" + language + "'>" + language + "</div>");
 		});
 	}
@@ -712,7 +730,6 @@ var Multilingual = (function(){
 						var nodes = $('#label-' + id).contents();
 						for (var i = 0; i < nodes.length; i++) {
 							// replace textContent of first text type node
-							
 							if (!nodes[i] || !nodes[i].nodeType)
 								continue;
 							if (nodes[i].nodeType === 3) {
@@ -1046,6 +1063,13 @@ var Multilingual = (function(){
 				})
 			}
 		}
+		
+		Object.values(languages).forEach(function(language, i) {
+			if (langIsHidden(language) === true) {
+				console.log('removing ' + language + ' button');
+				$(".setLangButtons[name=" + language + "]").remove();
+			}
+		});
 	}
 	
 	function piping(){
@@ -1070,18 +1094,34 @@ var Multilingual = (function(){
 
 	function getLanguage(newLang){
 		langReady = 0;
-		if(newLang == null){
-			lang = getCookie('p1000Lang');
-			if(lang == "-1"){
-				//lang = languages[Object.keys(languages)[0]];
-				
-				if (!langIsHidden(languages[1]))
-					lang = languages[1];
-				//setCookie('p1000Lang', lang, .04);
+		console.log('getLanugage(' + JSON.stringify(newLang) + ')');
+		/*
+			if newLang null or undefined,
+				try to set language using cookies
+				if that fails
+					set language to first language that isn't hidden
+			else
+				if newLang is a hidden lang
+					return early
+				else
+					translate
+		*/
+		
+		if (newLang == null || newLang == undefined) {
+			var cookieLangIndex = getCookie('p1000Lang');
+			if (langIsHidden(languages[cookieLangIndex]) === false) {
+				lang = cookieLangIndex;
+			} else {
+				lang = null;
+				Object.values(languages).forEach(function(language, i) {
+					if (lang == null && (langIsHidden(language) === false))
+						lang = language;
+				});
 			}
-		}
-		else{
-			if (!langIsHidden(newLang)) {
+		} else {
+			if (langIsHidden(newLang) === true) {
+				return;
+			} else {
 				setCookie('p1000Lang', newLang, .04);
 				lang = newLang;
 				translateReady();
@@ -1247,12 +1287,13 @@ var Multilingual = (function(){
 	
 	function langIsHidden(lang) {
 		if (!settings || !settings.instruments || !settings.instruments[instrument_name] || !settings.instruments[instrument_name][lang] || !settings.instruments[instrument_name][lang].basic_settings)
-			return false;
+			return null;
 		
 		var slice = settings.instruments[instrument_name][lang].basic_settings;
-		if (slice.hide_lang == '1')
+		if (slice.hide_lang == '1') {
 			return true;
-		
-		return false;
+		} else {
+			return false;
+		}
 	}
 })();
