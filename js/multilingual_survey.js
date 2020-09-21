@@ -1109,12 +1109,12 @@ var Multilingual = (function(){
 		
 		if (newLang == null || newLang == undefined) {
 			var cookieLangIndex = getCookie('p1000Lang');
-			if (langIsHidden(languages[cookieLangIndex]) === false) {
+			if (languages[cookieLangIndex] && !langIsHidden(languages[cookieLangIndex])) {
 				lang = cookieLangIndex;
 			} else {
 				lang = null;
 				Object.values(languages).forEach(function(language, i) {
-					if (lang == null && (langIsHidden(language) === false))
+					if (!lang && !langIsHidden(language))
 						lang = language;
 				});
 			}
