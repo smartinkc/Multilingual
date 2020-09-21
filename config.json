@@ -22,7 +22,8 @@
 		{"1.11.4": "Survey Settings page will now correctly find the instructions and acknowlegement tinyMCE editors in REDCap 10.2+"},
 		{"1.11.5": "Fixed a bug where question labels with embedded HTML were renderly incorrectly"},
 		{"1.11.6": "Fixed regression where mobile surveys had faulty branching logic errors appear -- html translations now happen sequentially over found text nodes"},
-		{"1.12.0": "Add option to hide language translations at the form level. Added setting for 'Submit' button."}
+		{"1.12.0": "Add option to hide language translations at the form level. Added setting for 'Submit' button."},
+		{"1.12.1": "Fixed jQuery Exception in controlText and lang setting issue in getLanguage (multilingual_survey.js)"}
 	],
 
 	"authors": [

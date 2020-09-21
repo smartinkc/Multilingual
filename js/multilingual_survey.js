@@ -539,15 +539,17 @@ var Multilingual = (function(){
 					$('#surveypagenum').addClass('multilingual-translated');
 				}
 				var surveyControlPageNumber = settings['survey-control-page-number']['value'][langKey];
-				if(surveyControlPageNumber.includes("CURRENTPAGE") && surveyControlPageNumber.includes("MAXPAGE")) {
-					surveyControlPageNumber = surveyControlPageNumber.replace("CURRENTPAGE", '<span class="multilingual-cur-page">'+curPage+'</span>').replace("MAXPAGE", '<span class="multilingual-max-page">'+maxPage+'</span>');
-				} else if(surveyControlPageNumber.includes("CURRENTPAGE") ) {
-					surveyControlPageNumber = surveyControlPageNumber.replace("CURRENTPAGE", '<span class="multilingual-cur-page">'+curPage+'</span>');
-					surveyControlPageNumber += '<span class="multilingual-max-page" style="display: none;">'+maxPage+'</span>';
-				} else {
-					surveyControlPageNumber = pageSymbol+' <span class="multilingual-cur-page">' + curPage + '</span> / <span class="multilingual-max-page">' + maxPage + '</span>';
+				if (surveyControlPageNumber) {
+					if(surveyControlPageNumber.includes("CURRENTPAGE") && surveyControlPageNumber.includes("MAXPAGE")) {
+						surveyControlPageNumber = surveyControlPageNumber.replace("CURRENTPAGE", '<span class="multilingual-cur-page">'+curPage+'</span>').replace("MAXPAGE", '<span class="multilingual-max-page">'+maxPage+'</span>');
+					} else if(surveyControlPageNumber.includes("CURRENTPAGE") ) {
+						surveyControlPageNumber = surveyControlPageNumber.replace("CURRENTPAGE", '<span class="multilingual-cur-page">'+curPage+'</span>');
+						surveyControlPageNumber += '<span class="multilingual-max-page" style="display: none;">'+maxPage+'</span>';
+					} else {
+						surveyControlPageNumber = pageSymbol+' <span class="multilingual-cur-page">' + curPage + '</span> / <span class="multilingual-max-page">' + maxPage + '</span>';
+					}
+					$('#surveypagenum').html(surveyControlPageNumber);
 				}
-				$('#surveypagenum').html(surveyControlPageNumber);
 			}
 		} else {
 			// If there is no data for this language then use symbols
