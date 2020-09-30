@@ -24,7 +24,7 @@ var Multilingual = (function(){
 	var matrixProcessed = {};
 	var settingsRetrieved = false;
 	var languagesRetrieved = false;
-	var form_settings = null;
+	var form_settings;
 	
 	//document ready change language
 	$( document ).ready(function(){
@@ -938,10 +938,10 @@ var Multilingual = (function(){
 	}
 	
 	function form_translate() {
-		console.log('form_translate()');
+		console.log('form_translate(), form_settings:', form_settings);
 		// form specific translation from Survey Settings
 		if (form_settings) {
-			console.log('form_translate(), form_settings exists', form_settings);
+			console.log('form_translate(), form_settings exists');
 			// // basic survey text translations
 			if ($("#surveytitle").length)	// survey title
 				$("#surveytitle").html(form_settings.survey_settings.title);
@@ -1231,8 +1231,6 @@ var Multilingual = (function(){
 		if (settings.instruments[instrument_name] && settings.instruments[instrument_name][lang]) {
 			console.log('loadFormSettings(), set form_settings lang:', lang);
 			form_settings = settings.instruments[instrument_name][lang];
-		} else {
-			form_settings = null;
 		}
 		
 		// if survey acknowledgement text is shown, add buttons so user can translate survey acknowledgement text
