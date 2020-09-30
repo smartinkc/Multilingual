@@ -397,6 +397,7 @@ var Multilingual = (function(){
 
 	//specific functions
 	function symbols(){
+		console.log('symbols()');
 		//popup
 		$('#redcapValidationErrorPopup').html('<center><span style="color:red;font-size:50px;">&#x26D4;</span></center>');
 
@@ -416,6 +417,7 @@ var Multilingual = (function(){
 	}
 	
 	function stopText(){
+		console.log('stopText()');
 		var id;
 		var langKey = -1;
 		if(settings['stop-text-lang']){
@@ -480,6 +482,7 @@ var Multilingual = (function(){
 	}
 
 	function controlText(){
+		console.log('controlText()');
 		// Define symbols
 		var prevArrow = "<<";
 		var nextArrow = ">>";
@@ -643,6 +646,7 @@ var Multilingual = (function(){
 	}
 	
 	function translate(){
+		console.log('translate()');
 		if(langReady == 1 && !settings['empty']){
 			clearInterval(interval);
 			if ($('#changeLang').length)
@@ -934,6 +938,7 @@ var Multilingual = (function(){
 	}
 	
 	function form_translate() {
+		console.log('form_translate()');
 		// form specific translation from Survey Settings
 		if (form_settings) {
 			
@@ -1091,10 +1096,12 @@ var Multilingual = (function(){
 	}
 
 	function translateReady(){
+		console.log('translateReady()');
 		interval = setInterval(translate, 0);
 	}
 
 	function getLanguage(newLang){
+		console.log('getLanguage()');
 		langReady = 0;
 		// console.log('getLanguage(' + JSON.stringify(newLang) + ')');
 		/*
@@ -1140,11 +1147,13 @@ var Multilingual = (function(){
 				}
 			});
 		}
-
+		
+		console.log('getLanguage() lang: ', lang);
 		getTranslations();
 	}
 
 	function getTranslations(){
+		console.log('getTranslations()');
 		langReady = 0;
 		var data = {};
 		data['todo'] = 1;
@@ -1208,6 +1217,7 @@ var Multilingual = (function(){
 	}
 
 	function loadFormSettings() {
+		console.log('loadFormSettings()');
 		// overwrite project-level $settings with form-specific $form_settings
 		if (!settingsRetrieved || !languagesRetrieved)
 			return;
@@ -1218,6 +1228,7 @@ var Multilingual = (function(){
 		
 		// if text translations exist for this instrument/lang combo, then set form_settings
 		if (settings.instruments[instrument_name] && settings.instruments[instrument_name][lang]) {
+			console.log('loadFormSettings(), set form_settings lang:', lang);
 			form_settings = settings.instruments[instrument_name][lang];
 		} else {
 			form_settings = null;
