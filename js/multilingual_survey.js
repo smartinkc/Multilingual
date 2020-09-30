@@ -29,9 +29,7 @@ var Multilingual = (function(){
 	//document ready change language
 	$( document ).ready(function(){
 		setNormalCookie('p1000pid', pid, .04);
-		//listen for translations
-		translateReady();
-
+		
 		//change out text for symbols
 		symbols();
 
@@ -42,7 +40,6 @@ var Multilingual = (function(){
 		$('body').on('click', '.setLangButtons', function(){
 			var tmp = $(this).attr('name');
 			getLanguage(tmp);
-			loadFormSettings();
 		});
 
 		$('body').on('click', '#changeLang', function(){
@@ -76,7 +73,6 @@ var Multilingual = (function(){
 						id = 1;
 					}
 					getLanguage(languages[id]);
-					loadFormSettings();
 				}
 			}
 		});
@@ -90,6 +86,7 @@ var Multilingual = (function(){
 				var id = $(this).parent().parent().parent().attr('id').replace('-tr','');
 
 				setTimeout(function(){
+					console.log('doc ready timeout 500 firing')
 					$('#field_name_popup').html('<b>' + translations['questions'][id]['text'] + '</b>');
 					$('#signature-div-actions').children('button').html('&#x2714;');
 					$('#f1_upload_form').children().first().html('');
@@ -105,6 +102,7 @@ var Multilingual = (function(){
 						$('body').on('click', 'button', function a1(){
 							$('body').off('click', 'button', a1);
 							setTimeout(function(){
+								console.log('doc ready timeout 10 firing')
 								$('.ui-dialog-title').each(function(){
 									if($(this).is(':visible') && $(this).html() == 'ERROR'){
 										$(this).html('<span style="font-size:20px;font-weight:bold;">&#x26a0;</span>');
@@ -123,6 +121,7 @@ var Multilingual = (function(){
 						$('body').on('click', 'input[type="submit"]', function a2(){
 							$('body').off('click', 'input[type="submit"]', a2);
 							setTimeout(function(){
+								console.log('doc ready timeout 10 firing')
 								$('.ui-dialog-title').each(function(){
 									if($(this).is(':visible') && $(this).html() == 'ERROR'){
 										$(this).html('<span style="font-size:20px;font-weight:bold;">&#x26a0;</span>');
@@ -150,6 +149,7 @@ var Multilingual = (function(){
 
 					$('#redcapValidationErrorPopup').html('');
 					setTimeout(function(){
+						console.log('doc ready timeout 200 firing')
 						if(translations && translations['errors'] && translations['errors'][id] && translations['errors'][id]['text'] != ''){
 							$('#redcapValidationErrorPopup').html(translations['errors'][id]['text']);
 						}
@@ -309,7 +309,6 @@ var Multilingual = (function(){
 					languagesRetrieved = true;
 					totalLanguages = Object.keys(languages).length;
 					getLanguage();
-					loadFormSettings();
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
 				   console.log(textStatus, errorThrown);
@@ -338,6 +337,7 @@ var Multilingual = (function(){
 	}
 
 	function translatePopup(){
+		console.log('translatePopup')
 		if (form_settings) {
 			if (!$('#reqPopup').length)
 				return;
@@ -382,6 +382,7 @@ var Multilingual = (function(){
 				$('#reqPopup').html(tmp);
 
 				setTimeout(function(){
+					console.log('translatePopup timeout 300 firing')
 					$('#ui-id-1').html('<span style="font-size:20px;font-weight:bold;">&#x26a0;</span>');
 					$('#ui-id-2').html('<span style="font-size:20px;font-weight:bold;">&#x26a0;</span>');
 					$('.ui-dialog-title').each(function(){
@@ -648,7 +649,6 @@ var Multilingual = (function(){
 	function translate(){
 		console.log('translate()');
 		if(langReady == 1 && !settings['empty']){
-			clearInterval(interval);
 			if ($('#changeLang').length)
 				$('#changeLang').show();
 
@@ -941,7 +941,7 @@ var Multilingual = (function(){
 		console.log('form_translate()');
 		// form specific translation from Survey Settings
 		if (form_settings) {
-			
+			console.log('form_translate(), form_settings exists', form_settings);
 			// // basic survey text translations
 			if ($("#surveytitle").length)	// survey title
 				$("#surveytitle").html(form_settings.survey_settings.title);
@@ -1135,7 +1135,7 @@ var Multilingual = (function(){
 				// console.log('	translating to ' + newLang);
 				setCookie('p1000Lang', newLang, .04);
 				lang = newLang;
-				translateReady();
+				translate();
 			}
 		}
 
@@ -1150,6 +1150,7 @@ var Multilingual = (function(){
 		
 		console.log('getLanguage() lang: ', lang);
 		getTranslations();
+		loadFormSettings();
 	}
 
 	function getTranslations(){
