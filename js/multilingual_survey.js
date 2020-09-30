@@ -24,7 +24,16 @@ var Multilingual = (function(){
 	var matrixProcessed = {};
 	var settingsRetrieved = false;
 	var languagesRetrieved = false;
-	var form_settings;
+	
+	if (typeof form_settings == "undefined")
+		var form_settings;
+	
+	var debugging = false;
+	function log(arg1, arg2) {
+		if (!debugging)
+			return;
+		console.log(arg1, arg2);
+	}
 	
 	//document ready change language
 	$( document ).ready(function(){
@@ -86,7 +95,7 @@ var Multilingual = (function(){
 				var id = $(this).parent().parent().parent().attr('id').replace('-tr','');
 
 				setTimeout(function(){
-					console.log('doc ready timeout 500 firing')
+					log('doc ready timeout 500 firing')
 					$('#field_name_popup').html('<b>' + translations['questions'][id]['text'] + '</b>');
 					$('#signature-div-actions').children('button').html('&#x2714;');
 					$('#f1_upload_form').children().first().html('');
@@ -102,7 +111,7 @@ var Multilingual = (function(){
 						$('body').on('click', 'button', function a1(){
 							$('body').off('click', 'button', a1);
 							setTimeout(function(){
-								console.log('doc ready timeout 10 firing')
+								log('doc ready timeout 10 firing')
 								$('.ui-dialog-title').each(function(){
 									if($(this).is(':visible') && $(this).html() == 'ERROR'){
 										$(this).html('<span style="font-size:20px;font-weight:bold;">&#x26a0;</span>');
@@ -121,7 +130,7 @@ var Multilingual = (function(){
 						$('body').on('click', 'input[type="submit"]', function a2(){
 							$('body').off('click', 'input[type="submit"]', a2);
 							setTimeout(function(){
-								console.log('doc ready timeout 10 firing')
+								log('doc ready timeout 10 firing')
 								$('.ui-dialog-title').each(function(){
 									if($(this).is(':visible') && $(this).html() == 'ERROR'){
 										$(this).html('<span style="font-size:20px;font-weight:bold;">&#x26a0;</span>');
@@ -149,7 +158,7 @@ var Multilingual = (function(){
 
 					$('#redcapValidationErrorPopup').html('');
 					setTimeout(function(){
-						console.log('doc ready timeout 200 firing')
+						log('doc ready timeout 200 firing')
 						if(translations && translations['errors'] && translations['errors'][id] && translations['errors'][id]['text'] != ''){
 							$('#redcapValidationErrorPopup').html(translations['errors'][id]['text']);
 						}
@@ -235,7 +244,7 @@ var Multilingual = (function(){
 		//change iframe source
 		$('iframe').each(function(){
 			if($(this).attr('src').indexOf('compact=1') > -1){
-				//console.log(pdf_url + '&langIndex=' + id + '&display=1');
+				//log(pdf_url + '&langIndex=' + id + '&display=1');
 				//$(this).attr('src', pdf_url + '&langIndex=' + id + '&display=1');
 				$(this).src = pdf_url + '&langIndex=' + id + '&display=1';
 				$(this).parent().attr('data', pdf_url + '&langIndex=' + id + '&display=1');
@@ -293,7 +302,7 @@ var Multilingual = (function(){
 					loadFormSettings();
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
-				   console.log(textStatus, errorThrown);
+				   log(textStatus, errorThrown);
 				}
 			}),
 			// Get Languages
@@ -311,12 +320,12 @@ var Multilingual = (function(){
 					getLanguage();
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
-				   console.log(textStatus, errorThrown);
+				   log(textStatus, errorThrown);
 				}
 			})
 		).then(function() {
 			// Now that settings and language calls are complete process survey control text
-			// console.log('settings', settings);
+			// log('settings', settings);
 			
 			// if only one language unhidden, translate using it
 			var vis_langs = [];
@@ -324,7 +333,7 @@ var Multilingual = (function(){
 				if (langIsHidden(language) === false)
 					vis_langs.push(language);
 			});
-			// console.log('vis_langs', vis_langs);
+			// log('vis_langs', vis_langs);
 			if (vis_langs.length == 1) {
 				getLanguage(vis_langs.pop());
 				$(".setLangButtons").remove();
@@ -337,7 +346,7 @@ var Multilingual = (function(){
 	}
 
 	function translatePopup(){
-		console.log('translatePopup')
+		log('translatePopup')
 		if (form_settings) {
 			if (!$('#reqPopup').length)
 				return;
@@ -382,7 +391,7 @@ var Multilingual = (function(){
 				$('#reqPopup').html(tmp);
 
 				setTimeout(function(){
-					console.log('translatePopup timeout 300 firing')
+					log('translatePopup timeout 300 firing')
 					$('#ui-id-1').html('<span style="font-size:20px;font-weight:bold;">&#x26a0;</span>');
 					$('#ui-id-2').html('<span style="font-size:20px;font-weight:bold;">&#x26a0;</span>');
 					$('.ui-dialog-title').each(function(){
@@ -398,7 +407,7 @@ var Multilingual = (function(){
 
 	//specific functions
 	function symbols(){
-		console.log('symbols()');
+		log('symbols()');
 		//popup
 		$('#redcapValidationErrorPopup').html('<center><span style="color:red;font-size:50px;">&#x26D4;</span></center>');
 
@@ -418,7 +427,7 @@ var Multilingual = (function(){
 	}
 	
 	function stopText(){
-		console.log('stopText()');
+		log('stopText()');
 		var id;
 		var langKey = -1;
 		if(settings['stop-text-lang']){
@@ -475,7 +484,7 @@ var Multilingual = (function(){
 				b = $('#dpop').children().children().children(1).children().children().children().children().find('button')[0].outerHTML.replace(t, settings['save-return-later-continue-button']['value'][langKey]);
 			}
 			catch(e){
-				//console.log(e.message);
+				//log(e.message);
 			}
 			//save and return popup text
 			$('#dpop').children().children().children(1).children().children().children().children().html(settings['save-return-later-text']['value'][langKey] + '<br>' + b);
@@ -483,7 +492,7 @@ var Multilingual = (function(){
 	}
 
 	function controlText(){
-		console.log('controlText()');
+		log('controlText()');
 		// Define symbols
 		var prevArrow = "<<";
 		var nextArrow = ">>";
@@ -647,7 +656,7 @@ var Multilingual = (function(){
 	}
 	
 	function translate(){
-		console.log('translate()');
+		log('translate()');
 		if(langReady == 1 && !settings['empty']){
 			if ($('#changeLang').length)
 				$('#changeLang').show();
@@ -938,10 +947,10 @@ var Multilingual = (function(){
 	}
 	
 	function form_translate() {
-		console.log('form_translate(), form_settings:', form_settings);
+		log('form_translate(), form_settings:', form_settings);
 		// form specific translation from Survey Settings
 		if (form_settings) {
-			console.log('form_translate(), form_settings exists');
+			log('form_translate(), form_settings exists');
 			// // basic survey text translations
 			if ($("#surveytitle").length)	// survey title
 				$("#surveytitle").html(form_settings.survey_settings.title);
@@ -1073,7 +1082,7 @@ var Multilingual = (function(){
 		
 		Object.values(languages).forEach(function(language, i) {
 			if (langIsHidden(language) === true) {
-				// console.log('removing ' + language + ' button');
+				// log('removing ' + language + ' button');
 				$(".setLangButtons[name=" + language + "]").remove();
 			}
 		});
@@ -1096,14 +1105,14 @@ var Multilingual = (function(){
 	}
 
 	function translateReady(){
-		console.log('translateReady()');
+		log('translateReady()');
 		interval = setInterval(translate, 0);
 	}
 
 	function getLanguage(newLang){
-		console.log('getLanguage()');
+		log('getLanguage()');
 		langReady = 0;
-		// console.log('getLanguage(' + JSON.stringify(newLang) + ')');
+		// log('getLanguage(' + JSON.stringify(newLang) + ')');
 		/*
 			if newLang null or undefined,
 				try to set language using cookies
@@ -1129,10 +1138,10 @@ var Multilingual = (function(){
 			}
 		} else {
 			if (langIsHidden(newLang) === true) {
-				// console.log('	language hidden!');
+				// log('	language hidden!');
 				return;
 			} else {
-				// console.log('	translating to ' + newLang);
+				// log('	translating to ' + newLang);
 				setCookie('p1000Lang', newLang, .04);
 				lang = newLang;
 				translate();
@@ -1148,13 +1157,13 @@ var Multilingual = (function(){
 			});
 		}
 		
-		console.log('getLanguage() lang: ', lang);
+		log('getLanguage() lang: ', lang);
 		getTranslations();
 		loadFormSettings();
 	}
 
 	function getTranslations(){
-		console.log('getTranslations()');
+		log('getTranslations()');
 		langReady = 0;
 		var data = {};
 		data['todo'] = 1;
@@ -1212,13 +1221,13 @@ var Multilingual = (function(){
 				}
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
-			   console.log(textStatus, errorThrown);
+			   log(textStatus, errorThrown);
 			}
 		});
 	}
 
 	function loadFormSettings() {
-		console.log('loadFormSettings()');
+		log('loadFormSettings()');
 		// overwrite project-level $settings with form-specific $form_settings
 		if (!settingsRetrieved || !languagesRetrieved)
 			return;
@@ -1229,7 +1238,7 @@ var Multilingual = (function(){
 		
 		// if text translations exist for this instrument/lang combo, then set form_settings
 		if (settings.instruments[instrument_name] && settings.instruments[instrument_name][lang]) {
-			console.log('loadFormSettings(), set form_settings lang:', lang);
+			log('loadFormSettings(), set form_settings lang:', lang);
 			form_settings = settings.instruments[instrument_name][lang];
 		}
 		
