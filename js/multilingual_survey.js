@@ -39,6 +39,9 @@ var Multilingual = (function(){
 	$( document ).ready(function(){
 		setNormalCookie('p1000pid', pid, .04);
 		
+		// listen for translations
+		translateReady();
+		
 		//change out text for symbols
 		symbols();
 
@@ -658,6 +661,7 @@ var Multilingual = (function(){
 	function translate(){
 		log('translate()');
 		if(langReady == 1 && !settings['empty']){
+			clearInterval(interval);
 			if ($('#changeLang').length)
 				$('#changeLang').show();
 
@@ -758,7 +762,8 @@ var Multilingual = (function(){
 						var tnodes2 = getTextNodesIn(translation[0]);
 						
 						tnodes2.forEach(function(el, i) {
-							tnodes1[i].textContent = el.textContent;
+							if (el && el.textContent && tnodes1[i])
+								tnodes1[i].textContent = el.textContent;
 						});
 					}
 				}
@@ -1106,7 +1111,7 @@ var Multilingual = (function(){
 
 	function translateReady(){
 		log('translateReady()');
-		interval = setInterval(translate, 0);
+		interval = setInterval(translate, 200);
 	}
 
 	function getLanguage(newLang){
@@ -1144,7 +1149,7 @@ var Multilingual = (function(){
 				// log('	translating to ' + newLang);
 				setCookie('p1000Lang', newLang, .04);
 				lang = newLang;
-				translate();
+				translateReady();
 			}
 		}
 
