@@ -1,0 +1,59 @@
+Página Anterior
+Próxima página
+Levantamento
+Enviar
+Redimensionar a fonte
+Download
+Faça o download da resposta de sua pesquisa (PDF):
+* deve fornecer um valor
+Salvar e voltar mais tarde
+Retornando?
+Comece onde o senhor parou.
+Se o senhor já tiver concluído parte da pesquisa, poderá continuar de onde parou. Tudo o que o senhor precisa é o código de retorno que lhe foi dado anteriormente. Clique no link abaixo para começar a digitar seu código de retorno e continuar a pesquisa.
+Continuar a pesquisa
+Suas respostas ao questionário foram salvas!
+O senhor optou por interromper a pesquisa por agora e voltar mais tarde para completá-la. Para voltar a essa pesquisa, o senhor precisará tanto do link da pesquisa quanto do código de retorno. Veja as instruções abaixo.
+Código de retorno
+Um código de retorno é *necessário* a fim de continuar a pesquisa onde o senhor parou. Queira anotar o valor abaixo.
+O código de retorno NÃO será incluído no e-mail abaixo.
+Link de pesquisa para retorno
+O senhor pode marcar esta página para voltar à pesquisa, OU pode mandar-lhe o link da pesquisa por e-mail, fornecendo seu endereço de e-mail abaixo. Para fins de segurança, o código de retorno NÃO será incluído no e-mail. Se o senhor não receber o e-mail logo em seguida, favor verificar sua pasta de lixo eletrônico.
+Digite o endereço de e-mail
+Enviar link de pesquisa
+Seu endereço de e-mail não será armazenado
+Ou, se o senhor quiser, pode prosseguir agora mesmo com esta pesquisa.
+Continuar a pesquisa agora
+Código de retorno" necessário para retornar
+Copie ou anote o Código de Retorno abaixo. Sem ele, o senhor não poderá voltar e continuar esta pesquisa. Uma vez que tenha o código, clique em Fechar e siga as outras instruções nesta página.
+Feche .
+E-mail enviado!
+O e-mail foi enviado com sucesso para 
+Alerta
+Esse campo deve ser um endereço de e-mail válido (como joe@user.com). Por favor, digite-o novamente agora.
+Para continuar a pesquisa, favor digitar o CÓDIGO DE VOLTA que foi gerado automaticamente para o senhor quando saiu da pesquisa. Queira notar que o código de retorno é *não* sensível a maiúsculas e minúsculas.
+Envie seu Código de Retorno
+O código de retorno que o senhor inseriu estava incorreto. Por favor, tente novamente.
+Alternativamente, se o senhor esqueceu seu código de retorno ou simplesmente deseja recomeçar a pesquisa desde o início, pode apagar todas as respostas de sua pesquisa existente e começar de novo.
+Recomeçar de novo
+APAGAR SUAS RESPOSTAS? O senhor tem certeza de que deseja começar a pesquisa desde o início? Queira notar que, ao fazer isso, o senhor apagará TODAS as respostas que já deu para esse levantamento.
+O senhor poderá voltar a esta pesquisa no futuro para modificar suas respostas, navegando até o URL da pesquisa e inserindo o código abaixo.
+A seguir, encontra-se uma cópia somente para leitura das respostas de sua pesquisa. Queira revisá-la e as opções na parte inferior.
+Certifico que todas as informações contidas no documento acima estão corretas. Entendo que clicar em 'Enviar' assinará eletronicamente o formulário e que assinar esse formulário eletronicamente é o equivalente a assinar um documento físico.
+Se qualquer informação acima não estiver correta, o senhor pode clicar no botão "Página Anterior" para voltar e corrigi-la.
+Apagar sua(s) assinatura(s) nessa pesquisa?
+O senhor forneceu sua assinatura em uma página anterior desta pesquisa. Isso pode incluir a digitação de seu nome, um PIN e/ou a assinatura de sua assinatura. O senhor tem permissão para voltar a uma página anterior da pesquisa, mas se o fizer, favor ser informado de que sua(s) assinatura(s) será(ão) removida(s) automaticamente, após o que precisará fornecê-la novamente antes de poder completar a pesquisa. O senhor também poderá modificar qualquer uma de suas respostas existentes às perguntas dessa pesquisa. Se não houver problema, o senhor pode prosseguir para uma página anterior da pesquisa, clicando no botão abaixo.
+Apague minha(s) assinatura(s) e vá para a página anterior.
+Cancelar
+reset
+Expandir
+Acrescentar assinatura
+Assinatura (desenhar assinatura com o mouse ou com o dedo)
+Salvar assinatura
+Carregar arquivo
+Carregar de arquivos (para os usuários fazerem carregar de arquivos)
+Selecione um arquivo e clique no botão 'Carregar arquivo'.
+Tamanho máximo do arquivo: 128 MB
+Carregar do arquivo
+NOTA: Alguns campos são necessários!
+Seus dados foram salvos com sucesso, mas o senhor não forneceu um valor para alguns campos que exigem um valor. Queira digitar um valor para os campos desta página que estão relacionados abaixo.	Indique um valor para...
+Está bem

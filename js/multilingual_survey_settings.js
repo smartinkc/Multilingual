@@ -45,7 +45,7 @@ Multilingual.getLanguages = function() {
 		data: 'data=' + json,
 		success: function (r) {
 			Multilingual.languages = r;
-			Multilingual.addSurveySettingsLanguageRow(Multilingual.languages);
+			Multilingual.addSurveySettingsLanguageRows(Multilingual.languages);
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
 			console.log(textStatus, errorThrown);
@@ -146,7 +146,7 @@ Multilingual.addDownloadResponsesSection = function () {
 	$("[name='end_of_survey_pdf_download']").closest("tr").after(tr1);
 }
 
-Multilingual.addSurveySettingsLanguageRow = function(languages) {
+Multilingual.addSurveySettingsLanguageRows = function(languages) {
 	// make language select element
 	var langSelect = "<select id='ml-mod-language' name='ml-mod-language' class='x-form-text x-form-field' onchange='Multilingual.onLanguageSelect();'>"
 	langSelect += "<option value=''></option>"
@@ -155,14 +155,41 @@ Multilingual.addSurveySettingsLanguageRow = function(languages) {
 	});
 	langSelect += "</select>";
 	
+	var langSelect2 = "<select id='ml-translate-language' name='ml-translate-language' class='x-form-text x-form-field mx-3'>\
+		<option value=''></option>\
+		<option value='en'>English</option>\
+		<option value='de'>German</option>\
+		<option value='es'>Spanish</option>\
+		<option value='fr'>French</option>\
+		<option value='it'>Italian</option>\
+		<option value='ja'>Japanese</option>\
+		<option value='nl'>Deutsch</option>\
+		<option value='pl'>Polish</option>\
+		<option value='pt'>Portuguese</option>\
+		<option value='pt-br'>Portuguese (Brazil)</option>\
+		<option value='ru'>Russian</option>\
+		<option value='zh-CN'>Chinese (Simplified)</option>\
+	</select>";
+	
 	var langLabel = "<label class='ml-mod' for='ml-mod-language'>Translation Language</label>"
 	
 	var emIcon = "<i class='fas fa-cube fs14' style='position:relative;top:1px;margin-right:1px;margin-left:1px;'></i>";
 	
-	var ssRow = "<tr><td colspan=3><div class='header' style='padding:7px 10px 5px;margin:-5px -7px 0px; background-color: #fb8;>'";
+	var ssRow = "<tr><td colspan=3><div class='header' style='padding: 7px 10px 5px;margin: -5px -7px 0px; background-color: #fb8;'>";
 	ssRow += "<span>" + emIcon + " Multilingual Module - Select a translation language to change text settings</span>" + langLabel + langSelect
 	ssRow += "</div></td></tr>";
 	
+	var ssRow2 = "<tr>\
+		<td colspan=3>\
+			<div class='header' style='padding: 7px 10px 5px;margin: -5px -7px 0px; background-color: #fb8;'>\
+				Populate with translations from language: \
+				" + langSelect2 + "\
+				<button type='button' class='btn btn-primaryrc btn-xs' id='translateSettings'>Translate Survey Settings</button>\
+			</div>\
+		</td>\
+	</tr>";
+	
+	$("#survey_settings tbody tr:first").after(ssRow2);
 	$("#survey_settings tbody tr:first").after(ssRow);
 }
 
@@ -585,6 +612,36 @@ Multilingual.loadSurveySettings = function() {
 
 Multilingual.getSettings();
 
+Multilingual.translateSettings = function() {
+	// get selected language from #ml-translate-language
+	var language_iso_code = $("select#ml-translate-language").val();
+	if (!language_iso_code) {
+		console.log('no language_iso_code selected');
+		return;
+	}
+	
+	console.log('language_iso_code selected: ' + language_iso_code);
+	
+	$.ajax({
+		url: Multilingual.ajax_url + '&translate_settings_iso_code=' + language_iso_code,
+		complete: function(response) {
+			Multilingual.response = response;
+			var translations = response.responseJSON.translations;
+			if (response.error) {
+				alert(response.error);
+			} else if (!Array.isArray(translations)) {
+				alert("The Multilingual module wasn't able to retrieve a valid translations table!");
+			} else if (translations.length < 1) {
+				alert("The Multilingual module was able to retrieve translations, but the table is empty.");
+			} else {
+				for (var i = 0; i < translations.length; i++) {
+					$('.ml-text-setting:eq(' + i + ')').val(translations[i]);
+				}
+			}
+		}
+	});
+}
+
 $( document ).ready(function() {
 	Multilingual.getLanguages();
 	Multilingual.instructions_mce = tinyMCE.get('mce_0');
@@ -675,6 +732,11 @@ $( document ).ready(function() {
 		}
 	})
 	$("[name='show_required_field_text']").trigger('change')
+	
+	// only show 'must provide value' translation option when feature enabled
+	$('body').on('click', "button#translateSettings", function(e) {
+		Multilingual.translateSettings();
+	})
 })
 
 // add Espanol to all added survey text translation settings

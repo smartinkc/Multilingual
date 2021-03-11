@@ -1,0 +1,59 @@
+Página anterior
+Página siguiente
+Cerrar encuesta
+Enviar
+Cambiar el tamaño de la fuente
+Descargar
+Descargue su respuesta a la encuesta (PDF):
+* debe proporcionar un valor
+Guardar y volver más tarde
+¿Vuelve?
+Comience donde lo dejó.
+Si ya ha completado parte de la encuesta, puede continuar donde lo dejó. Todo lo que necesita es el código de retorno que se le dio anteriormente. Haga clic en el siguiente enlace para comenzar a introducir su código de retorno y continuar la encuesta.
+Continuar la encuesta
+Sus respuestas a la encuesta se han guardado.
+Ha elegido detener la encuesta por ahora y volver en otro momento para completarla. Para volver a esta encuesta, necesitará tanto el enlace de la encuesta como su código de retorno. Consulte las instrucciones que aparecen a continuación.
+Código de retorno
+El código de retorno es *requerido* para poder continuar la encuesta donde la dejó. Por favor, anote el valor que aparece a continuación.
+El código de devolución NO se incluirá en el correo electrónico que se envía a continuación.
+Enlace de la encuesta para la devolución
+Puede marcar esta página para volver a la encuesta, O puede recibir el enlace de la encuesta por correo electrónico proporcionando su dirección de correo electrónico a continuación. Por motivos de seguridad, el código de devolución NO se incluirá en el correo electrónico. Si no recibe el correo electrónico poco después, compruebe su carpeta de correo no deseado.
+Introduzca la dirección de correo electrónico
+Enviar el enlace de la encuesta
+Su dirección de correo electrónico no será almacenada
+O si lo desea, puede continuar con esta encuesta ahora.
+Continuar con la encuesta ahora
+Código de devolución" necesario para la devolución
+Copie o escriba el Código de Retorno que aparece a continuación. Sin él, no podrá volver y continuar con esta encuesta. Una vez que tenga el código, haga clic en Cerrar y siga las demás instrucciones de esta página.
+Cerrar
+¡Correo electrónico enviado!
+El correo electrónico se ha enviado con éxito a 
+Alerta
+Este campo debe ser una dirección de correo electrónico válida (como joe@user.com). Por favor, vuelva a introducirla ahora.
+Para continuar con la encuesta, introduzca el CÓDIGO DE RETORNO que se generó automáticamente para usted cuando abandonó la encuesta. Tenga en cuenta que el código de devolución no distingue entre mayúsculas y minúsculas.
+Envíe su código de retorno
+El código de devolución que ha introducido es incorrecto. Por favor, inténtelo de nuevo.
+Alternativamente, si ha olvidado su código de retorno o simplemente desea volver a empezar la encuesta desde el principio, puede borrar todas sus respuestas de la encuesta existentes y empezar de nuevo.
+Volver a empezar
+¿BORRAR SUS RESPUESTAS? ¿Está seguro de que desea volver a empezar la encuesta desde el principio? Tenga en cuenta que al hacerlo se borrarán TODAS sus respuestas ya introducidas para esta encuesta.
+Puede volver a esta encuesta en el futuro para modificar sus respuestas navegando a la URL de la encuesta e introduciendo el código que aparece a continuación.
+A continuación se muestra una copia de sólo lectura de sus respuestas a la encuesta. Por favor, revísela y revise las opciones que aparecen en la parte inferior.
+Certifico que toda la información del documento anterior es correcta. Entiendo que al hacer clic en "Enviar" se firmará electrónicamente el formulario y que la firma de este formulario electrónicamente equivale a la firma de un documento físico.
+Si cualquier información anterior no es correcta, puede hacer clic en el botón 'Página anterior' para volver atrás y corregirla.
+¿Borrar su(s) firma(s) en esta encuesta?
+Usted ha proporcionado su firma en una página anterior de esta encuesta. Esto puede incluir escribir su nombre, un PIN, y/o firmar su firma. Puede volver a una página anterior de la encuesta, pero si lo hace, tenga en cuenta que su(s) firma(s) será(n) eliminada(s) automáticamente, tras lo cual tendrá que proporcionarla(s) de nuevo antes de poder completar la encuesta. También podrá modificar cualquiera de sus respuestas existentes a las preguntas de esta encuesta. Si le parece bien, puede pasar a una página anterior de la encuesta haciendo clic en el botón de abajo.
+Borrar mi(s) firma(s) e ir a una página anterior
+Cancelar
+restablecer
+Ampliar
+Añadir firma
+Firma (dibujar la firma con el ratón o el dedo)
+Guardar firma
+Cargar archivo
+Subir archivo (para que los usuarios suban archivos)
+Seleccione un archivo y haga clic en el botón "Cargar archivo"
+Tamaño máximo del archivo: 128 MB
+Cargar archivo
+NOTA: ¡Algunos campos son obligatorios!
+Sus datos se han guardado correctamente, pero no ha proporcionado un valor para algunos campos que requieren un valor. Por favor, introduzca un valor para los campos de esta página que se enumeran a continuación.	Proporcione un valor para...
+Vale

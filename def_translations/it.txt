@@ -1,0 +1,59 @@
+Pagina precedente
+Pagina successiva
+Chiudi sondaggio
+Invia
+Ridimensionare il carattere
+Scaricare
+Scarichi la sua risposta al sondaggio (PDF):
+* deve fornire un valore
+Salvi e ritorni più tardi
+Ritornare?
+Ricominci da dove ha lasciato.
+Se ha già completato parte del sondaggio, può continuare da dove ha lasciato. Tutto ciò di cui ha bisogno è il codice di ritorno che le è stato dato in precedenza. Clicchi il link qui sotto per iniziare ad inserire il suo codice di ritorno e continuare il sondaggio.
+Continuare il sondaggio
+Le sue risposte al sondaggio sono state salvate!
+Ha scelto di interrompere il sondaggio per ora e di ritornare in un secondo momento per completarlo. Per tornare a questo sondaggio, avrà bisogno sia del link del sondaggio che del suo codice di ritorno. Veda le istruzioni qui sotto.
+Codice di ritorno
+Un codice di ritorno è *richiesto* per continuare il sondaggio da dove lo ha lasciato. Per favore, scriva il valore elencato qui sotto.
+Il codice di restituzione NON sarà incluso nell'email sottostante.
+Link al sondaggio per la restituzione
+Può mettere un segnalibro su questa pagina per tornare al sondaggio, OPPURE può farsi inviare il link del sondaggio via email fornendo il suo indirizzo email qui sotto. Per motivi di sicurezza, il codice di restituzione NON sarà incluso nell'email. Se non riceve l'email subito dopo, controlli la sua cartella Junk Email.
+Inserisca l'indirizzo email
+Invii il link del sondaggio
+Il suo indirizzo email non verrà memorizzato
+Oppure, se lo desidera, può continuare questo sondaggio di nuovo adesso.
+Continui il sondaggio ora
+'Codice di restituzione' necessario per la restituzione
+Copi o scriva il Codice di Ritorno qui sotto. Senza di esso non potrà ritornare e continuare questo sondaggio. Una volta ottenuto il codice, clicchi su Chiudi e segua le altre istruzioni su questa pagina.
+Chiudere
+Email inviata!
+L'email è stata inviata con successo a 
+Alert
+Questo campo deve essere un indirizzo email valido (come joe@user.com). La preghiamo di reinserirlo ora.
+Per continuare il sondaggio, inserisca il CODICE DI RITORNO che le è stato generato automaticamente quando ha lasciato il sondaggio. La preghiamo di notare che il codice di ritorno non fa distinzione tra maiuscole e minuscole.
+Invii il suo codice di ritorno
+Il codice di restituzione che ha inserito non è corretto. La preghiamo di riprovare.
+In alternativa, se ha dimenticato il suo codice di ritorno o semplicemente desidera ricominciare l'indagine dall'inizio, può cancellare tutte le sue risposte all'indagine esistenti e ricominciare.
+Ricominciare
+CANCELLARE LE SUE RISPOSTE? È sicuro di voler ricominciare il sondaggio dall'inizio? Tenga presente che così facendo cancellerà TUTTE le sue risposte già inserite per questo sondaggio.
+Potrà tornare a questo sondaggio in futuro per modificare le sue risposte navigando all'URL del sondaggio e inserendo il codice sottostante.
+Di seguito è visualizzata una copia di sola lettura delle sue risposte al sondaggio. La preghiamo di rivederle e le opzioni in basso.
+Certifico che tutte le informazioni contenute nel documento di cui sopra sono corrette. Sono consapevole che cliccando su 'Invia' firmerò elettronicamente il modulo e che firmare questo modulo elettronicamente equivale a firmare un documento fisico.
+Se qualche informazione qui sopra non è corretta, può cliccare il pulsante 'Pagina precedente' per tornare indietro e correggerla.
+Cancellare la sua firma in questo sondaggio?
+Ha fornito la sua firma in una pagina precedente di questo sondaggio. Questo può includere la digitazione del suo nome, un PIN e/o la firma. Le è permesso tornare ad una pagina precedente del sondaggio, ma se lo fa, la informiamo che la sua firma verrà automaticamente rimossa, dopodiché dovrà fornirla nuovamente prima di poter completare il sondaggio. Potrà anche modificare qualsiasi sua risposta esistente alle domande di questo sondaggio. Se va bene, può procedere ad una pagina precedente del sondaggio cliccando il pulsante qui sotto.
+Cancellare la mia firma (o le mie firme) e andare ad una pagina precedente
+Cancellare
+resettare
+Espandi
+Aggiungere la firma
+Firma (disegni la firma con il mouse o il dito)
+Salvare la firma
+Caricare file
+File Caricare (per gli utenti che caricano file)
+Selezioni un file e clicchi sul pulsante 'Caricare file'.
+Dimensione massima del file: 128 MB
+Caricare File
+NOTA: alcuni campi sono obbligatori!
+I suoi dati sono stati salvati con successo, ma non ha fornito un valore per alcuni campi che richiedono un valore. La preghiamo di inserire un valore per i campi di questa pagina che sono elencati di seguito.	Fornisca un valore per...
+Ok
