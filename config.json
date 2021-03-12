@@ -170,6 +170,13 @@
 			"type": "checkbox",
 			"repeatable": false,
 			"default": ""
+		},
+		{
+			"key": "prevent-check-mark-submit",
+			"name": "Prevent symbolic translation for survey 'Submit' button",
+			"required": false,
+			"type": "checkbox",
+			"repeatable": false
 		},		
 		{
 			"key": "multilingual-project-encoding",

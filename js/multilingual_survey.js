@@ -515,6 +515,10 @@ var Multilingual = (function(){
 			}
 		}
 		
+		if (settings['prevent-check-mark-submit']) {
+			submitCheck = "Submit";
+		}
+		
 		if($('[name="submit-btn-saverecord"]').text() == "Submit") {
 			$('[name="submit-btn-saverecord"]').addClass('multilingual-final-submit');
 		}
