@@ -131,27 +131,30 @@ class Multilingual extends AbstractExternalModule
 		echo json_encode($instrument);
 	}
 	
-	public function saveSurveySettings($data) {
+	public function saveSurveySettings($all_data) {
 		$instruments = $this->getProjectSetting('instruments');
-		$instrument = htmlspecialchars($data['instrument']);
-		$lang = htmlspecialchars($data['language']);
 		if (empty($instruments)) {
 			$instruments = new \stdClass();
 		} else {
 			$instruments = json_decode($instruments);
 		}
-		if (empty($instruments->$instrument)) {
-			$instruments->$instrument = new \stdClass();
-		}
-		if (empty($instruments->$instrument->$lang)) {
-			$instruments->$instrument->$lang = new \stdClass();
-		}
-		foreach ($data['collections'] as $coll_name => $coll) {
-			$instruments->$instrument->$lang->$coll_name = new \stdClass();
-			
-			// add each setting to collection after encoding HTML
-			foreach ($coll as $sname => $setting) {
-				$instruments->$instrument->$lang->$coll_name->$sname = htmlspecialchars($setting);
+		
+		foreach ($all_data as $data) {
+			$instrument = htmlspecialchars($data['instrument']);
+			$lang = htmlspecialchars($data['language']);
+			if (empty($instruments->$instrument)) {
+				$instruments->$instrument = new \stdClass();
+			}
+			if (empty($instruments->$instrument->$lang)) {
+				$instruments->$instrument->$lang = new \stdClass();
+			}
+			foreach ($data['collections'] as $coll_name => $coll) {
+				$instruments->$instrument->$lang->$coll_name = new \stdClass();
+				
+				// add each setting to collection after encoding HTML
+				foreach ($coll as $sname => $setting) {
+					$instruments->$instrument->$lang->$coll_name->$sname = htmlspecialchars($setting);
+				}
 			}
 		}
 		

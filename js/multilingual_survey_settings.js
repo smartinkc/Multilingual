@@ -2,6 +2,9 @@ var Multilingual = {}
 Multilingual.ajax_url = 'REDCAP_AJAX_URL';
 Multilingual.langVar = 'REDCAP_LANGUAGE_VARIABLE';
 Multilingual.languages = {1: 'en', 2: 'es'};
+Multilingual.settings_to_save = []
+Multilingual.previous_language = "";
+
 Multilingual.collection_names = [
 	"basic_settings",
 	"download_response",
@@ -72,6 +75,8 @@ Multilingual.htmlDecode = function(input) {
 
 //
 Multilingual.onLanguageSelect = function() {
+	Multilingual.cacheSurveySettings(Multilingual.previous_language)
+	
 	var selectVal = $("select#ml-mod-language").val();
 	if (selectVal == "") {
 		this.disableTextSettings();
@@ -83,6 +88,8 @@ Multilingual.onLanguageSelect = function() {
 		this.selectedLanguage = this.languages[lang_index];
 		this.loadSurveySettings();
 	}
+	
+	Multilingual.previous_language = this.selectedLanguage;
 }
 
 Multilingual.addBasicSurveySection = function () {
@@ -478,14 +485,15 @@ Multilingual.enableTextSettings = function() {
 	$("#hide_lang").attr('disabled', false);
 }
 
-Multilingual.saveSurveySettings = function() {
-	if (!this.selectedLanguage)		// only save module settings if translation language selected
-		return false;
+Multilingual.cacheSurveySettings = function(language) {
+	// add current survey setting translations to settings_to_save array
+	if (typeof(language) != 'string' || language == "") {		// only save module settings if translation language selected
+		return;
+	}
 	
 	var data = {}
-	data.action = 'SAVE_SURVEY_SETTINGS'
 	data.instrument = Multilingual.getVariable('page')
-	data.language = this.selectedLanguage
+	data.language = language
 	data.collections = {}
 	
 	// build survey_settings collection of settings
@@ -510,6 +518,26 @@ Multilingual.saveSurveySettings = function() {
 	} else {
 		data.collections.basic_settings.hide_lang = null;
 	}
+	
+	// remove previously cached settings for this language
+	Multilingual.settings_to_save = Multilingual.settings_to_save.filter(lang_settings => lang_settings.language != language)
+	
+	// append new survey settings for this language
+	Multilingual.settings_to_save.push(data)
+}
+
+Multilingual.saveSurveySettings = function() {
+	// cache current settings
+	if (this.selectedLanguage != "") {
+		this.cacheSurveySettings(this.selectedLanguage);
+	}
+	if (Multilingual.settings_to_save.length < 1) {		// only save module settings if any have been cached
+		return false;
+	}
+	
+	var data = {}
+	data.action = 'SAVE_SURVEY_SETTINGS'
+	data.payload = Multilingual.settings_to_save;
 	
 	var json = encodeURIComponent(JSON.stringify(data));
 	
@@ -578,7 +606,12 @@ Multilingual.getSurveySettings = function() {
 
 Multilingual.loadSurveySettings = function() {
 	var collections = this.defaults
-	if (this.selectedLanguage && typeof(this.settings) !== 'undefined') {
+	
+	// check cached settings first, if none available, check this.settings
+	var cached_settings = this.settings_to_save.filter(data => data.language == this.selectedLanguage)[0];
+	if (cached_settings) {
+		collections = cached_settings.collections;
+	} else if (this.selectedLanguage && typeof(this.settings) !== 'undefined') {
 		if (typeof(this.settings[this.selectedLanguage]) !== 'undefined') {
 			collections = this.settings[this.selectedLanguage]
 		}
@@ -616,11 +649,8 @@ Multilingual.translateSettings = function() {
 	// get selected language from #ml-translate-language
 	var language_iso_code = $("select#ml-translate-language").val();
 	if (!language_iso_code) {
-		console.log('no language_iso_code selected');
 		return;
 	}
-	
-	console.log('language_iso_code selected: ' + language_iso_code);
 	
 	$.ajax({
 		url: Multilingual.ajax_url + '&translate_settings_iso_code=' + language_iso_code,
