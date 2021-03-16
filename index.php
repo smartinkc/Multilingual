@@ -42,7 +42,7 @@
 		} else {
 			$file_contents = file_get_contents($translations_filepath);
 			$translations = [];
-			$file_lines = explode("\r\n", $file_contents);
+			$file_lines = preg_split('/\n|\r\n?/', $file_contents);
 			foreach ($file_lines as $i => $line) {
 				$translations[$i] = $line;
 			}
