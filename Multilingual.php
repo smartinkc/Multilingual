@@ -33,6 +33,11 @@ class Multilingual extends AbstractExternalModule
 	}
 	
 	function redcap_pdf($project_id, $metadata, $data, $instrument, $record, $event_id, $instance) {
+		// delay execution of this module to allow multi-consent-signature module to do it's thing
+		if ($this->delayModuleExecution()) {
+			return;
+		}
+		
 		// decide which language this pdf needs to be translated to by looking for 'languages' field value in $data
 		$lang_field_name = $this->languageVariable($project_id);
 		if (empty($event_id)) {
