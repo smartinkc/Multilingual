@@ -43,7 +43,8 @@
 		"redcap_data_entry_form",
 		"redcap_every_page_top",
 		"redcap_survey_complete",
-		"redcap_survey_page"
+		"redcap_survey_page",
+		"redcap_pdf"
 	],
 
 	"links": {

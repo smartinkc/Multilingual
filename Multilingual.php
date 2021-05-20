@@ -31,6 +31,52 @@ class Multilingual extends AbstractExternalModule
 		echo '<script type="text/javascript">' . str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true), file_get_contents($this->getModulePath() . 'js/multilingual.js')))) . '</script>';
 		echo '<link rel="stylesheet" type="text/css" href="' . $this->getUrl('css/multilingual.css') . '">';
 	}
+	
+	function redcap_pdf($project_id, $metadata, $data, $instrument, $record, $event_id, $instance) {
+		// decide which language this pdf needs to be translated to by looking for 'languages' field value in $data
+		$lang_field_name = $this->languageVariable($project_id);
+		if (empty($event_id)) {
+			// attempt to get event_id from data if not given as arg
+			$event_id = array_key_first($data[$record]);
+		}
+		$language_chosen = $data[$record][$event_id][$lang_field_name];
+		foreach($metadata as $i => $field) {
+			// todo : array_search
+			if ($field['field_name'] == $lang_field_name) {
+				$enum = $field['element_enum'];
+				$denum = $this->denumerateElement($enum);
+				$selected_lang_name = $denum[$language_chosen];
+			}
+		}
+		if (empty($selected_lang_name)) {
+			$this->log("Couldn't translate PDF because we couldn't detect a chosen translation language.");
+		} else {
+			foreach($metadata as &$field) {
+				// get element label's translation for selected language
+				$result = preg_match('/@p1000lang{([^}]+)}/', $field['misc'], $matches);
+				if ($result === 1) {
+					if (strpos($matches[1], $selected_lang_name) === false) {
+						// field element label for selected language doesn't exist
+						continue;
+					}
+					
+					$translations = json_decode('{' . $matches[1] . '}');
+					
+					if ($translations === null) {
+						// not json, use regex instead
+						$translations = $matches[1];
+						
+						preg_match('/"' . $selected_lang_name . '":"(.*)"(?:,"[^"]+":|$)/', $translations, $matches);
+						$translated_field_label = $matches[1];
+						$field['element_label'] = $translated_field_label;
+					} else {
+						$field['element_label'] = $translations->$selected_lang_name;
+					}
+				}
+			}
+		}
+		return array('metadata'=>$metadata, 'data'=>$data);
+	}
 
 	function redcap_every_page_top($project_id){
 		$api_endpoint = $this->getProjectSetting('use-api-endpoint', $project_id);
@@ -756,6 +802,16 @@ class Multilingual extends AbstractExternalModule
 		header("Expires: 0");
 
 		echo $data;
+	}
+	
+	public function denumerateElement($element_enum) {
+		$pieces = explode("\\n", $element_enum);
+		$elements = [];
+		foreach($pieces as $piece) {
+			list($a, $b) = explode(',', $piece, 2);
+			$elements[trim($a)] = trim($b);
+		}
+		return $elements;
 	}
 }
 ?>
