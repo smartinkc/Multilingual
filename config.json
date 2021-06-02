@@ -85,6 +85,13 @@
 			"default": "languages"
 		},
 		{
+			"key": "pdf_translation_fields",
+			"name": "PDF translation trigger variables",
+			"required": false,
+			"type": "field-list",
+			"repeatable": true
+		},
+		{
 			"key": "font-color",
 			"name": "Font Color (ex. #FFFFFF)",
 			"required": false,

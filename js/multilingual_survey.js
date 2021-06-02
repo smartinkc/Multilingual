@@ -4,6 +4,7 @@ var Multilingual = (function(){
 	var ajax_url = 'REDCAP_AJAX_URL';
 	var langVar = 'REDCAP_LANGUAGE_VARIABLE';
 	var instrument_name = 'REDCAP_INSTRUMENT_NAME';
+	var record_id = 'MULTILINGUAL_RECORD_ID';
 	
 	//get language choice from url
 	getURLLanguage();
@@ -51,6 +52,7 @@ var Multilingual = (function(){
 		//click function
 		$('body').on('click', '.setLangButtons', function(){
 			var tmp = $(this).attr('name');
+			onLanguageSelect(tmp);
 			getLanguage(tmp);
 		});
 
@@ -1327,5 +1329,25 @@ var Multilingual = (function(){
 		} else {
 			return false;
 		}
+	}
+	
+	function onLanguageSelect(selectedLanguage) {
+		var language_selected_url = 'MULTILINGUAL_LANGUAGE_SELECTED_URL';
+		var pdf_translation_field_name = 'MULTILINGUAL_PDF_TRANSLATION_FIELD';
+		
+		if (language_selected_url == '' || !record_id || !instrument_name || !pdf_translation_field_name)
+			return;
+		
+		var data = {
+			record_id: record_id,
+			instrument: instrument_name,
+			language_value: selectedLanguage
+		};
+		
+		$.ajax({
+			url: language_selected_url,
+			type: 'POST',
+			data: data
+		});
 	}
 })();
