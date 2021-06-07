@@ -20,20 +20,14 @@ class Multilingual extends AbstractExternalModule
 		$redcap_survey_javascript = str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), $redcap_survey_javascript);
 		$redcap_survey_javascript = str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true, ($api_endpoint == true ? true : false)), $redcap_survey_javascript);
 		$redcap_survey_javascript = str_replace('MULTILINGUAL_LANGUAGE_SELECTED_URL', $this->getUrl('languageSelected.php'), $redcap_survey_javascript);
+		$redcap_survey_javascript = str_replace('MULTILINGUAL_SURVEY_EVENT', $event_id, $redcap_survey_javascript);
 		
-		// determine if there is a pdf translation field for this instrument
-		global $Proj;
-		$pdf_translation_fields = $this->getProjectSetting('pdf_translation_fields');
-		foreach($Proj->metadata as $field_name => $field_data) {
-			$found = array_search($field_name, $pdf_translation_fields, true);
-			if ($found !== false && $field_data['form_name'] == $instrument) {
-				$redcap_survey_javascript = str_replace('MULTILINGUAL_PDF_TRANSLATION_FIELD', $field_name, $redcap_survey_javascript);
-				break;
-			}
+		// see if pdf translation is configured or not -- set variable in multilingual_survey.js
+		if ($this->getProjectSetting("translate_pdfs_instruments")) {
+			$redcap_survey_javascript = str_replace('MULTILINGUAL_PDF_TRANSLATION_ENABLED', 'true', $redcap_survey_javascript);
+		} else {
+			$redcap_survey_javascript = str_replace('MULTILINGUAL_PDF_TRANSLATION_ENABLED', 'false', $redcap_survey_javascript);
 		}
-		
-		// replace with empty string - will prevent survey page from logging language select
-		$redcap_survey_javascript = str_replace('MULTILINGUAL_PDF_TRANSLATION_FIELD', '', $redcap_survey_javascript);
 		
 		echo "<script type='text/javascript'>$redcap_survey_javascript</script>"; 
 		echo '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css', true, $api_endpoint == true) . '">';
@@ -51,17 +45,12 @@ class Multilingual extends AbstractExternalModule
 	}
 	
 	function redcap_pdf($project_id, $metadata, $data, $instrument, $record, $event_id, $instance) {
-		// delay execution of this module to allow multi-consent-signature module to do it's thing
-		if ($this->delayModuleExecution()) {
+		// check if PDF translation per instrument is configured or not
+		if (!$this->getProjectSetting("translate_pdfs_instruments")) {
 			return;
 		}
-		
-		// prevent translation if participant identifiers not enabled for this project AND we're not in the survey context
-		$survey_context = false;
-		if (strpos($_SERVER['SCRIPT_NAME'], '/surveys') !== false) {
-			$survey_context = true;
-		}
-		if (!$survey_context && !$this->areSurveysPublic()) {
+		// delay execution of this module to allow multi-consent-signature module to do it's thing
+		if ($this->delayModuleExecution()) {
 			return;
 		}
 		

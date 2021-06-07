@@ -5,6 +5,7 @@ var Multilingual = (function(){
 	var langVar = 'REDCAP_LANGUAGE_VARIABLE';
 	var instrument_name = 'REDCAP_INSTRUMENT_NAME';
 	var record_id = 'MULTILINGUAL_RECORD_ID';
+	var event_id = 'MULTILINGUAL_SURVEY_EVENT';
 	
 	//get language choice from url
 	getURLLanguage();
@@ -1333,13 +1334,14 @@ var Multilingual = (function(){
 	
 	function onLanguageSelect(selectedLanguage) {
 		var language_selected_url = 'MULTILINGUAL_LANGUAGE_SELECTED_URL';
-		var pdf_translation_field_name = 'MULTILINGUAL_PDF_TRANSLATION_FIELD';
+		var pdf_translation_enabled = 'MULTILINGUAL_PDF_TRANSLATION_ENABLED';
 		
-		if (language_selected_url == '' || !record_id || !instrument_name || !pdf_translation_field_name)
+		if (language_selected_url == '' || !record_id || !instrument_name || pdf_translation_enabled == 'false')
 			return;
 		
 		var data = {
 			record_id: record_id,
+			event_id: event_id,
 			instrument: instrument_name,
 			language_value: selectedLanguage
 		};

@@ -85,11 +85,10 @@
 			"default": "languages"
 		},
 		{
-			"key": "pdf_translation_fields",
-			"name": "PDF translation trigger variables",
+			"key": "translate_pdfs_instruments",
+			"name": "Translate PDFs on a per-instrument basis",
 			"required": false,
-			"type": "field-list",
-			"repeatable": true
+			"type": "checkbox"
 		},
 		{
 			"key": "font-color",
