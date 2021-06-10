@@ -45,46 +45,28 @@ class Multilingual extends AbstractExternalModule
 	}
 	
 	function redcap_pdf($project_id, $metadata, $data, $instrument, $record, $event_id, $instance) {
-		// check if PDF translation per instrument is configured or not
-		if (!$this->getProjectSetting("translate_pdfs_instruments")) {
-			return;
-		}
 		// delay execution of this module to allow multi-consent-signature module to do it's thing
 		if ($this->delayModuleExecution()) {
 			return;
 		}
 		
-		// query db to see if this user selected a language (at some point), if so which language was selected?
-		$user_selected_language = $this->getUserSelectedLanguage($record, $instrument);
+		// get which languages were selected for which instruments by the user as they were taking surveys
+		$user_langs = $this->getUserSelectedLanguages($record);
 		
-		if (empty($user_selected_language)) {
-			$this->log("Couldn't translate PDF because we couldn't detect a chosen translation language.");
-		} else {
-			foreach($metadata as &$field) {
-				// get element label's translation for selected language
-				$result = preg_match('/@p1000lang{([^}]+)}/', $field['misc'], $matches);
-				if ($result === 1) {
-					if (strpos($matches[1], $user_selected_language) === false) {
-						// field element label for selected language doesn't exist
-						continue;
-					}
-					
-					$translations = json_decode('{' . $matches[1] . '}');
-					
-					if ($translations === null) {
-						// not json, use regex instead
-						$translations = $matches[1];
-						
-						preg_match('/"' . $user_selected_language . '":"(.*)"(?:,"[^"]+":|$)/', $translations, $matches);
-						$translated_field_label = $matches[1];
-						$field['element_label'] = $translated_field_label;
-					} else {
-						$field['element_label'] = $translations->$user_selected_language;
-					}
-				}
-			}
+		if (empty($user_langs)) {
+			// user never selected a lang, do no translations
+			return array('metadata'=>$metadata, 'data'=>$data);
 		}
-		return array('metadata'=>$metadata, 'data'=>$data);
+		
+		// log to project event table
+		$action_description = "Translating Generated PDF";
+		$changes_made = "The Multilingual module will translate field labels (for each instrument) based on language selections the user made in survey(s).";
+		\REDCap::logEvent($action_description, $changes_made, null, $record_id, $event_id);
+		
+		// translate metadata using user selected languages
+		$translated_metadata = $this->translatePDF($metadata, $user_langs);
+		
+		return array('metadata'=>$translated_metadata, 'data'=>$data);
 	}
 
 	function redcap_every_page_top($project_id){
@@ -822,28 +804,65 @@ class Multilingual extends AbstractExternalModule
 		}
 	}
 	
-	public function getUserSelectedLanguage($record='', $instrument='') {
-		if (empty($instrument)) {
-			$result = $this->queryLogs("SELECT timestamp, message, record_id, language_value, instrument
-			WHERE message = ? AND record_id = ?
-			ORDER BY timestamp DESC LIMIT 1", [
+	public function getUserSelectedLanguages($record) {
+		$user_languages = [];
+		
+		$result = $this->queryLogs("SELECT timestamp, message, record_id, language_value, instrument, event_id
+			WHERE message = ? AND record_id = ?", [
 				"user_selected_language",
 				$record
-			]);
-		} else {
-			$result = $this->queryLogs("SELECT timestamp, message, record_id, language_value, instrument
-			WHERE message = ? AND instrument = ? AND record_id = ?
-			ORDER BY timestamp DESC LIMIT 1", [
-				"user_selected_language",
-				$instrument,
-				$record
-			]);
+		]);
+		
+		while($row = db_fetch_assoc($result)) {
+			$instrument = $row['instrument'];
+			$language_value = $row['language_value'];
+			$event_id = $row['event_id'];
+			
+			if (!empty($instrument) && !empty($language_value) && !empty($event_id)) {
+				if (empty($user_languages[$event_id])) {
+					$user_languages[$event_id] = [];
+				}
+				if (empty($user_languages[$event_id][$instrument])) {
+					$user_languages[$event_id][$instrument] = $language_value;
+				}
+			}
 		}
 		
-		$result = db_fetch_assoc($result);
-		if ($result && $result['language_value']) {
-			return $result['language_value'];
+		return $user_languages;
+	}
+	
+	public function translatePDF(&$metadata, $user_languages) {
+		foreach($metadata as &$field) {
+			// see which instrument this field belongs to
+			$parent_form = $field['form_name'];
+			
+			// determine which language to use for that field
+			$lang = '';
+			foreach($user_languages as $event_id => $event) {
+				if (!empty($event[$parent_form])) {
+					$lang = $event[$parent_form];
+					break;
+				}
+			}
+			if ($lang == '') {
+				continue;
+			}
+			
+			// get translated field labels
+			preg_match('/@p1000lang{([^}]+)}/', $field['misc'], $matches);
+			$translations = json_decode('{' . $matches[1] . '}');
+			if (empty($translations)) {
+				continue;
+			}
+			if (empty($translations->$lang)) {
+				continue;
+			}
+			
+			// determine the translated field label for this field/lang combo
+			$field['element_label'] = $translations->$lang;
 		}
+		
+		return $metadata;
 	}
 }
 ?>
