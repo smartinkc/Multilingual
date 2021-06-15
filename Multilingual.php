@@ -793,16 +793,6 @@ class Multilingual extends AbstractExternalModule
 		}
 		return $elements;
 	}
-
-	public function areSurveysPublic() {
-		$result = $this->query("SELECT enable_participant_identifiers FROM redcap_projects WHERE project_id = ?", [$this->getProjectId()]);
-		$result = db_fetch_assoc($result);
-		if ($result['enable_participant_identifiers']) {
-			return true;
-		} else {
-			return false;
-		}
-	}
 	
 	public function getUserSelectedLanguages($record) {
 		$user_languages = [];
