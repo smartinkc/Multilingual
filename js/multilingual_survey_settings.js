@@ -105,7 +105,7 @@ Multilingual.addBasicSurveySection = function () {
 	$(tr1).find('td:nth-child(2)').append("<b>Hide language</b>")
 	$(tr1).find('td:nth-child(3)').append("\
 	<label style='display:block;'>Hide this language for this form:\
-	<input type='checkbox' id='hide_lang'>\
+	<input type='checkbox' id='multilingual_module_hide_language'>\
 	</label>\
 	<br>\
 	");
@@ -465,8 +465,8 @@ Multilingual.disableTextSettings = function() {
 	// disable save and return later added settings
 	$("textarea.ml-text-setting, input.ml-text-setting").attr('disabled', true)
 	
-	// disable hide_lang checkbox too
-	$("#hide_lang").attr('disabled', true);
+	// disable multilingual_module_hide_language checkbox too
+	$("#multilingual_module_hide_language").attr('disabled', true);
 }
 
 Multilingual.enableTextSettings = function() {
@@ -481,8 +481,8 @@ Multilingual.enableTextSettings = function() {
 	// disable save and return later added settings
 	$("textarea.ml-text-setting, input.ml-text-setting").attr('disabled', null)
 	
-	// enable hide_lang checkbox too
-	$("#hide_lang").attr('disabled', false);
+	// enable multilingual_module_hide_language checkbox too
+	$("#multilingual_module_hide_language").attr('disabled', false);
 }
 
 Multilingual.cacheSurveySettings = function(language) {
@@ -513,10 +513,10 @@ Multilingual.cacheSurveySettings = function(language) {
 	})
 	
 	// remember hide option setting
-	if ($("#hide_lang").is(':checked')) {
-		data.collections.basic_settings.hide_lang = '1';
+	if ($("#multilingual_module_hide_language").is(':checked')) {
+		data.collections.basic_settings.multilingual_module_hide_language = '1';
 	} else {
-		data.collections.basic_settings.hide_lang = null;
+		data.collections.basic_settings.multilingual_module_hide_language = null;
 	}
 	
 	// remove previously cached settings for this language
@@ -634,11 +634,11 @@ Multilingual.loadSurveySettings = function() {
 		}
 	})
 	
-	// update hide_lang checkbox
-	if (collections.basic_settings.hide_lang == '1') {
-		$("#hide_lang").prop('checked', true)
+	// update multilingual_module_hide_language checkbox
+	if (collections.basic_settings.multilingual_module_hide_language == '1') {
+		$("#multilingual_module_hide_language").prop('checked', true)
 	} else {
-		$("#hide_lang").prop('checked', false)
+		$("#multilingual_module_hide_language").prop('checked', false)
 	}
 	
 }
