@@ -8,7 +8,6 @@
 	if(isset($data) && $data != ''){
 		$data = json_decode($data, true);
 		if ($data['action'] == 'SAVE_SURVEY_SETTINGS' && $data['payload']) {
-			carl_log("saving survey settings:\n" . print_r($data, true));
 			$module->saveSurveySettings($data['payload']);
 		} else if ($data['action'] == 'GET_SURVEY_SETTINGS') {
 			$module->getSurveySettings($data);
