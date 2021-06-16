@@ -2,7 +2,7 @@ var Multilingual = {}
 Multilingual.ajax_url = 'REDCAP_AJAX_URL';
 Multilingual.langVar = 'REDCAP_LANGUAGE_VARIABLE';
 Multilingual.languages = {1: 'en', 2: 'es'};
-Multilingual.settings_to_save = []
+Multilingual.settings_to_save = {};
 Multilingual.previous_language = "";
 
 Multilingual.collection_names = [
@@ -520,10 +520,7 @@ Multilingual.cacheSurveySettings = function(language) {
 	}
 	
 	// remove previously cached settings for this language
-	Multilingual.settings_to_save = Multilingual.settings_to_save.filter(lang_settings => lang_settings.language != language)
-	
-	// append new survey settings for this language
-	Multilingual.settings_to_save.push(data)
+	Multilingual.settings_to_save[language] = data;
 }
 
 Multilingual.saveSurveySettings = function() {
@@ -531,7 +528,7 @@ Multilingual.saveSurveySettings = function() {
 	if (this.selectedLanguage != "") {
 		this.cacheSurveySettings(this.selectedLanguage);
 	}
-	if (Multilingual.settings_to_save.length < 1) {		// only save module settings if any have been cached
+	if (Object.keys(Multilingual.settings_to_save).length < 1) {		// only save module settings if any have been cached
 		return false;
 	}
 	
@@ -608,7 +605,7 @@ Multilingual.loadSurveySettings = function() {
 	var collections = this.defaults
 	
 	// check cached settings first, if none available, check this.settings
-	var cached_settings = this.settings_to_save.filter(data => data.language == this.selectedLanguage)[0];
+	var cached_settings = this.settings_to_save[this.selectedLanguage];
 	if (cached_settings) {
 		collections = cached_settings.collections;
 	} else if (this.selectedLanguage && typeof(this.settings) !== 'undefined') {
