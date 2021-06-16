@@ -8,6 +8,7 @@
 	if(isset($data) && $data != ''){
 		$data = json_decode($data, true);
 		if ($data['action'] == 'SAVE_SURVEY_SETTINGS' && $data['payload']) {
+			carl_log("saving survey settings:\n" . print_r($data, true));
 			$module->saveSurveySettings($data['payload']);
 		} else if ($data['action'] == 'GET_SURVEY_SETTINGS') {
 			$module->getSurveySettings($data);
@@ -36,7 +37,13 @@
 	
 	elseif ($iso_code = $_GET['translate_settings_iso_code']) {
 		$response = new \stdClass();
-		$translations_filepath = $module->getModulePath() . "/def_translations/$iso_code.txt";
+		
+		/* NEVER DO THE FOLLOWING -- UNSAFE AGAINST PATH TRAVERSAL ATTACKS */
+		// $translations_filepath = $module->getModulePath() . "/def_translations/$iso_code.txt";
+		
+		/* getSafePath PREVENTS PATH TRAVERSAL ATTACKS */
+		$translations_filepath = $module->getSafePath("/def_translations/$iso_code.txt");
+		
 		if (!file_exists($translations_filepath)) {
 			$response->error = "Couldn't find translations for language with ISO code $iso_code";
 		} else {

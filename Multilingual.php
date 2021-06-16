@@ -784,16 +784,6 @@ class Multilingual extends AbstractExternalModule
 		echo $data;
 	}
 	
-	public function denumerateElement($element_enum) {
-		$pieces = explode("\\n", $element_enum);
-		$elements = [];
-		foreach($pieces as $piece) {
-			list($a, $b) = explode(',', $piece, 2);
-			$elements[trim($a)] = trim($b);
-		}
-		return $elements;
-	}
-	
 	public function getUserSelectedLanguages($record) {
 		$user_languages = [];
 		
