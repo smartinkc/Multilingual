@@ -1325,7 +1325,7 @@ var Multilingual = (function(){
 			return null;
 		
 		var slice = settings.instruments[instrument_name][lang].basic_settings;
-		if (slice.hide_lang == '1') {
+		if (slice.multilingual_module_hide_language == '1') {
 			return true;
 		} else {
 			return false;
