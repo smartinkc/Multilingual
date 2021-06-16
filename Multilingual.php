@@ -64,6 +64,7 @@ class Multilingual extends AbstractExternalModule
 		\REDCap::logEvent($action_description, $changes_made, null, $record_id, $event_id);
 		
 		// translate metadata using user selected languages
+		global $Proj;
 		$translated_metadata = $this->translatePDF($metadata, $user_langs);
 		
 		return array('metadata'=>$translated_metadata, 'data'=>$data);
@@ -812,6 +813,34 @@ class Multilingual extends AbstractExternalModule
 	}
 	
 	public function translatePDF(&$metadata, $user_languages) {
+		// translate survey instructions/titles
+		global $Proj;
+		$instruments = json_decode($this->getProjectSetting('instruments'));
+		if ($instruments && !empty($instruments)) {
+			foreach ($Proj->surveys as $id => &$survey) {
+				// determine which language to use for this form
+				$lang = '';
+				$form_name = $survey['form_name'];
+				foreach($user_languages as $event_id => $event) {
+					if (!empty($event[$form_name])) {
+						$lang = $event[$form_name];
+						break;
+					}
+				}
+				if ($lang == '') {
+					continue;
+				}
+				
+				if (!empty($instruments->$form_name->$lang->survey_settings->title)) {
+					$survey['title'] = $instruments->$form_name->$lang->survey_settings->title;
+				}
+				if (!empty($instruments->$form_name->$lang->survey_settings->acknowledgement)) {
+					$survey['instructions'] = $instruments->$form_name->$lang->survey_settings->acknowledgement;
+				}
+			}
+		}
+		
+		// translate field labels
 		foreach($metadata as &$field) {
 			// see which instrument this field belongs to
 			$parent_form = $field['form_name'];
