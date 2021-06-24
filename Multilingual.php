@@ -8,6 +8,15 @@ use REDCap;
 
 class Multilingual extends AbstractExternalModule
 {
+	public $translate_answer_field_types = [
+		"select",
+		"radio",
+		"checkbox",
+		"yesno",
+		"truefalse",
+		"slider"
+	];
+	
 	function redcap_survey_page($project_id, $record, $instrument, $event_id, $group_id, $survey_hash, $response_id, $repeat_instance){
 		$api_endpoint = $this->getProjectSetting('use-api-endpoint', $project_id);
 		
@@ -840,10 +849,14 @@ class Multilingual extends AbstractExternalModule
 			}
 		}
 		
-		// translate field labels
+		// translate field question/answer labels
 		foreach($metadata as &$field) {
 			// see which instrument this field belongs to
 			$parent_form = $field['form_name'];
+			$field_name = $field['field_name'];
+			
+			// get question and answer translations for this field
+			$translations = $this->getFieldTranslations($field);
 			
 			// determine which language to use for that field
 			$lang = '';
@@ -857,21 +870,76 @@ class Multilingual extends AbstractExternalModule
 				continue;
 			}
 			
-			// get translated field labels
-			preg_match('/@p1000lang{([^}]+)}/', $field['misc'], $matches);
-			$translations = json_decode('{' . $matches[1] . '}');
-			if (empty($translations)) {
-				continue;
-			}
-			if (empty($translations->$lang)) {
-				continue;
+			// determine the translated field label for this field/lang combo
+			if ($translations['lang'] && $translations['lang'][$lang]) {
+				$field['element_label'] = $translations['lang'][$lang];
 			}
 			
-			// determine the translated field label for this field/lang combo
-			$field['element_label'] = $translations->$lang;
+			// determine the translated answer labels for this field/lang combo
+			if ($translations['answers'] && $translations['answers'][$lang]) {
+				foreach($translations['answers'][$lang] as $raw => $translation) {
+					$translations['answers'][$lang][$raw] = "$raw, $translation";
+				}
+				$field['element_enum'] = implode(" \\n ", $translations['answers'][$lang]);
+			}
 		}
 		
 		return $metadata;
 	}
+	
+	public function getFieldTranslations($field_array) {
+		// this function returns an array like:
+		/*
+		translations = [
+			'lang' => [
+				'English' => 'My Field Label',
+				'Espanol' => 'Mi etiqueta de campo'
+			],
+			'answers' => [
+				'English' => [
+					'0' => 'Zero',
+					'1' => 'One',
+					'2' => 'Two'
+				],
+				'Espanol' => [
+					'0' => 'Cero',
+					'1' => 'Uno',
+					'2' => 'Dos'
+				],
+			]
+		]
+		
+		assuming $field_array passed has 'misc' field with relevant @p1000lang and @p1000answers information
+		*/
+		$translations = [];
+		$field_misc = $field_array['misc'];
+		
+		// determine indexes for p1000lang and p1000answers
+		$regex_capture_p1000 = "/p1000([^{]*)/m";
+		preg_match_all($regex_capture_p1000, $field_misc, $indexes);
+		$indexes = $indexes[1];
+		
+		// capture pieces of field['misc'] that are contained in balanced curly braces (inclusive)
+		$regex_capture_balanced_braces = "/\{(?:[^}{]+|(?R))*+\}/m";
+		preg_match_all($regex_capture_balanced_braces, $field_misc, $matches);
+		if (gettype($matches) == 'array') {
+			$matches = $matches[0];
+			
+			// decode lang json (if applicable)
+			$lang_index = array_search('lang', $indexes, true);
+			if ($lang_index !== false) {
+				$translations['lang'] = json_decode($matches[$lang_index], true);
+			}
+			
+			// decode answers json (if applicable)
+			$answers_index = array_search('answers', $indexes, true);
+			if ($answers_index !== false) {
+				$translations['answers'] = json_decode($matches[$answers_index], true);
+			}
+		}
+		
+		return $translations;
+	}
+	
 }
 ?>
