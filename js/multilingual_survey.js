@@ -1211,6 +1211,7 @@ var Multilingual = (function(){
 			type: 'POST',
 			data: 'data=' + json,
 			success: function (r) {
+				log("getTranslations response", r);
 				//hide if no translations
 				if(!anyTranslated && (r == null || (r['questions'] == null && r['answers'] == null && r['notes'] == null))){
 					clearInterval(interval);
@@ -1245,17 +1246,17 @@ var Multilingual = (function(){
 			return;
 		
 		// parse stored form_settings JSON
-		if (typeof settings.instruments.value === 'string')
+		if (settings.instruments && typeof settings.instruments.value === 'string')
 			settings.instruments = JSON.parse(settings.instruments.value)
 		
 		// if text translations exist for this instrument/lang combo, then set form_settings
-		if (settings.instruments[instrument_name] && settings.instruments[instrument_name][lang]) {
+		if (settings.instruments && settings.instruments[instrument_name] && settings.instruments[instrument_name][lang]) {
 			log('loadFormSettings(), set form_settings lang:', lang);
 			form_settings = settings.instruments[instrument_name][lang];
 		}
 		
 		// if survey acknowledgement text is shown, add buttons so user can translate survey acknowledgement text
-		if ($("#surveyacknowledgment").length && !$("#language_buttons").length) {
+		if ($("#surveyacknowledgment").length && !$("#language_buttons").length && settings.instruments) {
 			$("#pagecontent").prepend("<div id='language_buttons'></div>");
 			for (let [lang, s] of Object.entries(settings.instruments[instrument_name])) {
 				$("#language_buttons").append("<button>" + lang + "</button>")
