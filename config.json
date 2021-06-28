@@ -27,6 +27,8 @@
 		{"1.14.0": "Implemented PDF field translations."},
 		{"1.14.1": "Implemented PDF answer translations."}
 	],
+	
+	"framework-version": 5,
 
 	"authors": [
 		{

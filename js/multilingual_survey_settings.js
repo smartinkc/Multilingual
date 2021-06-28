@@ -16,25 +16,6 @@ Multilingual.collection_names = [
 	"field_level"
 ];
 
-Multilingual.getSettings = function() {
-	var data = {};
-	data['todo'] = 3;
-	data['project_id'] = pid;
-	var json = encodeURIComponent(JSON.stringify(data));
-
-	$.ajax({
-		url: Multilingual.ajax_url,
-		type: 'POST',
-		data: 'data=' + json,
-		success: function (r) {
-			settings = r;
-		},
-		error: function(jqXHR, textStatus, errorThrown) {
-		   console.log(textStatus, errorThrown);
-		}
-	});
-}
-
 Multilingual.getLanguages = function() {
 	var data = {};
 	data['todo'] = 2;
@@ -639,8 +620,6 @@ Multilingual.loadSurveySettings = function() {
 	}
 	
 }
-
-Multilingual.getSettings();
 
 Multilingual.translateSettings = function() {
 	// get selected language from #ml-translate-language

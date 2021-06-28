@@ -64,14 +64,14 @@ var Multilingual = (function(){
 				$('#changeLang').css('opacity','0.5');
 				
 				//if show start screen is checked, show all languages when changing language
-				if(settings['show-start-screen'] && settings['show-start-screen']['value'] == true){
+				if(settings['show-start-screen'] == true){
 					$('#p1000Overlay').show();
 					$('#p1000ChooseLang').show();
 					
 					if($('#p1000ChooseLang').html() == ''){
 						addLanguageButtons();
-						if(settings['start-screen-width'] && settings['start-screen-width']['value']){
-							$('#p1000ChooseLang').css('width', settings['start-screen-width']['value']);
+						if(settings['start-screen-width'] && settings['start-screen-width']){
+							$('#p1000ChooseLang').css('width', settings['start-screen-width']);
 						}
 					}
 				}
@@ -259,14 +259,14 @@ var Multilingual = (function(){
 		
 		//change econsent checkbox text
 		if($('#econsent_confirm_checkbox_label').is(':visible')){
-			for(id in settings['encoding-language']['value']){
-				if(settings['encoding-language']['value'][id] == lang){
+			for(id in settings['encoding-language']){
+				if(settings['encoding-language'][id] == lang){
 					break;
 				}
 			}
 			
-			if(settings['econsent-checkbox-text']['value'][id]){
-				$('#econsent_confirm_checkbox_label').html('<input type="checkbox" id="econsent_confirm_checkbox"> ' + settings['econsent-checkbox-text']['value'][id]);
+			if(settings['econsent-checkbox-text'][id]){
+				$('#econsent_confirm_checkbox_label').html('<input type="checkbox" id="econsent_confirm_checkbox"> ' + settings['econsent-checkbox-text'][id]);
 			}
 		}
 	}
@@ -301,7 +301,7 @@ var Multilingual = (function(){
 				data: 'data=' + json,
 				success: function (r) {
 					settings = r;
-					if (settings['show-all-lang-buttons'] && settings['show-all-lang-buttons'].value) {
+					if (settings['show-all-lang-buttons']) {
 						addAllLangButtons();
 					}
 					settingsRetrieved = true;
@@ -318,7 +318,7 @@ var Multilingual = (function(){
 				data: 'data=' + json2,
 				success: function (r) {
 					languages = r;
-					if (settings['show-all-lang-buttons'] && settings['show-all-lang-buttons'].value) {
+					if (settings['show-all-lang-buttons']) {
 						addAllLangButtons();
 					}
 					languagesRetrieved = true;
@@ -437,8 +437,8 @@ var Multilingual = (function(){
 		var id;
 		var langKey = -1;
 		if(settings['stop-text-lang']){
-			for(id in settings['stop-text-lang']['value']){
-				if(lang == settings['stop-text-lang']['value'][id]){
+			for(id in settings['stop-text-lang']){
+				if(lang == settings['stop-text-lang'][id]){
 					langKey = id;
 					break;
 				}
@@ -450,50 +450,50 @@ var Multilingual = (function(){
 			$('#stopActionPrompt').attr('title', '<img alt="Page" src="APP_PATH_IMAGESexclamation_frame.png">');
 			
 			//body
-			$('#stopActionPrompt').html(settings['stop-text-body']['value'][langKey]);
+			$('#stopActionPrompt').html(settings['stop-text-body'][langKey]);
 			
 			//stop button
-			stopAction1 = settings['stop-text-stop-button']['value'][langKey];
+			stopAction1 = settings['stop-text-stop-button'][langKey];
 			
 			//continue buttons
-			stopAction2 = settings['stop-text-continue-button']['value'][langKey];
-			stopAction3 = settings['stop-text-continue-button']['value'][langKey];
+			stopAction2 = settings['stop-text-continue-button'][langKey];
+			stopAction3 = settings['stop-text-continue-button'][langKey];
 			
 			//return
 			$('#stopActionReturn').attr('title', '<img alt="Page" src="APP_PATH_IMAGESexclamation_frame.png">');
-			$('#stopActionReturn').html(settings['stop-text-return-body']['value'][langKey]);
+			$('#stopActionReturn').html(settings['stop-text-return-body'][langKey]);
 		}
 		
 		//save and return
 		langKey = -1;
 		if(settings['save-return-later-lang']){
-			for(id in settings['save-return-later-lang']['value']){
-				if(lang == settings['save-return-later-lang']['value'][id]){
+			for(id in settings['save-return-later-lang']){
+				if(lang == settings['save-return-later-lang'][id]){
 					langKey = id;
 					break;
 				}
 			}
 		}
 		
-		if(langKey > -1 && typeof settings['save-return-later-corner']['value'][langKey] == 'string'){
+		if(langKey > -1 && typeof settings['save-return-later-corner'][langKey] == 'string'){
 			//save and return button
-			$('[name="submit-btn-savereturnlater"]').html(settings['save-return-later-button']['value'][langKey]);
+			$('[name="submit-btn-savereturnlater"]').html(settings['save-return-later-button'][langKey]);
 
 			//save and return corner
-			$('#return_corner').html(settings['save-return-later-corner']['value'][langKey]);
+			$('#return_corner').html(settings['save-return-later-corner'][langKey]);
 
 			//save and return continue button^M
 			var b = '';
 			var t = '';
 			try{
 				t = $('#dpop').children().children().children(1).children().children().children().children().find('button')[0].innerHTML;
-				b = $('#dpop').children().children().children(1).children().children().children().children().find('button')[0].outerHTML.replace(t, settings['save-return-later-continue-button']['value'][langKey]);
+				b = $('#dpop').children().children().children(1).children().children().children().children().find('button')[0].outerHTML.replace(t, settings['save-return-later-continue-button'][langKey]);
 			}
 			catch(e){
 				//log(e.message);
 			}
 			//save and return popup text
-			$('#dpop').children().children().children(1).children().children().children().children().html(settings['save-return-later-text']['value'][langKey] + '<br>' + b);
+			$('#dpop').children().children().children(1).children().children().children().children().html(settings['save-return-later-text'][langKey] + '<br>' + b);
 		}
 	}
 
@@ -510,8 +510,8 @@ var Multilingual = (function(){
 		// Survey Controls
 		langKey = -1;
 		if(settings['survey-control-lang']){
-			for(id in settings['survey-control-lang']['value']){
-				if(lang == settings['survey-control-lang']['value'][id]){
+			for(id in settings['survey-control-lang']){
+				if(lang == settings['survey-control-lang'][id]){
 					langKey = id;
 					break;
 				}
@@ -531,24 +531,24 @@ var Multilingual = (function(){
 			var showArrows = true;
 			if($('[name="submit-btn-saverecord"]').hasClass('multilingual-final-submit')) {
 				// Submit Button
-				$('[name="submit-btn-saverecord"]').html((settings['survey-control-submit']['value'][langKey] ? settings['survey-control-submit']['value'][langKey] : submitCheck ));
+				$('[name="submit-btn-saverecord"]').html((settings['survey-control-submit'][langKey] ? settings['survey-control-submit'][langKey] : submitCheck ));
 			} else {
 				// Next Button
-				$('[name="submit-btn-saverecord"]').html((settings['survey-control-next']['value'][langKey] ? settings['survey-control-next']['value'][langKey]+(showArrows ? " "+nextArrow : "") : nextArrow ));
+				$('[name="submit-btn-saverecord"]').html((settings['survey-control-next'][langKey] ? settings['survey-control-next'][langKey]+(showArrows ? " "+nextArrow : "") : nextArrow ));
 			}
 			
 			// Prev Button
-			$('[name="submit-btn-saveprevpage"]').html((settings['survey-control-prev']['value'][langKey] ? (showArrows ? prevArrow+" " : "")+settings['survey-control-prev']['value'][langKey] : prevArrow ));
+			$('[name="submit-btn-saveprevpage"]').html((settings['survey-control-prev'][langKey] ? (showArrows ? prevArrow+" " : "")+settings['survey-control-prev'][langKey] : prevArrow ));
 
 
 			var showSymbols = true;
 			// Reset
 			$('.smalllink').each(function(){
-				$(this).html((showArrows ? "&#x21ba; " : "")+settings['survey-control-reset']['value'][langKey]);
+				$(this).html((showArrows ? "&#x21ba; " : "")+settings['survey-control-reset'][langKey]);
 			});
 
 			//resize font
-			$('#changeFont').children().eq(0).html((settings['survey-control-font-size']['value'][langKey] ? settings['survey-control-font-size']['value'][langKey] : fontSizeSymbol ));
+			$('#changeFont').children().eq(0).html((settings['survey-control-font-size'][langKey] ? settings['survey-control-font-size'][langKey] : fontSizeSymbol ));
 
 			//page number
 			if($('#surveypagenum').is(':visible')){
@@ -561,7 +561,7 @@ var Multilingual = (function(){
 					var maxPage = tmp[3];
 					$('#surveypagenum').addClass('multilingual-translated');
 				}
-				var surveyControlPageNumber = settings['survey-control-page-number']['value'][langKey];
+				var surveyControlPageNumber = settings['survey-control-page-number'][langKey];
 				if (surveyControlPageNumber) {
 					if(surveyControlPageNumber.includes("CURRENTPAGE") && surveyControlPageNumber.includes("MAXPAGE")) {
 						surveyControlPageNumber = surveyControlPageNumber.replace("CURRENTPAGE", '<span class="multilingual-cur-page">'+curPage+'</span>').replace("MAXPAGE", '<span class="multilingual-max-page">'+maxPage+'</span>');
@@ -615,7 +615,7 @@ var Multilingual = (function(){
 			//id="changeLang1"
 			if (langIsHidden(languages[i]) === true)
 				continue;
-			$('#p1000ChooseLang').append('<p><div class="setLangButtons" name="' + languages[i] + '" style="display:none;float:left;width:' + (settings['button-width'] && settings['button-width']['value'] ? settings['button-width']['value'] : '100px') + ';color:' + (settings['font-color'] && settings['font-color']['value'] ? settings['font-color']['value'] : '') + ';background:' + (settings['background-color'] && settings['background-color']['value'] ? settings['background-color']['value'] : '') + ';margin-top:20px;" onclick="$(\'#p1000Overlay\').fadeOut();$(\'#p1000ChooseLang\').fadeOut();">' + languages[i] + '</div></p>');
+			$('#p1000ChooseLang').append('<p><div class="setLangButtons" name="' + languages[i] + '" style="display:none;float:left;width:' + (settings['button-width'] ? settings['button-width'] : '100px') + ';color:' + (settings['font-color'] ? settings['font-color'] : '') + ';background:' + (settings['background-color'] ? settings['background-color'] : '') + ';margin-top:20px;" onclick="$(\'#p1000Overlay\').fadeOut();$(\'#p1000ChooseLang\').fadeOut();">' + languages[i] + '</div></p>');
 		}
 		
 		var timing = 300;
@@ -675,8 +675,8 @@ var Multilingual = (function(){
 			//add buttons to startUp
 			if($('#p1000Overlay').is(':visible') && $('#p1000ChooseLang').html() == ''){
 				//set width of start up screen (expand when using many languages)
-				if(settings['start-screen-width'] && settings['start-screen-width']['value']){
-					$('#p1000ChooseLang').css('width', settings['start-screen-width']['value']);
+				if(settings['start-screen-width']){
+					$('#p1000ChooseLang').css('width', settings['start-screen-width']);
 				}
 				
 				addLanguageButtons();
@@ -698,17 +698,17 @@ var Multilingual = (function(){
 			if ($('#changeLang').length) {
 				$('#changeLang').html(lang);
 				if(lang.length > 2){
-					$('#changeLang').css('width', (settings['button-width'] && settings['button-width']['value'] ? settings['button-width']['value'] : '100px'));
+					$('#changeLang').css('width', (settings['button-width'] ? settings['button-width'] : '100px'));
 					$('#changeLang').css('padding-left','8px');
 					$('#changeLang').css('padding-right','8px');
 				}
 				else{
-					$('#changeLang').css('width', (settings['button-width'] && settings['button-width']['value'] ? settings['button-width']['value'] : '30px'));
+					$('#changeLang').css('width', (settings['button-width'] ? settings['button-width'] : '30px'));
 					$('#changeLang').css('padding-left','');
 					$('#changeLang').css('padding-right','');
 				}
-				$('#changeLang').css('background', (settings['background-color'] && settings['background-color']['value'] ? settings['background-color']['value'] : ''));
-				$('#changeLang').css('color', (settings['font-color'] && settings['font-color']['value'] ? settings['font-color']['value'] : ''));
+				$('#changeLang').css('background', (settings['background-color'] ? settings['background-color'] : ''));
+				$('#changeLang').css('color', (settings['font-color'] ? settings['font-color'] : ''));
 				$('#changeLang').css('opacity','1');
 			}
 			
@@ -721,7 +721,7 @@ var Multilingual = (function(){
 			var id;
 			for(id in translations['questions']){
 				if(translations['questions'][id]['matrix'] != null){
-					if(!(translations['questions'][id]['matrix'] in matrixProcessed) && settings['hide-matrix-questions-without-translation-survey'] && settings['hide-matrix-questions-without-translation-survey']['value']) {
+					if(!(translations['questions'][id]['matrix'] in matrixProcessed) && settings['hide-matrix-questions-without-translation-survey']) {
 						$('tr[mtxgrp="'+translations['questions'][id]['matrix']+'"].mtxfld').each(function(){
 							var curMtxQuestionId = $(this).attr('id');
 							curMtxQuestionId = curMtxQuestionId.replace('-tr', '');
@@ -786,7 +786,7 @@ var Multilingual = (function(){
 							if($(this).val() == id2){
 								$(this).text(translations['answers'][id]['text'][id2]);
 								$(this).data('lang', lang);
-							} else if(settings['hide-answers-without-translation-survey'] && settings['hide-answers-without-translation-survey']['value'] && $(this).val() !== '' && $(this).data('lang') !== lang) {
+							} else if(settings['hide-answers-without-translation-survey'] && $(this).val() !== '' && $(this).data('lang') !== lang) {
 								$(this).hide();
 							}
 						});
@@ -826,7 +826,7 @@ var Multilingual = (function(){
 							if($(this).val() == id2){
 								$(this).parent().contents().last().html(' ' + translations['answers'][id]['text'][id2]);
 								$(this).data('lang', lang);
-							} else if(settings['hide-answers-without-translation-survey'] && settings['hide-answers-without-translation-survey']['value'] && $(this).data('lang') !== lang) {
+							} else if(settings['hide-answers-without-translation-survey'] && $(this).data('lang') !== lang) {
 								$(this).parent().contents().last().hide();
 								$(this).hide();
 							}
@@ -842,7 +842,7 @@ var Multilingual = (function(){
 							if(tmp[0] == id && tmp[2] == id2) {
 								$(this).html(' ' + translations['answers'][id]['text'][id2]);
 								$(this).data('lang', lang);
-							} else if(settings['hide-answers-without-translation-survey'] && settings['hide-answers-without-translation-survey']['value'] && $(this).data('lang') !== lang) {
+							} else if(settings['hide-answers-without-translation-survey'] && $(this).data('lang') !== lang) {
 								if($(this).parent().parent().hasClass('enhancedchoice')) {
 									$(this).parent().hide();
 								}
@@ -861,7 +861,7 @@ var Multilingual = (function(){
 							if($(this).find('[name="__chk__' + id + '_RC_' + id2 + '"]').length) {
 								$(this).contents().last().html(' ' + translations['answers'][id]['text'][id2]);
 								$(this).data('lang', lang);
-							} else if(settings['hide-answers-without-translation-survey'] && settings['hide-answers-without-translation-survey']['value'] && $(this).data('lang') !== lang) {
+							} else if(settings['hide-answers-without-translation-survey'] && $(this).data('lang') !== lang) {
 								$(this).hide();
 							}
 						});
@@ -878,7 +878,7 @@ var Multilingual = (function(){
 							if(tmp[0] == id && tmp[2] == id2) {
 								$(this).html(translations['answers'][id]['text'][id2]);
 								$(this).data('lang', lang);
-							} else if(settings['hide-answers-without-translation-survey'] && settings['hide-answers-without-translation-survey']['value'] && $(this).data('lang') !== lang) {
+							} else if(settings['hide-answers-without-translation-survey'] && $(this).data('lang') !== lang) {
 								if($(this).parent().parent().hasClass('enhancedchoice')) {
 									$(this).parent().hide();
 								}
@@ -938,9 +938,9 @@ var Multilingual = (function(){
 			stopText();
 			controlText();
 		
-			if(settings['languages_variable'] && settings['languages_variable']['value']){
-				if($('#' + settings['languages_variable']['value'] + '-tr').length){
-					doBranching(settings['languages_variable']['value']);
+			if(settings['languages_variable']){
+				if($('#' + settings['languages_variable'] + '-tr').length){
+					doBranching(settings['languages_variable']);
 				}
 			}
 			else{
@@ -1161,8 +1161,8 @@ var Multilingual = (function(){
 		}
 
 		//set languages variable to current language
-		if(settings['languages_variable'] && settings['languages_variable']['value']){
-			$('[name="' + settings['languages_variable']['value'] + '"] option').each(function(){
+		if(settings['languages_variable']){
+			$('[name="' + settings['languages_variable'] + '"] option').each(function(){
 				if($(this).text() == lang){
 					$(this).prop('selected', true);
 				}

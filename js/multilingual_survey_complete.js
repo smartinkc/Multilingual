@@ -84,22 +84,22 @@
 		var lang = getCookie('p1000Lang');
 		var curLang = 0;
 		var id;
-		for(id in settings['save-return-later-lang']['value']){
-			if(settings['save-return-later-lang']['value'][id] == languages[lang]){
+		for(id in settings['save-return-later-lang']){
+			if(settings['save-return-later-lang'][id] == languages[lang]){
 				curLang = id;
 				break;
 			}
 		}
 		
 		var html = $('#return_code_completed_survey_div').html();
-		if(html != undefined && html != '' && settings['save-return-page-complete-text']['value'][curLang]){
+		if(html != undefined && html != '' && settings['save-return-page-complete-text'][curLang]){
 			//text
 			html = html.split('<div');
-			html[0] = settings['save-return-page-complete-text']['value'][curLang];
+			html[0] = settings['save-return-page-complete-text'][curLang];
 			
 			//return code text
 			var h = html[1].split('<span');
-			html[1] = '>' + settings['save-return-page-popup-return-code']['value'][curLang] + ': <span' + h[1];
+			html[1] = '>' + settings['save-return-page-popup-return-code'][curLang] + ': <span' + h[1];
 			
 			$('#return_code_completed_survey_div').html(html[0] + '<div' + html[1]);
 		}

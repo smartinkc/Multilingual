@@ -199,18 +199,18 @@ class Multilingual extends AbstractExternalModule
 
 	public function getSettings($data){
 		$response = $this->getProjectSettings($data['project_id']);
-
+		
 		foreach($response AS $key => $values){
 			if($key == 'button-width'){
-				if(substr($response[$key]['value'], -2) != 'px'){
-					$response[$key]['value'] = '100px';
+				if(substr($response[$key], -2) != 'px'){
+					$response[$key] = '100px';
 				}
-				elseif(intval(str_replace('px', '', $response[$key]['value'])) < 1){
-					$response[$key]['value'] = '100px';
+				elseif(intval(str_replace('px', '', $response[$key])) < 1){
+					$response[$key] = '100px';
 				}
 			}
-			elseif($key == 'languages_variable' && $response[$key]['value'] == null){
-				$response[$key]['value'] = 'languages';
+			elseif($key == 'languages_variable' && $response[$key] == null){
+				$response[$key] = 'languages';
 			}
 		}
 
@@ -435,10 +435,10 @@ class Multilingual extends AbstractExternalModule
 					if (!isset($defaultError)){
 						// make array of default error prompts
 						$defaultError = array();
-						$defaultError = array_fill_keys($projectSettings['validation']['value'], NULL);
+						$defaultError = array_fill_keys($projectSettings['validation'], NULL);
 
-						foreach($projectSettings['validation']['value'] AS $key => $valid_type){
-							$defaultError[$valid_type] = array_combine($projectSettings['lang']['value'][$key], $projectSettings['error']['value'][$key]);
+						foreach($projectSettings['validation'] AS $key => $valid_type){
+							$defaultError[$valid_type] = array_combine($projectSettings['lang'][$key], $projectSettings['error'][$key]);
 						}
 					}
 
