@@ -747,6 +747,9 @@ var Multilingual = (function(){
 					var translate_mode = 'html';
 					try {
 						translation = $(translations['questions'][id]['text']);
+						if (!translation[0]) {
+							throw "no valid HTML elements";
+						}
 					} catch(err) {
 						translation = translations['questions'][id]['text'];
 						translate_mode = 'text';
