@@ -1,0 +1,59 @@
+Page précédente
+Page suivante
+Fermer l'enquête
+Soumettre
+Redimensionner la police
+Télécharger
+Téléchargez votre réponse à l'enquête (PDF) :
+* doit fournir une valeur
+Sauvegarder et revenir plus tard
+Vous revenez ?
+Reprenez là où vous vous êtes arrêté.
+Si vous avez déjà répondu à une partie de l'enquête, vous pouvez continuer là où vous vous êtes arrêté. Tout ce dont vous avez besoin est le code de retour qui vous a été donné précédemment. Cliquez sur le lien ci-dessous pour commencer à saisir votre code de retour et poursuivre l'enquête.
+Continuer l'enquête
+Vos réponses à l'enquête ont été sauvegardées !
+Vous avez choisi d'arrêter l'enquête pour le moment et de revenir plus tard pour la terminer. Pour revenir à cette enquête, vous aurez besoin du lien de l'enquête et de votre code de retour. Voir les instructions ci-dessous.
+Code de retour
+Un code de retour est *requis* afin de poursuivre l'enquête là où vous l'avez laissée. Veuillez noter la valeur indiquée ci-dessous.
+Le code de retour ne sera PAS inclus dans l'e-mail ci-dessous.
+Lien de l'enquête pour le retour
+Vous pouvez ajouter cette page à vos favoris pour revenir à l'enquête, OU vous pouvez recevoir le lien de l'enquête par courriel en indiquant votre adresse électronique ci-dessous. Pour des raisons de sécurité, le code de retour ne sera PAS inclus dans le courriel. Si vous ne recevez pas le courriel peu après, veuillez vérifier votre dossier de courrier indésirable.
+Entrez votre adresse électronique
+Envoyer le lien de l'enquête
+Votre adresse e-mail ne sera pas enregistrée
+Ou si vous le souhaitez, vous pouvez poursuivre cette enquête dès maintenant.
+Continuer l'enquête maintenant
+Code de retour" nécessaire pour le retour
+Copiez ou notez le code de retour ci-dessous. Sans lui, vous ne pourrez pas retourner et continuer cette enquête. Une fois que vous avez le code, cliquez sur Fermer et suivez les autres instructions de cette page.
+Fermez
+Email envoyé !
+L'e-mail a été envoyé avec succès à 
+Alerte
+Ce champ doit être une adresse électronique valide (comme joe@user.com). Veuillez la saisir à nouveau maintenant.
+Pour continuer l'enquête, veuillez entrer le CODE DE RETOUR qui a été généré automatiquement pour vous lorsque vous avez quitté l'enquête. Veuillez noter que le code de retour n'est pas sensible à la casse.
+Soumettre votre code de retour
+Le code de retour que vous avez saisi était incorrect. Veuillez réessayer.
+Si vous avez oublié votre code de retour ou si vous souhaitez simplement recommencer l'enquête depuis le début, vous pouvez supprimer toutes vos réponses existantes et recommencer.
+Recommencer à zéro
+EFFACER VOS RÉPONSES ? Êtes-vous sûr de vouloir recommencer l'enquête depuis le début ? Veuillez noter que cela effacera TOUTES vos réponses déjà saisies pour cette enquête.
+Vous pouvez revenir à cette enquête à l'avenir pour modifier vos réponses en vous rendant à l'URL de l'enquête et en saisissant le code ci-dessous.
+Vous trouverez ci-dessous une copie en lecture seule de vos réponses à l'enquête. Veuillez la consulter ainsi que les options en bas de page.
+Je certifie que toutes les informations contenues dans le document ci-dessus sont correctes. Je comprends que le fait de cliquer sur "Soumettre" signera électroniquement le formulaire et que signer ce formulaire électroniquement équivaut à signer un document physique.
+Si l'une des informations ci-dessus n'est pas correcte, vous pouvez cliquer sur le bouton "Page précédente" pour revenir en arrière et la corriger.
+Effacer votre/vos signature(s) dans cette enquête ?
+Vous avez apposé votre signature sur une page précédente de cette enquête. Il peut s'agir de votre nom, d'un code PIN et/ou de votre signature. Vous êtes autorisé à revenir à une page précédente de l'enquête, mais si vous le faites, sachez que votre ou vos signatures seront automatiquement effacées, après quoi vous devrez les fournir à nouveau avant de pouvoir répondre à l'enquête. Vous pourrez également modifier vos réponses existantes aux questions de cette enquête. Si cela vous convient, vous pouvez passer à une page antérieure de l'enquête en cliquant sur le bouton ci-dessous.
+Effacer ma (mes) signature(s) et passer à la page précédente
+Annuler
+réinitialiser
+Développer
+Ajouter une signature
+Signature (dessiner la signature avec la souris ou le doigt)
+Enregistrer la signature
+Télécharger un fichier
+Téléchargement de fichiers (pour les utilisateurs qui souhaitent télécharger des fichiers)
+Sélectionnez un fichier puis cliquez sur le bouton "Télécharger le fichier".
+Taille maximale du fichier : 128 Mo
+Charger un fichier
+NOTE : Certains champs sont obligatoires !
+Vos données ont été enregistrées avec succès, mais vous n'avez pas fourni de valeur pour certains champs qui en requièrent une. Veuillez entrer une valeur pour les champs de cette page qui sont énumérés ci-dessous.	Fournissez une valeur pour...
+Ok

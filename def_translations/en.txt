@@ -1,0 +1,59 @@
+Previous Page
+Next Page
+Close Survey
+Submit
+Resize Font
+Download
+Download your survey response (PDF):
+* must provide a value
+Save & Return Later
+Returning?
+Begin where you left off.
+If you have already completed part of the survey, you may continue where you left off. All you need is the return code given to you previously. Click the link below to begin entering your return code and continue the survey.
+Continue the survey
+Your survey responses were saved!
+You have chosen to stop the survey for now and return at a later time to complete it. To return to this survey, you will need both the survey link and your return code. See the instructions below.
+Return Code
+A return code is *required* in order to continue the survey where you left off. Please write down the value listed below.
+The return code will NOT be included in the email below.
+Survey link for returning
+You may bookmark this page to return to the survey, OR you can have the survey link emailed to you by providing your email address below. For security purposes, the return code will NOT be included in the email. If you do not receive the email soon afterward, please check your Junk Email folder.
+Enter email address
+Send Survey Link
+Your email address will not be stored
+Or if you wish, you may continue with this survey again now.
+Continue Survey Now
+'Return Code' needed to return
+Copy or write down the Return Code below. Without it, you will not be able to return and continue this survey. Once you have the code, click Close and follow the other instructions on this page.
+Close
+Email sent!
+The email was successfully sent to 
+Alert
+This field must be a valid email address (like joe@user.com). Please re-enter it now.
+To continue the survey, please enter the RETURN CODE that was auto-generated for you when you left the survey. Please note that the return code is *not* case sensitive.
+Submit your Return Code
+The return code you entered was incorrect. Please try again.
+Alternatively, if you have forgotten your return code or simply wish to start the survey over from the beginning, you may delete all your existing survey responses and start over.
+Start Over
+ERASE YOUR RESPONSES? Are you sure you wish to start the survey over from the beginning? Please note that doing so will erase ALL your responses already entered for this survey.
+You may return to this survey in the future to modify your responses by navigating to the survey URL and entering the code below.
+Displayed below is a read-only copy of your survey responses. Please review it and the options at the bottom.
+I certify that all the information in the document above is correct. I understand that clicking 'Submit' will electronically sign the form and that signing this form electronically is the equivalent of signing a physical document.
+If any information above is not correct, you may click the 'Previous Page' button to go back and correct it.
+Erase your signature(s) in this survey?
+You have provided your signature on an earlier page in this survey. This may include typing your name, a PIN, and/or signing your signature. You are allowed to return to a previous page in the survey, but if you do so, please be advised that your signature(s) will be automatically removed, after which you will need to provide it again before you can complete the survey. You will also be able to modify any of your existing responses to the questions in this survey. If this is okay, you may proceed to an earlier page in the survey by clicking the button below.
+Erase my signature(s) and go to earlier page
+Cancel
+reset
+Expand
+Add signature
+Signature (draw signature with mouse or finger)
+Save signature
+Upload file
+File Upload (for users to upload files)
+Select a file then click the 'Upload File' button
+Max file size: 128 MB
+Upload File
+NOTE: Some fields are required!
+Your data was successfully saved, but you did not provide a value for some fields that require a value. Please enter a value for the fields on this page that are listed below.	Provide a value for...
+Okay

@@ -34,21 +34,21 @@
 				setTimeout(function(){
 					try {
 						var t;
-						for(t in settings['validation']['value']){
-							if(settings['validation']['value'][t] == 'email'){
+						for(t in settings['validation']){
+							if(settings['validation'][t] == 'email'){
 								break;
 							}
 						}
 						
 						var l;
-						for(l in settings['lang']['value']){
-							if(settings['lang']['value'][l] == languages[getCookie('p1000Lang')]){
+						for(l in settings['lang']){
+							if(settings['lang'][l] == languages[getCookie('p1000Lang')]){
 								break;
 							}						
 						}
 						
-						if(settings['error']['value'][t] && settings['error']['value'][t][l]){
-							$('#redcapValidationErrorPopup').html(settings['error']['value'][t][l]);
+						if(settings['error'][t] && settings['error'][t][l]){
+							$('#redcapValidationErrorPopup').html(settings['error'][t][l]);
 						}
 						else{
 							$('#redcapValidationErrorPopup').html('<center><span style="color:red;font-size:50px;">&#x26D4;</span></center>');
@@ -95,21 +95,21 @@
 		try {
 			var curLang = null;
 			var id;
-			for(id in settings['save-return-later-lang']['value']){
-				if(settings['save-return-later-lang']['value'][id] == lang){
+			for(id in settings['save-return-later-lang']){
+				if(settings['save-return-later-lang'][id] == lang){
 					curLang = id;
 					break;
 				}
 			}
 			
-			if($('#return_instructions').length && curLang != null && settings['save-return-page-popup-title']['value'][curLang]){
+			if($('#return_instructions').length && curLang != null && settings['save-return-page-popup-title'][curLang]){
 				//popup 
 				if($('#ui-id-1').is(':visible')){
-					$('#ui-id-1').html(settings['save-return-page-popup-title']['value'][curLang]);
-					$('#codePopupReminderText').html(settings['save-return-page-popup-body']['value'][curLang]);
+					$('#ui-id-1').html(settings['save-return-page-popup-title'][curLang]);
+					$('#codePopupReminderText').html(settings['save-return-page-popup-body'][curLang]);
 					var html = $('#codePopupReminderTextCode').html();
 					html = html.split('<span');
-					$('#codePopupReminderTextCode').html('<b>' + settings['save-return-page-popup-return-code']['value'][curLang] + ':</b> <span' + html[1]);
+					$('#codePopupReminderTextCode').html('<b>' + settings['save-return-page-popup-return-code'][curLang] + ':</b> <span' + html[1]);
 					
 					// translate modal button
 					$('.ui-dialog-buttonpane').find('button').html('&#x2716;');
@@ -118,32 +118,32 @@
 				}
 			
 				//return page-popup-body
-				$('#return_instructions').find('h4').html('<b>' + settings['save-return-page-title']['value'][curLang]  + '</b>');
+				$('#return_instructions').find('h4').html('<b>' + settings['save-return-page-title'][curLang]  + '</b>');
 				
 				if(hasCode == 1){
 					html = $('#return_instructions').find('div').html().split('<div');
-					html[0] = settings['save-return-page-instructions']['value'][curLang];
+					html[0] = settings['save-return-page-instructions'][curLang];
 					
 					html[1] = html[1].split(/<br>/g);
-					html[1][1] = settings['save-return-page-return-code-instructions']['value'][curLang];
+					html[1][1] = settings['save-return-page-return-code-instructions'][curLang];
 					
 					html[1][2] = html[1][2].split('<span');
-					html[1][2][0] = settings['save-return-page-popup-return-code']['value'][curLang];
+					html[1][2][0] = settings['save-return-page-popup-return-code'][curLang];
 					html[1][2] = html[1][2][0] + '<span' + html[1][2][1];
 					
 					html[1] = html[1][0] + '<br>' + html[1][1] + '<br>' + html[1][2] + '<br>' + html[1][3] + '<br>';
 					
 					$('#return_instructions').find('div').html(html[0] + '<div' + html[1] + '<div' + html[2] + '<div' + html[3] + '<div' + html[4]);
-					$('#return_instructions').find('u').eq(0).html(settings['save-return-page-popup-return-code']['value'][curLang]);
-					$('#return_instructions').find('u').eq(1).html(settings['save-return-page-survey-link-title']['value'][curLang]);
+					$('#return_instructions').find('u').eq(0).html(settings['save-return-page-popup-return-code'][curLang]);
+					$('#return_instructions').find('u').eq(1).html(settings['save-return-page-survey-link-title'][curLang]);
 					
 					html = $('#provideEmail').html().split('<br>');
-					$('#provideEmail').html(settings['save-return-page-email-instructions']['value'][curLang] + '<br>' + html[1] + '<br>' + html[2] + '<br>' + html[3]);
+					$('#provideEmail').html(settings['save-return-page-email-instructions'][curLang] + '<br>' + html[1] + '<br>' + html[2] + '<br>' + html[3]);
 					
-					$('#sendLinkBtn').html(settings['save-return-page-email-button']['value'][curLang]);
+					$('#sendLinkBtn').html(settings['save-return-page-email-button'][curLang]);
 					
-					$('#return_continue_form').find('b').eq(0).html(settings['save-return-page-continue-title']['value'][curLang]);
-					$('#return_continue_form').find('button').eq(0).html(settings['save-return-later-continue-button']['value'][curLang]);
+					$('#return_continue_form').find('b').eq(0).html(settings['save-return-page-continue-title'][curLang]);
+					$('#return_continue_form').find('button').eq(0).html(settings['save-return-later-continue-button'][curLang]);
 					
 					$('#return_instructions').find('span').eq(4).html('');
 					$('#return_instructions').find('span').eq(1).html('');
@@ -153,28 +153,28 @@
 					$('#return_instructions').find('span').eq(4).html('');
 				}
 				else{
-					$('#return_instructions').find('div').eq(0).html(settings['save-return-page-instructions']['value'][curLang]);
-					$('#return_instructions').find('div').eq(1).find('u').eq(0).html(settings['save-return-page-survey-link-title']['value'][curLang]);
+					$('#return_instructions').find('div').eq(0).html(settings['save-return-page-instructions'][curLang]);
+					$('#return_instructions').find('div').eq(1).find('u').eq(0).html(settings['save-return-page-survey-link-title'][curLang]);
 					
 					var html = $('#provideEmail').html().split('<br>');
-					html[0] = settings['save-return-page-email-instructions']['value'][curLang];
+					html[0] = settings['save-return-page-email-instructions'][curLang];
 
 					$('#provideEmail').html(html[0] + '<br>' + html[1] + '<br>' + html[2] + '<br>');
-					$('#provideEmail').find('button').eq(0).html(settings['save-return-page-email-button']['value'][curLang]);
+					$('#provideEmail').find('button').eq(0).html(settings['save-return-page-email-button'][curLang]);
 					
-					$('#return_continue_form').find('b').eq(0).html(settings['save-return-page-continue-title']['value'][curLang]);
-					$('#return_continue_form').find('button').eq(0).html(settings['save-return-later-continue-button']['value'][curLang]);
+					$('#return_continue_form').find('b').eq(0).html(settings['save-return-page-continue-title'][curLang]);
+					$('#return_continue_form').find('button').eq(0).html(settings['save-return-later-continue-button'][curLang]);
 				}
 			}
-			else if($('#surveytitle').length && curLang != null && settings['save-return-page-survey-title']['value'][curLang]){
+			else if($('#surveytitle').length && curLang != null && settings['save-return-page-survey-title'][curLang]){
 				//continue page if cookie still set
-				$('#surveytitle').html(settings['save-return-page-survey-title']['value'][curLang]);
-				$('#return_code_form_instructions').html(settings['save-return-page-continue-text']['value'][curLang]);
-				$('#return_code_form').find('button').html(settings['save-return-later-continue-button']['value'][curLang]);
+				$('#surveytitle').html(settings['save-return-page-survey-title'][curLang]);
+				$('#return_code_form_instructions').html(settings['save-return-page-continue-text'][curLang]);
+				$('#return_code_form').find('button').html(settings['save-return-later-continue-button'][curLang]);
 				
 				//start over
-				$('#start_over_form').find('p').html(settings['save-return-page-startover-text']['value'][curLang]);
-				$('#start_over_form').find('input').val(settings['save-return-page-startover-button']['value'][curLang]);
+				$('#start_over_form').find('p').html(settings['save-return-page-startover-text'][curLang]);
+				$('#start_over_form').find('input').val(settings['save-return-page-startover-button'][curLang]);
 			}
 		} catch(err) {
 			console.log('translation error: ' + err);
@@ -327,34 +327,6 @@
 					} else {
 						form_settings = null;
 					}
-					
-					// if (form_settings) {
-						// var mapping = {
-							// "save-return-page-title": {collection: 'save_and_return_saved', setting: 'title'},
-							// "save-return-page-instructions": {collection: 'save_and_return_saved', setting: 'instructions1'},
-							// "save-return-page-popup-return-code": {collection: 'save_and_return_saved', setting: 'return_code'},
-							// "save-return-page-return-code-instructions": {collection: 'save_and_return_saved', setting: 'req_note'},
-							// "save-return-page-survey-link-title": {collection: 'save_and_return_saved', setting: 'heading1'},
-							// "save-return-page-email-instructions": {collection: 'save_and_return_saved', setting: 'instructions2'},
-							// "save-return-page-email-button": {collection: 'save_and_return_saved', setting: 'send_link'},
-							// "save-return-page-continue-title": {collection: 'save_and_return_saved', setting: 'instructions3'},
-							// "save-return-later-continue-button": {collection: 'save_and_return_saved', setting: 'continue'},
-							// "save-return-page-popup-title": {collection: 'save_and_return_modals', setting: 'intro_title'},
-							// "save-return-page-survey-title": {collection: 'survey_settings', setting: 'title'},
-							// "save-return-page-continue-text": {collection: 'save_and_return_returned', setting: 'instructions'},
-							// "save-return-page-startover-text": {collection: 'save_and_return_returned', setting: 'start_over_instructions'},
-							// "save-return-page-startover-button": {collection: 'save_and_return_returned', setting: 'start_over_button'}
-						// };
-						
-						// for (let [name, entry] of Object.entries(mapping)) {
-							// if (form_settings && form_settings[entry.collection] &&  form_settings[entry.collection][entry.setting]) {
-								// settings[name]['value'] = [form_settings[entry.collection][entry.setting]]
-								// console.log('saved setting ' + name + ':', form_settings[entry.collection][entry.setting])
-							// }
-						// }
-					// } else {
-						// form_settings = null;
-					// }
 				}
 				
 				translate();

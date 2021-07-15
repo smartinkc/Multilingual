@@ -18,8 +18,17 @@
 		{"1.8.3": "Translate notes/slider, default validation messages translations, stop action translations, bug fixes"},
 		{"1.10.0": "Added form-specific text translation settings in the Survey Settings page"},
 		{"1.10.1": "Fix bugs that might prevent Survey Settings module values from loading or translation would fail on the surey page"},
-		{"1.11.3": "Added eConsent, basic navigation, and field-specific translation settings"}
+		{"1.11.3": "Added eConsent, basic navigation, and field-specific translation settings"},
+		{"1.11.4": "Survey Settings page will now correctly find the instructions and acknowlegement tinyMCE editors in REDCap 10.2+"},
+		{"1.11.5": "Fixed a bug where question labels with embedded HTML were renderly incorrectly"},
+		{"1.11.6": "Fixed regression where mobile surveys had faulty branching logic errors appear -- html translations now happen sequentially over found text nodes"},
+		{"1.12.0": "Add option to hide language translations at the form level. Added setting for 'Submit' button."},
+		{"1.12.1": "Fixed jQuery Exception in controlText and lang setting issue in getLanguage (multilingual_survey.js)"},
+		{"1.14.0": "Implemented PDF field translations."},
+		{"1.14.1": "Implemented PDF answer translations."}
 	],
+	
+	"framework-version": 5,
 
 	"authors": [
 		{
@@ -38,7 +47,8 @@
 		"redcap_data_entry_form",
 		"redcap_every_page_top",
 		"redcap_survey_complete",
-		"redcap_survey_page"
+		"redcap_survey_page",
+		"redcap_pdf"
 	],
 
 	"links": {
@@ -77,6 +87,12 @@
 			"type": "text",
 			"repeatable": false,
 			"default": "languages"
+		},
+		{
+			"key": "translate_pdfs_instruments",
+			"name": "Translate PDFs on a per-instrument basis",
+			"required": false,
+			"type": "checkbox"
 		},
 		{
 			"key": "font-color",
@@ -165,6 +181,13 @@
 			"type": "checkbox",
 			"repeatable": false,
 			"default": ""
+		},
+		{
+			"key": "prevent-check-mark-submit",
+			"name": "Prevent symbolic translation for survey 'Submit' button",
+			"required": false,
+			"type": "checkbox",
+			"repeatable": false
 		},		
 		{
 			"key": "multilingual-project-encoding",

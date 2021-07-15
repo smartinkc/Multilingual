@@ -2,6 +2,9 @@ var Multilingual = {}
 Multilingual.ajax_url = 'REDCAP_AJAX_URL';
 Multilingual.langVar = 'REDCAP_LANGUAGE_VARIABLE';
 Multilingual.languages = {1: 'en', 2: 'es'};
+Multilingual.settings_to_save = {};
+Multilingual.previous_language = "";
+
 Multilingual.collection_names = [
 	"basic_settings",
 	"download_response",
@@ -12,25 +15,6 @@ Multilingual.collection_names = [
 	"econsent",
 	"field_level"
 ];
-
-Multilingual.getSettings = function() {
-	var data = {};
-	data['todo'] = 3;
-	data['project_id'] = pid;
-	var json = encodeURIComponent(JSON.stringify(data));
-
-	$.ajax({
-		url: Multilingual.ajax_url,
-		type: 'POST',
-		data: 'data=' + json,
-		success: function (r) {
-			settings = r;
-		},
-		error: function(jqXHR, textStatus, errorThrown) {
-		   console.log(textStatus, errorThrown);
-		}
-	});
-}
 
 Multilingual.getLanguages = function() {
 	var data = {};
@@ -45,7 +29,7 @@ Multilingual.getLanguages = function() {
 		data: 'data=' + json,
 		success: function (r) {
 			Multilingual.languages = r;
-			Multilingual.addSurveySettingsLanguageRow(Multilingual.languages);
+			Multilingual.addSurveySettingsLanguageRows(Multilingual.languages);
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
 			console.log(textStatus, errorThrown);
@@ -72,6 +56,8 @@ Multilingual.htmlDecode = function(input) {
 
 //
 Multilingual.onLanguageSelect = function() {
+	Multilingual.cacheSurveySettings(Multilingual.previous_language)
+	
 	var selectVal = $("select#ml-mod-language").val();
 	if (selectVal == "") {
 		this.disableTextSettings();
@@ -83,6 +69,8 @@ Multilingual.onLanguageSelect = function() {
 		this.selectedLanguage = this.languages[lang_index];
 		this.loadSurveySettings();
 	}
+	
+	Multilingual.previous_language = this.selectedLanguage;
 }
 
 Multilingual.addBasicSurveySection = function () {
@@ -93,14 +81,25 @@ Multilingual.addBasicSurveySection = function () {
 		<td valign='top' style='padding-left:15px;padding-bottom:5px;'></td>\
 	</tr>")
 	
-	// Survery Page Texts <tr>
+	// Language Enable/Disable <tr>
 	var tr1 = blank_tr.clone()
-	$(tr1).find('td:nth-child(2)').append("<b>General Survey Text Translations</b>")
+	$(tr1).find('td:nth-child(2)').append("<b>Hide language</b>")
 	$(tr1).find('td:nth-child(3)').append("\
-	<span style='display:block;'>Text for the buttons used to navigate back/forth through survey pages:</span>\
+	<label style='display:block;'>Hide this language for this form:\
+	<input type='checkbox' id='multilingual_module_hide_language'>\
+	</label>\
+	<br>\
+	");
+	
+	// Survery Page Texts <tr>
+	var tr2 = blank_tr.clone()
+	$(tr2).find('td:nth-child(2)').append("<b>General Survey Text Translations</b>")
+	$(tr2).find('td:nth-child(3)').append("\
+	<span style='display:block;'>Text for the buttons used to navigate surveys:</span>\
 	<div><input data-collection='basic_settings' data-setting='previous' class='ml-text-setting' value='Previous Page' style='width:80%'></div>\
 	<div><input data-collection='basic_settings' data-setting='next' class='ml-text-setting' value='Next Page' style='width:80%'></div>\
 	<div><input data-collection='basic_settings' data-setting='close' class='ml-text-setting' value='Close Survey' style='width:80%'></div>\
+	<div><input data-collection='basic_settings' data-setting='submit' class='ml-text-setting' value='Submit' style='width:80%'></div>\
 	<br>\
 	<span style='display:block;'>Text that appears above [+] and [-] buttons which resize survey text:</span>\
 	<div><input data-collection='basic_settings' data-setting='resize_font' class='ml-text-setting' value='Resize Font' style='width:80%'></div>\
@@ -108,7 +107,7 @@ Multilingual.addBasicSurveySection = function () {
 	");
 	
 	// insert these table rows into DOM
-	$("[name='instructions']").closest("tr").after(tr1);
+	$("[name='instructions']").closest("tr").after(tr1).after(tr2);
 }
 
 Multilingual.addDownloadResponsesSection = function () {
@@ -135,7 +134,7 @@ Multilingual.addDownloadResponsesSection = function () {
 	$("[name='end_of_survey_pdf_download']").closest("tr").after(tr1);
 }
 
-Multilingual.addSurveySettingsLanguageRow = function(languages) {
+Multilingual.addSurveySettingsLanguageRows = function(languages) {
 	// make language select element
 	var langSelect = "<select id='ml-mod-language' name='ml-mod-language' class='x-form-text x-form-field' onchange='Multilingual.onLanguageSelect();'>"
 	langSelect += "<option value=''></option>"
@@ -144,14 +143,41 @@ Multilingual.addSurveySettingsLanguageRow = function(languages) {
 	});
 	langSelect += "</select>";
 	
+	var langSelect2 = "<select id='ml-translate-language' name='ml-translate-language' class='x-form-text x-form-field mx-3'>\
+		<option value=''></option>\
+		<option value='en'>English</option>\
+		<option value='de'>German</option>\
+		<option value='es'>Spanish</option>\
+		<option value='fr'>French</option>\
+		<option value='it'>Italian</option>\
+		<option value='ja'>Japanese</option>\
+		<option value='nl'>Deutsch</option>\
+		<option value='pl'>Polish</option>\
+		<option value='pt'>Portuguese</option>\
+		<option value='pt-br'>Portuguese (Brazil)</option>\
+		<option value='ru'>Russian</option>\
+		<option value='zh-CN'>Chinese (Simplified)</option>\
+	</select>";
+	
 	var langLabel = "<label class='ml-mod' for='ml-mod-language'>Translation Language</label>"
 	
 	var emIcon = "<i class='fas fa-cube fs14' style='position:relative;top:1px;margin-right:1px;margin-left:1px;'></i>";
 	
-	var ssRow = "<tr><td colspan=3><div class='header' style='padding:7px 10px 5px;margin:-5px -7px 0px; background-color: #fb8;>'";
+	var ssRow = "<tr><td colspan=3><div class='header' style='padding: 7px 10px 5px;margin: -5px -7px 0px; background-color: #fb8;'>";
 	ssRow += "<span>" + emIcon + " Multilingual Module - Select a translation language to change text settings</span>" + langLabel + langSelect
 	ssRow += "</div></td></tr>";
 	
+	var ssRow2 = "<tr>\
+		<td colspan=3>\
+			<div class='header' style='padding: 7px 10px 5px;margin: -5px -7px 0px; background-color: #fb8;'>\
+				Populate with translations from language: \
+				" + langSelect2 + "\
+				<button type='button' class='btn btn-primaryrc btn-xs' id='translateSettings'>Translate Survey Settings</button>\
+			</div>\
+		</td>\
+	</tr>";
+	
+	$("#survey_settings tbody tr:first").after(ssRow2);
 	$("#survey_settings tbody tr:first").after(ssRow);
 }
 
@@ -412,44 +438,51 @@ Multilingual.disableTextSettings = function() {
 	$("input[name='title']").attr('disabled', true)
 	$("input[name='title']").css('background-color', "#ccc")
 	// $("textarea[name='response_limit_custom_text']").attr('disabled', true)
-	tinyMCE.editors["instructions"].getBody().setAttribute('contenteditable', false)
-	tinyMCE.editors["instructions"].getBody().style.backgroundColor = "#ccc"
-	tinyMCE.editors["acknowledgement"].getBody().setAttribute('contenteditable', false)
-	tinyMCE.editors["acknowledgement"].getBody().style.backgroundColor = "#ccc"
+	Multilingual.instructions_mce.getBody().setAttribute('contenteditable', false)
+	Multilingual.instructions_mce.getBody().style.backgroundColor = "#ccc"
+	Multilingual.acknowledgement_mce.getBody().setAttribute('contenteditable', false)
+	Multilingual.acknowledgement_mce.getBody().style.backgroundColor = "#ccc"
 	
 	// disable save and return later added settings
 	$("textarea.ml-text-setting, input.ml-text-setting").attr('disabled', true)
+	
+	// disable multilingual_module_hide_language checkbox too
+	$("#multilingual_module_hide_language").attr('disabled', true);
 }
 
 Multilingual.enableTextSettings = function() {
 	$("input[name='title']").attr('disabled', false)
 	$("input[name='title']").css('background-color', "#fff")
 	// $("textarea[name='response_limit_custom_text']").attr('disabled', false)
-	tinyMCE.editors["instructions"].getBody().setAttribute('contenteditable', true);
-	tinyMCE.editors["instructions"].getBody().style.backgroundColor = "#fff"
-	tinyMCE.editors["acknowledgement"].getBody().setAttribute('contenteditable', true);
-	tinyMCE.editors["acknowledgement"].getBody().style.backgroundColor = "#fff"
+	Multilingual.instructions_mce.getBody().setAttribute('contenteditable', true);
+	Multilingual.instructions_mce.getBody().style.backgroundColor = "#fff"
+	Multilingual.acknowledgement_mce.getBody().setAttribute('contenteditable', true);
+	Multilingual.acknowledgement_mce.getBody().style.backgroundColor = "#fff"
 	
 	// disable save and return later added settings
 	$("textarea.ml-text-setting, input.ml-text-setting").attr('disabled', null)
+	
+	// enable multilingual_module_hide_language checkbox too
+	$("#multilingual_module_hide_language").attr('disabled', false);
 }
 
-Multilingual.saveSurveySettings = function() {
-	if (!this.selectedLanguage)		// only save module settings if translation language selected
-		return false;
+Multilingual.cacheSurveySettings = function(language) {
+	// add current survey setting translations to settings_to_save array
+	if (typeof(language) != 'string' || language == "") {		// only save module settings if translation language selected
+		return;
+	}
 	
 	var data = {}
-	data.action = 'SAVE_SURVEY_SETTINGS'
 	data.instrument = Multilingual.getVariable('page')
-	data.language = this.selectedLanguage
+	data.language = language
 	data.collections = {}
 	
 	// build survey_settings collection of settings
 	var survey_settings = {}
 	survey_settings.title = $("input[name=title]").val()
-	survey_settings.instructions = tinymce.editors.instructions.getContent()
+	survey_settings.instructions = Multilingual.instructions_mce.getContent()
 	// survey_settings.response_limit = $("textarea[name=response_limit_custom_text]").val()
-	survey_settings.acknowledgement = tinymce.editors.acknowledgement.getContent()
+	survey_settings.acknowledgement = Multilingual.acknowledgement_mce.getContent()
 	data.collections.survey_settings = survey_settings
 	
 	// add 'Save and Return Later' setting collections
@@ -459,6 +492,30 @@ Multilingual.saveSurveySettings = function() {
 			data.collections[coll_name][$(setting).attr('data-setting')] = $(setting).val()
 		})
 	})
+	
+	// remember hide option setting
+	if ($("#multilingual_module_hide_language").is(':checked')) {
+		data.collections.basic_settings.multilingual_module_hide_language = '1';
+	} else {
+		data.collections.basic_settings.multilingual_module_hide_language = null;
+	}
+	
+	// remove previously cached settings for this language
+	Multilingual.settings_to_save[language] = data;
+}
+
+Multilingual.saveSurveySettings = function() {
+	// cache current settings
+	if (this.selectedLanguage != "") {
+		this.cacheSurveySettings(this.selectedLanguage);
+	}
+	if (Object.keys(Multilingual.settings_to_save).length < 1) {		// only save module settings if any have been cached
+		return false;
+	}
+	
+	var data = {}
+	data.action = 'SAVE_SURVEY_SETTINGS'
+	data.payload = Multilingual.settings_to_save;
 	
 	var json = encodeURIComponent(JSON.stringify(data));
 	
@@ -481,9 +538,9 @@ Multilingual.getSurveySettings = function() {
 	Multilingual.defaults = {}
 	Multilingual.defaults.survey_settings = {}
 	Multilingual.defaults.survey_settings.title = $("input[name=title]").val();
-	Multilingual.defaults.survey_settings.instructions = tinymce.editors.instructions.getContent();
+	Multilingual.defaults.survey_settings.instructions = Multilingual.instructions_mce.getContent();
 	// Multilingual.defaults.survey_settings.response_limit = $("textarea[name=response_limit_custom_text]").val();
-	Multilingual.defaults.survey_settings.acknowledgement = tinymce.editors.acknowledgement.getContent();
+	Multilingual.defaults.survey_settings.acknowledgement = Multilingual.acknowledgement_mce.getContent();
 	
 	// store default 'Save and Return Later' settings as well
 	Multilingual.collection_names.forEach(function(coll_name, i) {
@@ -527,18 +584,22 @@ Multilingual.getSurveySettings = function() {
 
 Multilingual.loadSurveySettings = function() {
 	var collections = this.defaults
-	if (this.selectedLanguage && typeof(this.settings) !== 'undefined') {
+	
+	// check cached settings first, if none available, check this.settings
+	var cached_settings = this.settings_to_save[this.selectedLanguage];
+	if (cached_settings) {
+		collections = cached_settings.collections;
+	} else if (this.selectedLanguage && typeof(this.settings) !== 'undefined') {
 		if (typeof(this.settings[this.selectedLanguage]) !== 'undefined') {
 			collections = this.settings[this.selectedLanguage]
 		}
 	}
-		
 	
 	// handles setting input values for settings that exist in every REDCap survey
 	$("input[name='title']").val(collections.survey_settings.title)
-	tinyMCE.editors.instructions.setContent(collections.survey_settings.instructions);
+	Multilingual.instructions_mce.setContent(collections.survey_settings.instructions);
 	// $("textarea[name='response_limit_custom_text']").val(collections.survey_settings.response_limit)
-	tinyMCE.editors.acknowledgement.setContent(collections.survey_settings.acknowledgement);
+	Multilingual.acknowledgement_mce.setContent(collections.survey_settings.acknowledgement);
 	
 	// handles all settings that are added by ML module itself
 	$(".ml-text-setting[data-collection][data-setting]").each(function(i, setting) {
@@ -550,22 +611,57 @@ Multilingual.loadSurveySettings = function() {
 			}
 		}
 	})
+	
+	// update multilingual_module_hide_language checkbox
+	if (collections.basic_settings.multilingual_module_hide_language == '1') {
+		$("#multilingual_module_hide_language").prop('checked', true)
+	} else {
+		$("#multilingual_module_hide_language").prop('checked', false)
+	}
+	
 }
 
-Multilingual.getSettings();
+Multilingual.translateSettings = function() {
+	// get selected language from #ml-translate-language
+	var language_iso_code = $("select#ml-translate-language").val();
+	if (!language_iso_code) {
+		return;
+	}
+	
+	$.ajax({
+		url: Multilingual.ajax_url + '&translate_settings_iso_code=' + language_iso_code,
+		complete: function(response) {
+			Multilingual.response = response;
+			var translations = response.responseJSON.translations;
+			if (response.error) {
+				alert(response.error);
+			} else if (!Array.isArray(translations)) {
+				alert("The Multilingual module wasn't able to retrieve a valid translations table!");
+			} else if (translations.length < 1) {
+				alert("The Multilingual module was able to retrieve translations, but the table is empty.");
+			} else {
+				for (var i = 0; i < translations.length; i++) {
+					$('.ml-text-setting:eq(' + i + ')').val(translations[i]);
+				}
+			}
+		}
+	});
+}
 
 $( document ).ready(function() {
 	Multilingual.getLanguages();
+	Multilingual.instructions_mce = tinyMCE.get('mce_0');
+	Multilingual.acknowledgement_mce = tinyMCE.get('mce_2');
 	
 	// disable text settings when both tinyMCE editors are init'ed
-	tinyMCE.editors["instructions"].on('init', function(e) {
+	Multilingual.instructions_mce.on('init', function(e) {
 		Multilingual.instructionsEditorReady = true;
 		if (Multilingual.acknowledgementEditorReady && Multilingual.instructionsEditorReady) {
 			Multilingual.disableTextSettings();
 			Multilingual.getSurveySettings();
 		}
 	})
-	tinyMCE.editors["acknowledgement"].on('init', function(e) {
+	Multilingual.acknowledgement_mce.on('init', function(e) {
 		Multilingual.acknowledgementEditorReady = true;
 		if (Multilingual.acknowledgementEditorReady && Multilingual.instructionsEditorReady) {
 			Multilingual.disableTextSettings();
@@ -643,6 +739,10 @@ $( document ).ready(function() {
 	})
 	$("[name='show_required_field_text']").trigger('change')
 	
+	// only show 'must provide value' translation option when feature enabled
+	$('body').on('click', "button#translateSettings", function(e) {
+		Multilingual.translateSettings();
+	})
 })
 
 // add Espanol to all added survey text translation settings

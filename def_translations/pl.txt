@@ -1,0 +1,59 @@
+Poprzednia strona
+Następna strona
+Zamknij ankietę
+Prześlij
+Zmień rozmiar czcionki
+Pobierz
+Pobierz swoją odpowiedź na ankietę (PDF):
+* musi zawierać wartość
+Zapisz i wróć później
+Wracacie Państwo?
+Proszę zacząć od miejsca, w którym Państwo skończyli.
+Jeżeli wypełnili już Państwo część ankiety, mogą Państwo kontynuować od miejsca, w którym się Państwo zatrzymali. Potrzebny jest tylko podany wcześniej kod zwrotny. Proszę kliknąć na poniższy link, aby rozpocząć wprowadzanie kodu zwrotnego i kontynuować ankietę.
+Kontynuuj ankietę
+Państwa odpowiedzi zostały zapisane!
+Zdecydował się Pan przerwać ankietę na razie i powrócić do niej później, aby ją dokończyć. Aby powrócić do tej ankiety, potrzebuje Pan(i) zarówno link do ankiety, jak i swój kod zwrotny. Proszę zapoznać się z poniższą instrukcją.
+Kod powrotu
+Kod powrotu jest *niezbędny*, aby kontynuować ankietę w miejscu, w którym ją Państwo przerwali. Proszę wpisać podaną poniżej wartość.
+Kod zwrotny NIE będzie zawarty w poniższym e-mailu.
+Link do ankiety dla powrotu
+Aby powrócić do ankiety, może Pan(i) zapisać tę stronę w zakładce LUB może Pan(i) otrzymać link do ankiety pocztą elektroniczną, podając poniżej swój adres e-mail. Ze względów bezpieczeństwa, kod zwrotny NIE będzie zawarty w e-mailu. Jeśli nie otrzymają Państwo e-maila, proszę sprawdzić folder Junk Email.
+Proszę wpisać adres e-mail
+Wyślij link do ankiety
+Państwa adres e-mail nie będzie przechowywany
+Lub jeśli Pan chce, może Pan teraz kontynuować tę ankietę.
+Kontynuuj badanie teraz
+Kod zwrotny" potrzebny do zwrotu
+Proszę skopiować lub zapisać poniższy kod zwrotny. Bez niego nie będą mogli Państwo powrócić i kontynuować tej ankiety. Po otrzymaniu kodu proszę kliknąć "Zamknij" i postępować zgodnie z pozostałymi instrukcjami na tej stronie.
+Zamknij
+Email został wysłany!
+Email został pomyślnie wysłany do 
+Alert
+W tym polu musi znajdować się prawidłowy adres e-mail (np. joe@user.com). Proszę teraz wpisać go ponownie.
+Aby kontynuować ankietę, proszę wpisać KOD POWROTNY, który został wygenerowany automatycznie po opuszczeniu ankiety. Proszę zwrócić uwagę, że w kodzie zwrotnym *nie* rozróżnia się wielkości liter.
+Proszę podać swój kod powrotu
+Wprowadzony przez Pana/Panią kod zwrotu jest nieprawidłowy. Proszę spróbować ponownie.
+Alternatywnie, jeśli zapomniał Pan/Pani kodu zwrotnego lub po prostu chce Pan/Pani zacząć ankietę od początku, może Pan/Pani skasować wszystkie dotychczasowe odpowiedzi i zacząć od nowa.
+Zacznij od nowa
+SKASOWAĆ SWOJE ODPOWIEDZI? Czy na pewno chce Pan(i) rozpocząć ankietę od początku? Proszę pamiętać, że w ten sposób zostaną skasowane WSZYSTKIE odpowiedzi, które zostały już wprowadzone do tej ankiety.
+Może Pan(i) powrócić do tej ankiety w przyszłości, aby zmienić swoje odpowiedzi, wchodząc na adres URL ankiety i wpisując poniższy kod.
+Poniżej znajduje się kopia tylko do odczytu Pana(i) odpowiedzi z ankiety. Proszę zapoznać się z nią i z opcjami na dole.
+Oświadczam, że wszystkie informacje w powyższym dokumencie są poprawne. Rozumiem, że kliknięcie "Wyślij" spowoduje elektroniczne podpisanie formularza i że podpisanie tego formularza elektronicznie jest równoznaczne z podpisaniem fizycznego dokumentu.
+Jeżeli jakakolwiek informacja powyżej nie jest poprawna, mogą Państwo kliknąć przycisk "Poprzednia strona", aby wrócić i ją poprawić.
+Usunąć swój podpis(y) w tej ankiecie?
+Na wcześniejszej stronie w tej ankiecie złożył Pan swój podpis. Może to być wpisanie nazwiska, kodu PIN i/lub złożenie podpisu. Może Pan(i) powrócić do poprzedniej strony ankiety, ale jeśli Pan(i) to zrobi, proszę pamiętać, że Pana(i) podpis(y) zostanie(ą) automatycznie usunięty(e), po czym będzie Pan(i) musiał(a) ponownie go(ą) złożyć, aby móc dokończyć ankietę. Będzie Pan mógł również zmienić wszystkie swoje dotychczasowe odpowiedzi na pytania w tej ankiecie. Jeśli to jest w porządku, może Pan(i) przejść do wcześniejszej strony ankiety, klikając na poniższy przycisk.
+Usunąć mój podpis(y) i przejść do wcześniejszej strony
+Anuluj
+resetowanie
+Rozwiń
+Dodaj podpis
+Podpis (narysuj podpis za pomocą myszki lub palca)
+Zapisz podpis
+Prześlij plik
+Przesyłanie plików (dla użytkowników do przesyłania plików)
+Proszę wybrać plik, a następnie kliknąć na przycisk "Prześlij plik"
+Maksymalna wielkość pliku: 128 MB
+Prześlij plik
+UWAGA: Niektóre pola są wymagane!
+Państwa dane zostały pomyślnie zapisane, ale nie podali Państwo wartości dla niektórych pól, które wymagają wartości. Proszę podać wartość dla pól na tej stronie, które są wymienione poniżej.	Proszę podać wartość dla...
+Okay

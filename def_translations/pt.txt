@@ -1,0 +1,59 @@
+Página Anterior
+Página seguinte
+Inquérito de Fecho
+Submeter
+Redimensionar a fonte
+Descarregar
+Descarregue a sua resposta ao inquérito (PDF):
+* deve fornecer um valor
+Salvar & Devolver Mais Tarde
+A regressar?
+Comece de onde parou.
+Se já completou parte da pesquisa, pode continuar de onde parou. Tudo o que você precisa é o código de retorno que lhe foi dado anteriormente. Clique no link abaixo para começar a inserir o seu código de retorno e continuar o inquérito.
+Continuar o inquérito
+As suas respostas ao inquérito foram salvas!
+Você optou por parar o inquérito por agora e regressar mais tarde para o completar. Para voltar a este inquérito, vai precisar tanto do link do inquérito como do seu código de retorno. Veja as instruções abaixo.
+Código de retorno
+Um código de retorno é *necessário* a fim de continuar o inquérito onde parou. Por favor escreva o valor listado abaixo.
+O código de retorno NÃO será incluído no e-mail abaixo.
+Link de retorno do questionário
+Pode marcar esta página para voltar ao inquérito, OU pode ter o link do inquérito enviado por e-mail, fornecendo o seu endereço de e-mail abaixo. Por razões de segurança, o código de retorno NÃO será incluído no e-mail. Se não receber o email logo a seguir, por favor verifique a sua pasta de lixo electrónico.
+Introduza o seu endereço de correio electrónico
+Enviar link do inquérito
+O seu endereço de e-mail não será armazenado
+Ou se desejar, pode continuar com este inquérito novamente agora.
+Continuar o Inquérito Agora
+Código de Retorno' necessário para retornar
+Copie ou anote o Código de Retorno abaixo. Sem ele, não poderá regressar e continuar este inquérito. Assim que tiver o código, clique em Fechar e siga as outras instruções nesta página.
+Feche
+E-mail enviado!
+O e-mail foi enviado com sucesso para 
+Alerta
+Este campo deve ser um endereço de e-mail válido (como joe@user.com). Por favor, introduza-o novamente agora.
+Para continuar o inquérito, por favor introduza o CÓDIGO DE VOLTA que foi gerado automaticamente para si quando deixou o inquérito. Por favor, note que o código de retorno é *não* sensível a maiúsculas e minúsculas.
+Submeta o seu Código de Regresso
+O código de retorno que introduziu estava incorrecto. Por favor tente novamente.
+Alternativamente, se se tiver esquecido do seu código de retorno ou se simplesmente desejar começar o inquérito novamente desde o início, pode apagar todas as suas respostas ao inquérito existente e começar de novo.
+Começar de novo
+APAGAR AS SUAS RESPOSTAS? Tem a certeza de que deseja começar o inquérito desde o início? Por favor note que ao fazê-lo irá apagar TODAS as suas respostas já inseridas para este inquérito.
+Pode voltar a este inquérito no futuro para modificar as suas respostas, navegando para o URL do inquérito e introduzindo o código abaixo.
+A seguir é exibida uma cópia somente leitura das suas respostas ao questionário. Por favor, reveja-a e as opções na parte inferior.
+Eu certifico que todas as informações no documento acima estão correctas. Eu entendo que clicando em 'Enviar' assinará electronicamente o formulário e que assinar este formulário electronicamente é o equivalente a assinar um documento físico.
+Se qualquer informação acima não estiver correcta, pode clicar no botão 'Página Anterior' para voltar atrás e corrigi-la.
+Apagar a(s) sua(s) assinatura(s) neste inquérito?
+Você forneceu a sua assinatura numa página anterior desta pesquisa. Isto pode incluir digitar o seu nome, um PIN, e/ou assinar a sua assinatura. Está autorizado a voltar a uma página anterior do inquérito, mas se o fizer, por favor seja avisado que a(s) sua(s) assinatura(s) será(ão) automaticamente removida(s), após o que terá de a fornecer novamente antes de poder completar o inquérito. Também poderá modificar qualquer uma das suas respostas existentes às perguntas deste inquérito. Se não houver problema, pode prosseguir para uma página anterior do inquérito clicando no botão abaixo.
+Apague a minha assinatura(s) e vá para a página anterior
+Cancelar
+reinicialização
+Expandir
+Adicionar assinatura
+Assinatura (desenhe a assinatura com o rato ou o dedo)
+Guardar assinatura
+Carregar ficheiro
+Upload de ficheiros (para os utilizadores fazerem upload de ficheiros)
+Seleccione um ficheiro e clique no botão 'Carregar ficheiro'.
+Tamanho máximo do ficheiro: 128 MB
+Carregar ficheiro
+NOTA: Alguns campos são obrigatórios!
+Os seus dados foram guardados com sucesso, mas você não forneceu um valor para alguns campos que requerem um valor. Por favor introduza um valor para os campos desta página que estão listados abaixo.	Forneça um valor para...
+Está bem
