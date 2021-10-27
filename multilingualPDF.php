@@ -96,7 +96,8 @@
 	$pdfFile = explode('// Render the PDF', $pdfFile);
 
 	$t = explode('// If a survey response, get record, event, form instance', $pdfFile[0]);
-	$newFile = $t[0];
+	$newFile = "<?php";
+	$newFile .= $t[0];
 	$newFile .= '$project_encoding = "' . $pdf_encoding . '";'. "\r\n";
 	$newFile .= $t[1];
 	$newFile .= '$app_title = "' . $pdf_title . '";' . "\r\n";
@@ -113,6 +114,7 @@
 	
 	$newFile .= "// Render the PDF\r\n";
 	$newFile .= $pdfFile[1] . "\r\n";
+	$newFile .= "?>\r\n";
 	
 	//delete files
 	$newFile .= "unlink('".APP_PATH_DOCROOT."PDF".DS."index_multilingual_$random.php"."');\r\n";
