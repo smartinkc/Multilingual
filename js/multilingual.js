@@ -103,6 +103,23 @@
 		});
 	}
 
+	function addMustProvideValue(html, translation, tag)
+	{
+		if(settings['keep-must-provide-value']['value'])
+		{
+			// if html element not null.
+			if(html.length <= 0)
+				return translation;
+			
+			var requiredElement = html.find(tag);
+			
+			// if we found the must provide value tag then we need to copy it.
+			if(requiredElement.length)
+				translation += requiredElement.prop("outerHTML");
+		}
+		return translation;
+	}
+
 	//specific functions
 	function translate(){
 		if(langReady == 1 && !settings['empty']){
@@ -143,7 +160,8 @@
 						});
 						matrixProcessed[translations['questions'][id]['matrix']] = true;
 					}
-					$('#' + id + '-tr').children().children().children().children().children().children().children().children().children().children('td:first').html(translations['questions'][id]['text']);
+					var translation = addMustProvideValue($('#' + id + '-tr').children().children().children().children().children().children().children().children().children().children('td:first'), translations['questions'][id]['text'], ".requiredlabelmatrix");
+					$('#' + id + '-tr').children().children().children().children().children().children().children().children().children().children('td:first').html(translation);
 				}
 				else if(translations['questions'][id]['type'] == 'descriptive'){
 					//var tmp = $('#' + id + '-tr').children('td:first').html().split(/<(.+)/);
@@ -151,8 +169,8 @@
 					$('#' + id + '-tr').children('td:first').html(translations['questions'][id]['text']);
 				}
 				else{
-					$('#' + id + '-tr').children().children().children().children().children().children('td:first').html(translations['questions'][id]['text']);
-					//$('#label-' + id).html(translations['questions'][id]['text']);
+					var translation = addMustProvideValue($('#' + id + '-tr').children().children().children().children().children().children('td:first'), translations['questions'][id]['text'], ".requiredlabel");
+					$('#' + id + '-tr').children().children().children().children().children().children('td:first').html(translation);
 				}
 			}
 
