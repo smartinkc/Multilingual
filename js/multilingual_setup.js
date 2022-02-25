@@ -250,7 +250,7 @@
 			display += '</table>';
 			
 			//answers
-			if(r[""] != ""){
+			if(r != null){
 				var id2;
 				display += '<p><span style="color:blue;">Choices</span><p><table>';
 				for(id in languages){
@@ -324,7 +324,7 @@
 		
 		//answers
 		var id;
-		if(r[""] != ""){
+		if(r != null){
 			var id2;
 			display += '<p><span style="color:blue;">Answers</span><p><table>';
 			for(id in languages){
