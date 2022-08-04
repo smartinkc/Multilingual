@@ -8,14 +8,41 @@ use REDCap;
 
 class Multilingual extends AbstractExternalModule
 {
+	public $translate_answer_field_types = [
+		"select",
+		"radio",
+		"checkbox",
+		"yesno",
+		"truefalse",
+		"slider"
+	];
+	
 	function redcap_survey_page($project_id, $record, $instrument, $event_id, $group_id, $survey_hash, $response_id, $repeat_instance){
 		$api_endpoint = $this->getProjectSetting('use-api-endpoint', $project_id);
-		// Update and add multilingual_survey.js
-		echo '<script type="text/javascript">' . str_replace('REDCAP_PDF_URL', ($this->getProjectSetting('multilingual-econsent', $project_id) ? $this->getUrl("multilingualPDF.php", true, ($api_endpoint == true ? true : false)) : 'false') . '&id=' . $record . '&form=' . $instrument . '&event_id=' . $event_id . '&instance=' . $repeat_instance, str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true, ($api_endpoint == true ? true : false)), file_get_contents($this->getModulePath() . 'js/multilingual_survey.js'))))) . '</script>';
+		
+		// add multilingual_survey.js after making text replacements
+		$redcap_survey_javascript = file_get_contents($this->getModulePath() . 'js/multilingual_survey.js');
+		$redcap_survey_javascript = str_replace('REDCAP_PDF_URL', ($this->getProjectSetting('multilingual-econsent', $project_id) ? $this->getUrl("multilingualPDF.php", true, ($api_endpoint == true ? true : false)) : 'false') . '&id=' . $record . '&form=' . $instrument . '&event_id=' . $event_id . '&instance=' . $repeat_instance, $redcap_survey_javascript);
+		$redcap_survey_javascript = str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, $redcap_survey_javascript);
+		$redcap_survey_javascript = str_replace('REDCAP_INSTRUMENT_NAME', $instrument, $redcap_survey_javascript);
+		$redcap_survey_javascript = str_replace('MULTILINGUAL_RECORD_ID', $record, $redcap_survey_javascript);
+		$redcap_survey_javascript = str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), $redcap_survey_javascript);
+		$redcap_survey_javascript = str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true, ($api_endpoint == true ? true : false)), $redcap_survey_javascript);
+		$redcap_survey_javascript = str_replace('MULTILINGUAL_LANGUAGE_SELECTED_URL', $this->getUrl('languageSelected.php'), $redcap_survey_javascript);
+		$redcap_survey_javascript = str_replace('MULTILINGUAL_SURVEY_EVENT', $event_id, $redcap_survey_javascript);
+		
+		// see if pdf translation is configured or not -- set variable in multilingual_survey.js
+		if ($this->getProjectSetting("translate_pdfs_instruments")) {
+			$redcap_survey_javascript = str_replace('MULTILINGUAL_PDF_TRANSLATION_ENABLED', 'true', $redcap_survey_javascript);
+		} else {
+			$redcap_survey_javascript = str_replace('MULTILINGUAL_PDF_TRANSLATION_ENABLED', 'false', $redcap_survey_javascript);
+		}
+		
+		echo "<script type='text/javascript'>$redcap_survey_javascript</script>"; 
 		echo '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css', true, $api_endpoint == true) . '">';
 	}
 
-	function redcap_survey_complete($project_id, $record, $instrument, $event_id, $group_id, $survey_hash, $response_id, $repeat_instance){
+	function redcap_survey_complete($project_id, $record, $instrument, $event_id, $group_id = NULL, $survey_hash, $response_id = NULL, $repeat_instance){
 		$api_endpoint = $this->getProjectSetting('use-api-endpoint', $project_id);
 		// Update and add multilingual_survey_complete
 		echo '<script type="text/javascript">' . str_replace('REDCAP_PDF_URL', ($this->getProjectSetting('multilingual-econsent', $project_id) ? $this->getUrl("multilingualPDF.php", true, ($api_endpoint == true ? true : false)) : 'false') . '&id=' . $record . '&form=' . $instrument . '&event_id=' . $event_id . '&instance=' . $repeat_instance , str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true, ($api_endpoint == true ? true : false)), file_get_contents($this->getModulePath() . 'js/multilingual_survey_complete.js')))) . '</script>';
@@ -25,9 +52,36 @@ class Multilingual extends AbstractExternalModule
 		echo '<script type="text/javascript">' . str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true), file_get_contents($this->getModulePath() . 'js/multilingual.js')))) . '</script>';
 		echo '<link rel="stylesheet" type="text/css" href="' . $this->getUrl('css/multilingual.css') . '">';
 	}
+	
+	function redcap_pdf($project_id, $metadata, $data, $instrument, $record, $event_id, $instance) {
+		// delay execution of this module to allow multi-consent-signature module to do it's thing
+		if ($this->delayModuleExecution()) {
+			return;
+		}
+		
+		// get which languages were selected for which instruments by the user as they were taking surveys
+		$user_langs = $this->getUserSelectedLanguages($record);
+		
+		if (empty($user_langs)) {
+			// user never selected a lang, do no translations
+			return array('metadata'=>$metadata, 'data'=>$data);
+		}
+		
+		// log to project event table
+		$action_description = "Translating Generated PDF";
+		$changes_made = "The Multilingual module will translate field labels (for each instrument) based on language selections the user made in survey(s).";
+		\REDCap::logEvent($action_description, $changes_made, null, $record_id, $event_id);
+		
+		// translate metadata using user selected languages
+		global $Proj;
+		$translated_metadata = $this->translatePDF($metadata, $user_langs);
+		
+		return array('metadata'=>$translated_metadata, 'data'=>$data);
+	}
 
 	function redcap_every_page_top($project_id){
 		$api_endpoint = $this->getProjectSetting('use-api-endpoint', $project_id);
+		$at_survey_settings = strpos($_SERVER['REQUEST_URI'], 'Surveys/edit_info.php') !== false || strpos($_SERVER['REQUEST_URI'], 'Surveys/create_survey.php') !== false;
 		
 		//$user_rights = REDCap::getUserRights();
 		//echo json_encode($user_rights);
@@ -39,13 +93,31 @@ class Multilingual extends AbstractExternalModule
 		elseif(strpos($_SERVER['REQUEST_URI'], 'DataExport/index.php') !== false){
 			echo '<script type="text/javascript">' . str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true), file_get_contents($this->getModulePath() . 'js/multilingual_export.js'))) . '</script>';
 		}
-		elseif(isset($_GET['__return']) && $_GET['__return'] == 1){
-			echo '<script type="text/javascript">' . str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true, ($api_endpoint == true ? true : false)), file_get_contents($this->getModulePath() . 'js/multilingual_survey_return.js')))) . '</script>';
+		elseif($_GET['__return'] == 1 or (isset($_GET['s']) && !isset($_GET['__page__']))){
+			$instrument = $_GET['page'];
+			echo '<script type="text/javascript">' . 
+			str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, 
+			str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), 
+			str_replace('REDCAP_INSTRUMENT_NAME', $instrument, 
+			str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true, ($api_endpoint == true ? true : false)), 
+			file_get_contents($this->getModulePath() . 'js/multilingual_survey_return.js'))))) . '</script>';
+			
 			echo '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css', true, ($api_endpoint == true ? true : false)) . '">';
 		}
 		elseif(strpos($_SERVER['REQUEST_URI'], 'DataEntry/index.php') !== false || strpos($_SERVER['REQUEST_URI'], 'DataEntry/record_home.php') !== false){
 			echo '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css') . '">';
 			echo '<script type="text/javascript">' . str_replace('PDF_URL', $this->getUrl("multilingualPDF.php", true), str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true), file_get_contents($this->getModulePath() . 'js/multilingual_pdf.js'))))) . '</script>';
+		}
+		elseif($at_survey_settings && isset($_GET['page'])){
+			$index_url = $this->getUrl("index.php", true, ($api_endpoint == true ? true : false));
+			$language_var = $this->languageVariable($project_id);
+			$stylesheet = '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css') . '">';
+			$ml_survey_settings_js = '<script type="text/javascript">' . file_get_contents($this->getUrl('js/multilingual_survey_settings.js')) . '</script>';
+			$ml_survey_settings_js = str_replace('REDCAP_AJAX_URL', $index_url, $ml_survey_settings_js);
+			$ml_survey_settings_js = str_replace('REDCAP_LANGUAGE_VARIABLE', $language_var, $ml_survey_settings_js);
+			
+			echo $stylesheet;
+			echo $ml_survey_settings_js;
 		}
 	}
 
@@ -56,7 +128,7 @@ class Multilingual extends AbstractExternalModule
 	private function getMetaDataTableName($projectId){
 		global $conn;
 		if($this->getProjectSetting('use-drafted-changes', $projectId)){
-			$query = "select draft_mode from redcap_projects where project_id = $projectId";
+			$query = "select draft_mode from redcap_projects where project_id = " . mysqli_real_escape_string($conn, $data['project_id']);
 			if($result = mysqli_query($conn, $query)){
 				if($row = mysqli_fetch_array($result)){
 					$draftMode = $row["draft_mode"];
@@ -79,21 +151,66 @@ class Multilingual extends AbstractExternalModule
 		}
 		return $langVar;
 	}
+	
+	public function getSurveySettings($data) {
+		$instruments = $this->getProjectSetting('instruments');
+		
+		if (!empty($instruments)) {
+			$instruments = json_decode($instruments);
+			$name = htmlspecialchars($data['instrument']);
+			$instrument = $instruments->$name;
+		} else {
+			$instruments = new \stdClass();
+		}
+		
+		header('Content-Type: application/json');
+		echo json_encode($instrument);
+	}
+	
+	public function saveSurveySettings($all_data) {
+		$instruments = $this->getProjectSetting('instruments');
+		if (empty($instruments)) {
+			$instruments = new \stdClass();
+		} else {
+			$instruments = json_decode($instruments);
+		}
+		
+		foreach ($all_data as $data) {
+			$instrument = htmlspecialchars($data['instrument']);
+			$lang = htmlspecialchars($data['language']);
+			if (empty($instruments->$instrument)) {
+				$instruments->$instrument = new \stdClass();
+			}
+			if (empty($instruments->$instrument->$lang)) {
+				$instruments->$instrument->$lang = new \stdClass();
+			}
+			foreach ($data['collections'] as $coll_name => $coll) {
+				$instruments->$instrument->$lang->$coll_name = new \stdClass();
+				
+				// add each setting to collection after encoding HTML
+				foreach ($coll as $sname => $setting) {
+					$instruments->$instrument->$lang->$coll_name->$sname = htmlspecialchars($setting);
+				}
+			}
+		}
+		
+		$this->setProjectSetting('instruments', json_encode($instruments));
+	}
 
 	public function getSettings($data){
 		$response = $this->getProjectSettings($data['project_id']);
-
+		
 		foreach($response AS $key => $values){
 			if($key == 'button-width'){
-				if(substr($response[$key]['value'], -2) != 'px'){
-					$response[$key]['value'] = '100px';
+				if(substr($response[$key], -2) != 'px'){
+					$response[$key] = '100px';
 				}
-				elseif(intval(str_replace('px', '', $response[$key]['value'])) < 1){
-					$response[$key]['value'] = '100px';
+				elseif(intval(str_replace('px', '', $response[$key])) < 1){
+					$response[$key] = '100px';
 				}
 			}
-			elseif($key == 'languages_variable' && $response[$key]['value'] == null){
-				$response[$key]['value'] = 'languages';
+			elseif($key == 'languages_variable' && $response[$key] == null){
+				$response[$key] = 'languages';
 			}
 		}
 
@@ -111,13 +228,13 @@ class Multilingual extends AbstractExternalModule
 
 		if($data['matrix'] == 1){
 			$query = "SELECT element_enum, element_type, element_validation_type, element_validation_min, element_validation_max FROM $metaDataTableName
-				WHERE project_id = " . $data['project_id'] . "
+				WHERE project_id = " . intval($data['project_id']) . "
 				AND grid_name LIKE '" . $data['field_name'] . "'
 				LIMIT 1";
 		}
 		else{
 			$query = "SELECT element_enum, element_type, element_validation_type FROM $metaDataTableName
-				WHERE project_id = " . $data['project_id'] . "
+				WHERE project_id = " . intval($data['project_id']) . "
 				AND field_name LIKE '" . $data['field_name'] . "'";
 		}
 		$result = mysqli_query($conn, $query);
@@ -186,7 +303,7 @@ class Multilingual extends AbstractExternalModule
 		$metaDataTableName = $this->getMetaDataTableName($data['project_id']);
 
 		$query = "SELECT field_name, element_type, misc, grid_name, element_validation_type, element_validation_min, element_validation_max, element_label FROM $metaDataTableName
-			WHERE project_id = " . $data['project_id'] 
+			WHERE project_id = " . intval($data['project_id']) 
 				. ($data['page'] !='' ? " AND (form_name LIKE '" . $data['page'] . "' OR field_name LIKE 'survey_text_" . $data['page'] . "')" : '');
 		$result = mysqli_query($conn, $query);
 
@@ -318,10 +435,10 @@ class Multilingual extends AbstractExternalModule
 					if (!isset($defaultError)){
 						// make array of default error prompts
 						$defaultError = array();
-						$defaultError = array_fill_keys($projectSettings['validation']['value'], NULL);
+						$defaultError = array_fill_keys($projectSettings['validation'], NULL);
 
-						foreach($projectSettings['validation']['value'] AS $key => $valid_type){
-							$defaultError[$valid_type] = array_combine($projectSettings['lang']['value'][$key], $projectSettings['error']['value'][$key]);
+						foreach($projectSettings['validation'] AS $key => $valid_type){
+							$defaultError[$valid_type] = array_combine($projectSettings['lang'][$key], $projectSettings['error'][$key]);
 						}
 					}
 
@@ -348,6 +465,26 @@ class Multilingual extends AbstractExternalModule
 			}
 		}
 		
+		// override
+		$instruments = $this->getProjectSetting('instruments');
+		if (!empty($instruments)) {
+			$instruments = json_decode($instruments);
+			$form_name = $data['page'];
+			$this_lang = $data['lang'];
+			$simple_settings = $instruments->$form_name->$this_lang;
+			if (!empty($simple_settings)) {
+				$general_settings = $simple_settings->survey_settings;
+				if (!empty($general_settings)) {
+					if (!empty($general_settings->title) || $general_settings->title == "")
+						$response['surveytext']['surveytitle'] = html_entity_decode($general_settings->title);
+					if (!empty($general_settings->instructions) || $general_settings->instructions == "")
+						$response['surveytext']['surveyinstructions'] = html_entity_decode($general_settings->instructions);
+					if (!empty($general_settings->acknowledgement) || $general_settings->acknowledgement == "")
+						$response['surveytext']['surveyacknowledgment'] = html_entity_decode($general_settings->acknowledgement);
+				}
+			}
+		}
+		
 		//update language field
 		$response['exist'] = $this->updateLangVar($data);
 		$response['table'] = $metaDataTableName;
@@ -363,7 +500,7 @@ class Multilingual extends AbstractExternalModule
 
 		$metaDataTableName = $this->getMetaDataTableName($data['project_id']);
 		
-		$query = "SELECT field_name FROM $metaDataTableName where project_id = " . $data['project_id'] . " ORDER BY field_order LIMIT 1";
+		$query = "SELECT field_name FROM $metaDataTableName where project_id = " . intval($data['project_id']) . " ORDER BY field_order LIMIT 1";
 		$result = mysqli_query($conn, $query);
 		$row = mysqli_fetch_array($result);
 		
@@ -407,13 +544,13 @@ class Multilingual extends AbstractExternalModule
 	public function getEventName($event_id){
 		global $conn;
 		
-		$query = "SELECT descrip, arm_id FROM redcap_events_metadata WHERE event_id = " . $event_id;
+		$query = "SELECT descrip, arm_id FROM redcap_events_metadata WHERE event_id = " . intval($event_id);
 		$result = mysqli_query($conn, $query);
 		$row = mysqli_fetch_array($result); 
 		
 		$event_name = strtolower(str_replace(" ", "_", $row['descrip']));
 		
-		$query = "SELECT arm_name FROM redcap_events_arms WHERE arm_id = " . $row['arm_id'];
+		$query = "SELECT arm_name FROM redcap_events_arms WHERE arm_id = " . intval($row['arm_id']);
 		$result = mysqli_query($conn, $query);
 		$row = mysqli_fetch_array($result); 
 		
@@ -470,7 +607,7 @@ class Multilingual extends AbstractExternalModule
 			$langVar = 'languages';
 		}
 		
-		$q = "SELECT element_enum FROM redcap_metadata WHERE project_id = " . $project_id . " AND field_name = '" . $langVar . "'";
+		$q = "SELECT element_enum FROM redcap_metadata WHERE project_id = " . intval($project_id) . " AND field_name = '" . $langVar . "'";
 		$query = db_query($q);
 		$row = db_fetch_assoc($query);
 			
@@ -483,12 +620,9 @@ class Multilingual extends AbstractExternalModule
 		return $response;
 	}
 	
-	public function getData($project_id = NULL, $record = NULL){
-		if($project_id == NULL || $record == NULL)
-			return;
-		
+	public function getData($project_id, $record){
 		$q = "SELECT record, event_id, field_name, `value` FROM redcap_data
-			WHERE project_id = " . $project_id . 
+			WHERE project_id = " . intval($project_id) . 
 			" AND record = '" . $record . "'";
 		$query = db_query($q);
 	
@@ -499,12 +633,9 @@ class Multilingual extends AbstractExternalModule
 		return $response;
 	}
 	
-	public function getMetaData($project_id = NULL, $form = NULL){
-		if($project_id == NULL)
-			return;
-		
+	public function getMetaData($project_id, $form = null){
 		$q = "SELECT * FROM redcap_metadata
-			WHERE project_id = " . $project_id 
+			WHERE project_id = " . intval($project_id) 
 			. ($form ? " AND form_name = '" . $form . "'" : "") .
 			" ORDER BY field_order";
 		$query = db_query($q);
@@ -534,7 +665,7 @@ class Multilingual extends AbstractExternalModule
 
 		//language
 		$query = "SELECT element_enum, element_type, element_validation_type FROM $metaDataTableName
-			WHERE project_id = " . $pid . "
+			WHERE project_id = " . intval($pid) . "
 			AND field_name LIKE '" . $langVar . "'";
 		$result = mysqli_query($conn, $query);
 		$row = mysqli_fetch_array($result);
@@ -550,7 +681,7 @@ class Multilingual extends AbstractExternalModule
 
 		//translations
 		$query = "SELECT field_name, element_type, misc, grid_name, element_validation_type, element_label FROM $metaDataTableName
-			WHERE project_id = " . $pid . " AND field_name NOT LIKE 'survey_text%' ORDER BY field_order";
+			WHERE project_id = " . intval($pid) . " AND field_name NOT LIKE 'survey_text%' ORDER BY field_order";
 		$result = mysqli_query($conn, $query);
 
 		while($row = mysqli_fetch_array($result)){
@@ -662,5 +793,153 @@ class Multilingual extends AbstractExternalModule
 
 		echo $data;
 	}
+	
+	public function getUserSelectedLanguages($record) {
+		$user_languages = [];
+		
+		$result = $this->queryLogs("SELECT timestamp, message, record_id, language_value, instrument, event_id
+			WHERE message = ? AND record_id = ?", [
+				"user_selected_language",
+				$record
+		]);
+		
+		while($row = db_fetch_assoc($result)) {
+			$instrument = $row['instrument'];
+			$language_value = $row['language_value'];
+			$event_id = $row['event_id'];
+			
+			if (!empty($instrument) && !empty($language_value) && !empty($event_id)) {
+				if (empty($user_languages[$event_id])) {
+					$user_languages[$event_id] = [];
+				}
+				if (empty($user_languages[$event_id][$instrument])) {
+					$user_languages[$event_id][$instrument] = $language_value;
+				}
+			}
+		}
+		
+		return $user_languages;
+	}
+	
+	public function translatePDF(&$metadata, $user_languages) {
+		// translate survey instructions/titles
+		global $Proj;
+		$instruments = json_decode($this->getProjectSetting('instruments'));
+		if ($instruments && !empty($instruments)) {
+			foreach ($Proj->surveys as $id => &$survey) {
+				// determine which language to use for this form
+				$lang = '';
+				$form_name = $survey['form_name'];
+				foreach($user_languages as $event_id => $event) {
+					if (!empty($event[$form_name])) {
+						$lang = $event[$form_name];
+						break;
+					}
+				}
+				if ($lang == '') {
+					continue;
+				}
+				
+				if (!empty($instruments->$form_name->$lang->survey_settings->title)) {
+					$survey['title'] = $instruments->$form_name->$lang->survey_settings->title;
+				}
+				if (!empty($instruments->$form_name->$lang->survey_settings->acknowledgement)) {
+					$survey['instructions'] = $instruments->$form_name->$lang->survey_settings->acknowledgement;
+				}
+			}
+		}
+		
+		// translate field question/answer labels
+		foreach($metadata as &$field) {
+			// see which instrument this field belongs to
+			$parent_form = $field['form_name'];
+			$field_name = $field['field_name'];
+			
+			// get question and answer translations for this field
+			$translations = $this->getFieldTranslations($field);
+			
+			// determine which language to use for that field
+			$lang = '';
+			foreach($user_languages as $event_id => $event) {
+				if (!empty($event[$parent_form])) {
+					$lang = $event[$parent_form];
+					break;
+				}
+			}
+			if ($lang == '') {
+				continue;
+			}
+			
+			// determine the translated field label for this field/lang combo
+			if ($translations['lang'] && $translations['lang'][$lang]) {
+				$field['element_label'] = $translations['lang'][$lang];
+			}
+			
+			// determine the translated answer labels for this field/lang combo
+			if ($translations['answers'] && $translations['answers'][$lang]) {
+				foreach($translations['answers'][$lang] as $raw => $translation) {
+					$translations['answers'][$lang][$raw] = "$raw, $translation";
+				}
+				$field['element_enum'] = implode(" \\n ", $translations['answers'][$lang]);
+			}
+		}
+		
+		return $metadata;
+	}
+	
+	public function getFieldTranslations($field_array) {
+		// this function returns an array like:
+		/*
+		translations = [
+			'lang' => [
+				'English' => 'My Field Label',
+				'Espanol' => 'Mi etiqueta de campo'
+			],
+			'answers' => [
+				'English' => [
+					'0' => 'Zero',
+					'1' => 'One',
+					'2' => 'Two'
+				],
+				'Espanol' => [
+					'0' => 'Cero',
+					'1' => 'Uno',
+					'2' => 'Dos'
+				],
+			]
+		]
+		
+		assuming $field_array passed has 'misc' field with relevant @p1000lang and @p1000answers information
+		*/
+		$translations = [];
+		$field_misc = $field_array['misc'];
+		
+		// determine indexes for p1000lang and p1000answers
+		$regex_capture_p1000 = "/p1000([^{]*)/m";
+		preg_match_all($regex_capture_p1000, $field_misc, $indexes);
+		$indexes = $indexes[1];
+		
+		// capture pieces of field['misc'] that are contained in balanced curly braces (inclusive)
+		$regex_capture_balanced_braces = "/\{(?:[^}{]+|(?R))*+\}/m";
+		preg_match_all($regex_capture_balanced_braces, $field_misc, $matches);
+		if (gettype($matches) == 'array') {
+			$matches = $matches[0];
+			
+			// decode lang json (if applicable)
+			$lang_index = array_search('lang', $indexes, true);
+			if ($lang_index !== false) {
+				$translations['lang'] = json_decode($matches[$lang_index], true);
+			}
+			
+			// decode answers json (if applicable)
+			$answers_index = array_search('answers', $indexes, true);
+			if ($answers_index !== false) {
+				$translations['answers'] = json_decode($matches[$answers_index], true);
+			}
+		}
+		
+		return $translations;
+	}
+	
 }
 ?>
