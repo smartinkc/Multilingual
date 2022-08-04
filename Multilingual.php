@@ -42,7 +42,7 @@ class Multilingual extends AbstractExternalModule
 		echo '<link rel="stylesheet" type="text/css" href="' .  $this->getUrl('css/multilingual.css', true, $api_endpoint == true) . '">';
 	}
 
-	function redcap_survey_complete($project_id, $record, $instrument, $event_id, $group_id = NULL, $survey_hash, $response_id = NULL, $repeat_instance){
+	function redcap_survey_complete($project_id, $record, $instrument, $event_id, $group_id, $survey_hash, $response_id, $repeat_instance){
 		$api_endpoint = $this->getProjectSetting('use-api-endpoint', $project_id);
 		// Update and add multilingual_survey_complete
 		echo '<script type="text/javascript">' . str_replace('REDCAP_PDF_URL', ($this->getProjectSetting('multilingual-econsent', $project_id) ? $this->getUrl("multilingualPDF.php", true, ($api_endpoint == true ? true : false)) : 'false') . '&id=' . $record . '&form=' . $instrument . '&event_id=' . $event_id . '&instance=' . $repeat_instance , str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true, ($api_endpoint == true ? true : false)), file_get_contents($this->getModulePath() . 'js/multilingual_survey_complete.js')))) . '</script>';
@@ -93,7 +93,7 @@ class Multilingual extends AbstractExternalModule
 		elseif(strpos($_SERVER['REQUEST_URI'], 'DataExport/index.php') !== false){
 			echo '<script type="text/javascript">' . str_replace('REDCAP_LANGUAGE_VARIABLE', $this->languageVariable($project_id), str_replace('REDCAP_AJAX_URL', $this->getUrl("index.php", true), file_get_contents($this->getModulePath() . 'js/multilingual_export.js'))) . '</script>';
 		}
-		elseif($_GET['__return'] == 1 or (isset($_GET['s']) && !isset($_GET['__page__']))){
+		elseif((isset($_GET['__return']) && $_GET['__return'] == 1) or (isset($_GET['s']) && !isset($_GET['__page__']))){
 			$instrument = $_GET['page'];
 			echo '<script type="text/javascript">' . 
 			str_replace('APP_PATH_IMAGES', APP_PATH_IMAGES, 
@@ -620,7 +620,10 @@ class Multilingual extends AbstractExternalModule
 		return $response;
 	}
 	
-	public function getData($project_id, $record){
+	public function getData($project_id = NULL, $record = NULL){
+		if($project_id == NULL || $record == NULL)
+			return;
+		
 		$q = "SELECT record, event_id, field_name, `value` FROM redcap_data
 			WHERE project_id = " . intval($project_id) . 
 			" AND record = '" . $record . "'";
@@ -633,7 +636,10 @@ class Multilingual extends AbstractExternalModule
 		return $response;
 	}
 	
-	public function getMetaData($project_id, $form = null){
+	public function getMetaData($project_id = NULL, $form = NULL){
+		if($project_id == NULL)
+			return;
+		
 		$q = "SELECT * FROM redcap_metadata
 			WHERE project_id = " . intval($project_id) 
 			. ($form ? " AND form_name = '" . $form . "'" : "") .
