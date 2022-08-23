@@ -1,9 +1,9 @@
 {
-	"name": "Multilingual",
+	"name": "Multilingual (deprecated)",
 
 	"namespace": "CMH\\Multilingual",
 
-	"description": "Allow survey's and data entry forms to be translated into multiple languages. Add translations via the Online Designer.",
+	"description": "<b>This module does not work properly in newer PHP versions, and has been deprecated in favor of REDCap's built-in Multi-Language Management feature.</b>  Allow survey's and data entry forms to be translated into multiple languages. Add translations via the Online Designer.",
 
 	"versions": [
 		{"1.2": "Move all functions into Multilingual class"},
