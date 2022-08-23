@@ -44,7 +44,7 @@
 	ob_end_clean();
 	
 	//get metadata
-	$metadata = $module->getMetaData(intval(intval($_GET['pid'])), $_GET['form']);
+	$metadata = $module->getMetaData2(intval(intval($_GET['pid'])), $_GET['form']);
 
 	//replace labels and element_enum with translations
 	foreach($metadata AS $key => $values){
