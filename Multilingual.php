@@ -620,19 +620,6 @@ class Multilingual extends AbstractExternalModule
 		return $response;
 	}
 	
-	public function getData($project_id, $record){
-		$q = "SELECT record, event_id, field_name, `value` FROM redcap_data
-			WHERE project_id = " . intval($project_id) . 
-			" AND record = '" . $record . "'";
-		$query = db_query($q);
-	
-		while($row = db_fetch_assoc($query)){
-			$response[$row['record']][$row['event_id']][$row['field_name']] = $row['value'];
-		}
-		
-		return $response;
-	}
-	
 	public function getMetaData2($project_id, $form = null){
 		$q = "SELECT * FROM redcap_metadata
 			WHERE project_id = " . intval($project_id) 
