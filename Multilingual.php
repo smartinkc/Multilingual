@@ -633,7 +633,7 @@ class Multilingual extends AbstractExternalModule
 		return $response;
 	}
 	
-	public function getMetaData($project_id, $form = null){
+	public function getMetaData2($project_id, $form = null){
 		$q = "SELECT * FROM redcap_metadata
 			WHERE project_id = " . intval($project_id) 
 			. ($form ? " AND form_name = '" . $form . "'" : "") .
